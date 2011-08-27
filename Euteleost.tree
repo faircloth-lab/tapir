@@ -1,0 +1,84 @@
+#NEXUS
+begin taxa;
+	dimensions ntax=5;
+	taxlabels
+	danRer6[&!name="danRer6"]
+	oryLat2[&!name="oryLat2"]
+	gasAcu1[&!name="gasAcu1"]
+	fr2[&!name="fr2"]
+	tetNig2[&!name="tetNig2"]
+;
+end;
+
+begin trees;
+	tree tree_1 = [&R] (danRer6:174.0,(oryLat2:100.0,(gasAcu1:93.0,(fr2:37.0,tetNig2:37.0):56.0):7.0):74.0);
+end;
+
+begin figtree;
+	set appearance.backgroundColorAttribute="User Selection";
+	set appearance.backgroundColour=#-1;
+	set appearance.branchColorAttribute="User Selection";
+	set appearance.branchLineWidth=3.0;
+	set appearance.foregroundColour=#-16777216;
+	set appearance.selectionColour=#-2144520576;
+	set branchLabels.colorAttribute="User Selection";
+	set branchLabels.displayAttribute="Branch lengths (raw)";
+	set branchLabels.fontName="Abadi MT Condensed Extra Bold";
+	set branchLabels.fontSize=12;
+	set branchLabels.fontStyle=1;
+	set branchLabels.isShown=true;
+	set branchLabels.significantDigits=4;
+	set layout.expansion=0;
+	set layout.layoutType="RECTILINEAR";
+	set layout.zoom=0;
+	set nodeBars.barWidth=4.0;
+	set nodeLabels.colorAttribute="User Selection";
+	set nodeLabels.displayAttribute="Node ages";
+	set nodeLabels.fontName="Abadi MT Condensed Extra Bold";
+	set nodeLabels.fontSize=12;
+	set nodeLabels.fontStyle=0;
+	set nodeLabels.isShown=true;
+	set nodeLabels.significantDigits=4;
+	set polarLayout.alignTipLabels=false;
+	set polarLayout.angularRange=0;
+	set polarLayout.rootAngle=0;
+	set polarLayout.rootLength=100;
+	set polarLayout.showRoot=true;
+	set radialLayout.spread=0.0;
+	set rectilinearLayout.alignTipLabels=false;
+	set rectilinearLayout.curvature=0;
+	set rectilinearLayout.rootLength=988;
+	set scale.offsetAge=0.0;
+	set scale.rootAge=1.0;
+	set scale.scaleFactor=1.0;
+	set scale.scaleRoot=false;
+	set scaleAxis.automaticScale=false;
+	set scaleAxis.fontSize=8.0;
+	set scaleAxis.isShown=true;
+	set scaleAxis.lineWidth=1.0;
+	set scaleAxis.majorTicks=25.0;
+	set scaleAxis.origin=0.0;
+	set scaleAxis.reverseAxis=true;
+	set scaleAxis.showGrid=false;
+	set scaleAxis.significantDigits=4;
+	set scaleBar.automaticScale=true;
+	set scaleBar.fontSize=10.0;
+	set scaleBar.isShown=false;
+	set scaleBar.lineWidth=1.0;
+	set scaleBar.scaleRange=20.0;
+	set scaleBar.significantDigits=4;
+	set tipLabels.colorAttribute="User Selection";
+	set tipLabels.displayAttribute="Names";
+	set tipLabels.fontName="Abadi MT Condensed Extra Bold";
+	set tipLabels.fontSize=14;
+	set tipLabels.fontStyle=0;
+	set tipLabels.isShown=true;
+	set tipLabels.significantDigits=4;
+	set trees.order=false;
+	set trees.orderType="increasing";
+	set trees.rooting=false;
+	set trees.rootingType="User Selection";
+	set trees.transform=false;
+	set trees.transformType="cladogram";
+end;
+
