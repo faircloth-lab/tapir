@@ -32,8 +32,9 @@ def expand_paths(a):
 
 def parse_site_rates(rate_file):
     """parse the site rate file returned from hyphy to a vector of rates"""
-    return numpy.array([float(line.split(',')[2]) 
+    rates = numpy.array([float(line.split(',')[2]) 
         for line in open(rate_file, 'rU') if not line.startswith('site')])
+    return numpy.reshape(rates, (-1,1))
 
 def get_townsend_pi(time, rates):
     return 16 * (rates**2) * time * numpy.exp(-(4 * rates * time))
@@ -46,15 +47,11 @@ def main():
     args = get_args()
     # generate a vector of times given start and stops
     time = numpy.array(range(args.start, args.end + 1, args.step))
-    if args.test:
-        rates = parse_site_rates('test/test-uniform-draw-weights.csv')
-    else:
-        hyphy = Popen([args.hyphy, 'templates/models_and_rates.bf'], stdin=PIPE, stdout=PIPE)
-        output = os.path.join(args.output, os.path.basename(args.alignment) + '.rates')
-        towrite = "\n".join([args.alignment, args.tree, output])
-        stdout, stderr = hyphy.communicate(towrite)
-        rates = parse_site_rates(output)
-    rates = numpy.reshape(rates, (-1,1))
+    hyphy = Popen([args.hyphy, 'templates/models_and_rates.bf'], stdin=PIPE, stdout=PIPE)
+    output = os.path.join(args.output, os.path.basename(args.alignment) + '.rates')
+    towrite = "\n".join([args.alignment, args.tree, output])
+    stdout, stderr = hyphy.communicate(towrite)
+    rates = parse_site_rates(output)
     # send column of times and vector of site rates to get_townsend_pi.
     # Because of structure, we can take advantage of numpy's
     # elementwise speedup
