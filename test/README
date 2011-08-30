@@ -1,0 +1,12 @@
+# test/ manifest:
+# Alignment.hyphy_output - what we get from the phydesign website
+# SiteRates_GTR_template_test.bf - original phydesign hyphy script with minor modifications
+# test.hyphy.output - what we get from our local copy of the script
+
+# usage:
+# run HYPHY test
+
+./HYPHY SiteRates_GTR_template_test.bf > test.hyphy_output
+diff test.hyphy_output Alignment.hyphy_output
+
+# note major differences
