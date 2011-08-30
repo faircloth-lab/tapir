@@ -1,10 +1,12 @@
 RequireVersion ("0.9920061127");
 
-fprintf(stdout, "Nucleotide file: ");
+//fprintf(stdout, "Nucleotide file: ");
 fscanf(stdin, "String", FILE_NUCLEOTIDES);
-fprintf(stdout, "Tree file: ");
+//fprintf(stdout, "Tree file: ");
 fscanf(stdin, "String", FILE_TREE);
-FILE_OUTPUT = FILE_NUCLEOTIDES + ".rates";
+// FILE_OUTPUT = FILE_NUCLEOTIDES + ".rates";
+//fprintf(stdout, "Output file: ");
+fscanf(stdin, "String", FILE_OUTPUT);
 
 // FILE_NUCLEOTIDES = "chr1_918.nex";
 // FILE_TREE        = "Euteleost.tree";
