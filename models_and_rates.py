@@ -27,9 +27,6 @@ def get_args():
     parser.add_argument('--test', action='store_true')
     return parser.parse_args()
 
-def expand_paths(a):
-    return os.path.abspath(os.path.expanduser(a))
-
 def parse_site_rates(rate_file):
     """parse the site rate file returned from hyphy to a vector of rates"""
     rates = numpy.array([float(line.split(',')[2]) 
