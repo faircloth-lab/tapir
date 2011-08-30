@@ -22,7 +22,6 @@ def main():
     args = get_args()
     hyphy = Popen([args.hyphy, 'templates/models_and_rates.bf'], stdin=PIPE, stdout=PIPE)
     output = os.path.join(os.path.abspath(os.path.expanduser(args.output)), os.path.basename(args.alignment) + '.rates')
-    pdb.set_trace()
     towrite = "\n".join([os.path.abspath(os.path.expanduser(args.alignment)), os.path.abspath(os.path.expanduser(args.tree)), output])
     #pdb.set_trace()
     stdout, stderr = hyphy.communicate(towrite)
