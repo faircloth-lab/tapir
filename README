@@ -1,5 +1,0 @@
-# single file run
-python models_and_rates.py chr1_918.nex
-
-# multiple file run (untested)
-ls *.nex | xargs -n1 -P8 python models_and_rates.py
