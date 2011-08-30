@@ -1,0 +1,7 @@
+# Alignment.hyphy_output is what we get from the phydesign website
+# run HYPHY test
+
+./HYPHY SiteRates_GTR_template_test.bf > test.hyphy_output
+diff test.hyphy_output Alignment.hyphy_output
+
+# note major differences
