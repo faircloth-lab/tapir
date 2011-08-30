@@ -1,2 +1,10 @@
+## generic files to ignore
 *.log
 *.tmproj
+*.lock
+*.DS_Store
+*.swp
+*.out
+
+## python
+*.pyc
