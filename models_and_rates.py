@@ -27,7 +27,7 @@ def get_args():
         +" directory", default=os.getcwd(), action=FullPaths)
     parser.add_argument('--hyphy', dest='hyphy', default="HYPHY", help="The "
         +"path to hyphy (if not in $PATH)")
-    parser.add_argument('--test', action='store_true')
+    #parser.add_argument('--test', action='store_true')
     return parser.parse_args()
 
 def parse_site_rates(rate_file):
