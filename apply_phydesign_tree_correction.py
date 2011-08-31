@@ -26,8 +26,8 @@ def main():
             correction_factor = math.pow(10, string_length)
         else:
             correction_factor = 1
-        for leaf in tree.get_terminals():
-            leaf.branch_length /= correction_factor
+        for node in tree.find_clades(branch_length=True):
+            node.branch_length /= correction_factor
         accumulator.append(tree)
     Phylo.write(accumulator, args.output, 'nexus') 
 
