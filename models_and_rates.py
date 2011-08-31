@@ -59,6 +59,7 @@ def main():
     # vectorize the integral function to take our rates array as input
     vec_integrate = vectorize(integrate)
     # scipy.integrate returns tuple of (integral, upper-error-bound)
+    # TODO:  figure out how we want to handle diff. time intervals here
     integral, error = vec_integrate(30, 50, rates)
     pdb.set_trace()
     
