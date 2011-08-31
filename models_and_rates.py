@@ -21,9 +21,12 @@ def get_args():
     parser.add_argument('tree', help="The input tree", action=FullPaths)
     parser.add_argument('start', help="The start time of interest (MYA)", type=int)
     parser.add_argument('end', help="The end time of interest (MYA)", type=int)
-    parser.add_argument('--step', dest='step', help="The step distances between `start` and `end`", default=1, type=int)
-    parser.add_argument('--output', dest='output', help="The path to the output directory", default=os.getcwd(), action=FullPaths)
-    parser.add_argument('--hyphy', dest='hyphy', default="HYPHY", help="The path to hyphy (if not in $PATH)")
+    parser.add_argument('--step', dest='step', help="The step distances between"
+        +"`start` and `end`", default=1, type=int)
+    parser.add_argument('--output', dest='output', help="The path to the output"
+        +" directory", default=os.getcwd(), action=FullPaths)
+    parser.add_argument('--hyphy', dest='hyphy', default="HYPHY", help="The "
+        +"path to hyphy (if not in $PATH)")
     parser.add_argument('--test', action='store_true')
     return parser.parse_args()
 
@@ -53,7 +56,7 @@ def main():
     # Because of structure, we can take advantage of numpy's
     # elementwise speedup
     townsend = get_townsend_pi(time, numpy.array([rates,]*len(time)))
-    # vectorize the integral function to take out rates array
+    # vectorize the integral function to take our rates array as input
     vec_integrate = vectorize(integrate)
     # scipy.integrate returns tuple of (integral, upper-error-bound)
     integral, error = vec_integrate(30, 50, rates)
