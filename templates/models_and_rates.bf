@@ -8,8 +8,10 @@ fscanf(stdin, "String", FILE_TREE);
 //fprintf(stdout, "Output file: ");
 fscanf(stdin, "String", FILE_OUTPUT);
 
-fscanf(stdin, "String", BASE_FREQS);
-fscanf(stdin, "String", AVG_SUBS);
+// If we want output into diff files:
+
+//fscanf(stdin, "String", BASE_FREQS);
+//fscanf(stdin, "String", AVG_SUBS);
 
 
 // FILE_NUCLEOTIDES = "chr1_918.nex";
@@ -1013,15 +1015,20 @@ for (i=0; i< Columns(chronoBranches); i=i+1) 	{
 fprintf (stdout, "\nChronogram length (time units): ", chronoLength, "\n");
 //fprintf (BASE_FREQS, "\nBase freqs: ", Freqs, "\n");
 //fprintf (FILE_OUTPUT,CLEAR_FILE,"base_freqs = [[",Freqs[0],"],[",Freqs[1],"],[",Freqs[2],"],[",Freqs[3],"]]",);
-fprintf (FILE_OUTPUT,CLEAR_FILE,"base_freqs = {'A':",Freqs[0],",'C':",Freqs[1],",'G':",Freqs[2],",'T':",Freqs[3],"}",);
+fprintf (FILE_OUTPUT,CLEAR_FILE,"{\n\t\"sites\": {\n\t\t\"freqs\":{\n\t\t\t\"A\":",
+                                Freqs[0],",\n\t\t\t\"C\":",
+                                Freqs[1],",\n\t\t\t\"G\":",
+                                Freqs[2],",\n\t\t\t\"T\":",
+                                Freqs[3],"\n\t\t},",);
+
 //fprintf (FILE_OUTPUT, "\nBase freqs: ", Freqs, "\n");
-fprintf (FILE_OUTPUT, "\nsubs_matrix = {",
-                              "'AC':", AC, ",",
-                              "'AG':", AG, ",",
-                              "'AT':", AT, ",",
-                              "'CG':", CG, ",",
-                              "'CT':", CT, ",",
-                              "'GT':", GT, "}","\n");
+fprintf (FILE_OUTPUT, "\n\t\t\"subs_matrix\":{",
+                              "\n\t\t\t\"AC\":", AC, ",",
+                              "\n\t\t\t\"AG\":", AG, ",",
+                              "\n\t\t\t\"AT\":", AT, ",",
+                              "\n\t\t\t\"CG\":", CG, ",",
+                              "\n\t\t\t\"CT\":", CT, ",",
+                              "\n\t\t\t\"GT\":", GT, "\n\t\t},",);
 
 doneSites    = {myFilter.unique_sites,3}; /* Getting the different site patterns */
 fullSites    = {myFilter.sites,3};
@@ -1030,7 +1037,7 @@ alreadyDone  = {};
 
 //fprintf (FILE_OUTPUT, CLEAR_FILE, "site,subst,rate,logL", "\n"); // csv column headers
 
-fprintf (FILE_OUTPUT, "site_rates = (",); // csv column headers
+fprintf (FILE_OUTPUT, "\n\t\t\"rates\":[",); // csv column headers
 
 for (siteCount = 0; siteCount < myFilter.sites; siteCount = siteCount+1) {
 			siteMap = dupInfo[siteCount];
@@ -1059,17 +1066,17 @@ for (siteCount = 0; siteCount < myFilter.sites; siteCount = siteCount+1) {
 				doneSites[siteMap][2] = site_res[1][0];/*Loglikelihood*/
 
 			}
-			ReportSite (siteCount, siteMap);
+			ReportSite (siteCount, siteMap, myFilter.sites);
 }
 
-fprintf (FILE_OUTPUT,")\n",); // csv column headers
+fprintf (FILE_OUTPUT,"\n\t\t]\n\t}\n}",); // csv column headers
 fprintf (stdout, "\nOutput written to ", FILE_OUTPUT, "\n");
 fprintf (stdout, "THE END\n");
 
 
 /*------------------------------------------------------------------------*/
 
-function ReportSite (siteI, siteM)
+function ReportSite (siteI, siteM, siteA)
 {
 	fullSites[siteI][0] = doneSites[siteM][0];
 	fullSites[siteI][1] = doneSites[siteM][1];
@@ -1082,11 +1089,17 @@ function ReportSite (siteI, siteM)
 					 " Log(L) ", Format(fullSites[siteI][2],7,4),"\n");
 
     fprintf(FILE_OUTPUT,
-        "(", siteI+1, ",",                      // site
-        Format(fullSites[siteI][0],0,4), ",",   // subst
-        Format(fullSites[siteI][1],0,4), ",",   // rate
-        Format(fullSites[siteI][2],0,4),        // log-likelihood
-        "),\n");
+        "\n\t\t\t{\"site\":", siteI+1, ",",                      // site
+        "\"subst\":",Format(fullSites[siteI][0],0,4), ",",   // subst
+        "\"rate\":",Format(fullSites[siteI][1],0,4), ",",   // rate
+        "\"ll\":",Format(fullSites[siteI][2],0,4),        // log-likelihood
+        );
+    if (siteCount+1 < siteA) {
+            fprintf(FILE_OUTPUT, "},",);
+        } else {
+            fprintf(FILE_OUTPUT, "}",);
+        }
+
 	return 0;
 }
 

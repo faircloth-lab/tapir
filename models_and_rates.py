@@ -2,6 +2,8 @@
 
 import os
 import sys
+import imp
+import json
 import numpy
 import argparse
 import dendropy
@@ -35,8 +37,8 @@ def get_args():
 
 def parse_site_rates(rate_file, correction = 1):
     """parse the site rate file returned from hyphy to a vector of rates"""
-    rates = numpy.array([float(line.split(',')[2])
-        for line in open(rate_file, 'rU') if not line.startswith('site')])
+    data = json.load(open(rate_file, 'r'))
+    rates = numpy.array([line["rate"] for line in data["sites"]["rates"]])
     return numpy.reshape(rates/correction, (-1,1))
 
 def get_townsend_pi(time, rates):
@@ -77,6 +79,7 @@ def main():
     towrite = "\n".join([args.alignment, tree, output])
     #pdb.set_trace()
     stdout, stderr = hyphy.communicate(towrite)
+    pdb.set_trace()
     rates = parse_site_rates(output, correction = correction)
     # send column of times and vector of site rates to get_townsend_pi.
     # Because of structure, we can take advantage of numpy's

@@ -20,11 +20,11 @@ class TestTransform(unittest.TestCase):
         self.expected = numpy.load('test/test-data/test-parsed-rates.npy')
 
     def test_uncorrected_site_rates(self):
-        observed = parse_site_rates('test/test-data/test-uniform-draw-weights.csv')
+        observed = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json')
         assert observed.all() == self.expected.all()
 
     def test_rate_correction(self):
-        observed = parse_site_rates('test/test-data/test-uniform-draw-weights.csv', 10.)
+        observed = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json', 10.)
         corrected_expected = self.expected/10.
         assert observed.all() == corrected_expected.all()
 
@@ -33,7 +33,7 @@ class TestTransform(unittest.TestCase):
 
 class TestTownsendAndIntegration(unittest.TestCase):
     def setUp(self):
-        self.rates = parse_site_rates('test/test-data/test-uniform-draw-weights.csv')
+        self.rates = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json')
         self.time = numpy.array(range(0, 100 + 1, 1))
 
     def test_townsend_computation(self):
@@ -55,7 +55,7 @@ class TestTreeAdjustment(unittest.TestCase):
             dendropy.Tree.get_from_string('(danRer6:1.74,(oryLat2:1,(gasAcu1:0.93,(fr2:0.37,tetNig2:0.37):0.56):0.07):0.74)', schema='newick')
 
     def runTest(self):
-        depth, correction, self.observed = correct_branch_lengths('test/test-data/Euteleost.tree')
+        depth, correction, self.observed = correct_branch_lengths('test/test-data/Euteleost.tree', 'newick')
         observed_tree = dendropy.Tree.get_from_path(self.observed, 'newick')
         #pdb.set_trace()
         assert observed_tree.as_string('newick') == \
