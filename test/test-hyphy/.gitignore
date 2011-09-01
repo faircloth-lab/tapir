@@ -1,0 +1,5 @@
+*.phylip
+*.allrates
+*IDs_table*.txt
+*.newick
+*.hyphy_output
