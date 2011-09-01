@@ -57,12 +57,20 @@ my $tree_depth = $one_leaf_node->depth;
 $tree_depth = $tree_depth >= 0.001 ? sprintf '%.3f', $tree_depth
                                    : sprintf '%.2e', $tree_depth;
 
+print "Tree depth:\t\t", $tree_depth;
+print "\n";
 #Branches should be 10(1) or lower
 #Total of branches is 2n-3 where n is leaves.
 my $total_branches = 2 * (scalar keys %taxa_tree) - 3;
 my $mean_branch_length =  $tree_length/$total_branches;
+print "Mean branch length:\t", $mean_branch_length;
+print "\n";
 my $string_length = length int($mean_branch_length + .5);
+print "String length:\t\t", $string_length;
+print "\n";
 my $correction_factor = $string_length > 1 ? ('1' . '0' x $string_length) : 1;
+print "Correction factor:\t", $correction_factor;
+print "\n";
 
 #dividing each branch by the correction factor
 $tree_string =~ s{(?<=:)([\d\.]+)}{$1/$correction_factor}gexm;
@@ -71,7 +79,7 @@ $tree_string =~ s{(?<=:)([\d\.]+)}{$1/$correction_factor}gexm;
 #if alignment was uploaded
 $tree_string = rename_tree_leaves($tree_string, \%id_align_for);
 
-#writting tree in a file 
+#writting tree in a file
 #with correction factor and tree depth in the name
 my $OUTTREE_file_name = "Tree_$correction_factor" . "_$tree_depth.newick";
 open my $OUTTREE, '>', "$OUTTREE_file_name"
@@ -82,9 +90,9 @@ close $OUTTREE
 
 ####################################################
 # Renaming the tree leaves using the taxon id from
-# the file created in the server. 
+# the file created in the server.
 # To use the treestring ...
-# Maybe it is not he best way? 
+# Maybe it is not he best way?
 ####################################################
 
 sub rename_tree_leaves {
@@ -94,7 +102,7 @@ sub rename_tree_leaves {
     foreach my $taxon (keys %id_align_for) {
         $tree_string =~ s/$taxon\b/$id_align_for{$taxon}/xm;
     }
-    
+
     return $tree_string;
 } # ----------  end of subroutine rename_tree_leaves  ----------
 
@@ -107,17 +115,17 @@ sub get_taxonID_from_file {
 
     open  my $INFILE, '<', $infile_name
         or croak  "$0: failed to open  input file '$infile_name' : $!\n";
-     
+
     while (<$INFILE>) {
         chomp;
         my ($taxon_name, $taxon_ID) = split /\Q$taxa_seperator/xm, $_;
         $id_align_for{$taxon_name} = $taxon_ID;
     }
-    
+
     close  $INFILE
         or carp "$0: failed to close input file '$infile_name' : $!\n";
 
-    
+
     return %id_align_for;
 }    # ----------  end of subroutine  ----------
 
@@ -131,14 +139,14 @@ sub create_taxonID_file {
 
     open my $IDTABLE, '>', "IDs_table_$sid.txt"
         or croak "$0 : failed to open  output file 'IDs_table_$sid.txt' : $!\n";
-   
+
     foreach my $x (0..$#taxa) {
         my $taxon = $taxa[$x];
         my $new_ID =  'X_' . ($x+1) . '_X';
         $taxonID_for{$taxon} = $new_ID;
         print {$IDTABLE} $taxon, $taxa_seperator, $new_ID, "\n";
     }
-    
+
     close $IDTABLE
         or carp "$0 : failed to close output file 'IDs_table_$sid.txt' : $!\n";
 
@@ -158,7 +166,7 @@ sub format_checking_for_Alignment {
     if ($align_format eq 'unknown') {
         return 0, 'Unknown format. Only NEXUS, PHYLIP and FASTA accepted.';
     }
-    
+
     my $return_msg = "Alignment with format [$align_format] uploaded.";
 
     #If format nexus and morphology characters
@@ -178,8 +186,8 @@ sub format_checking_for_Alignment {
         alarm 0; #Removing alarm if object is created without problem
         @seq_objects = $align_object->each_seq();
        };
-    
-    #Getting error message from Bioperl or creating one 
+
+    #Getting error message from Bioperl or creating one
     #Specially when bioperl doesnt create object neither error
     #Returm errpr amd msg
     if ($EVAL_ERROR) {
@@ -193,20 +201,20 @@ sub format_checking_for_Alignment {
         carp "ERROR FROM BIOPERL:: $error_from_bioperl";
         return 0, $error_from_bioperl;
     }
-    
+
     #Create a file with the an ID table. This table will be used
     #to rename the sequences for our own names/ids (numbers).
     #first getting sequences id
     my $renamed_align_object = Bio::SimpleAlign->new; #used to create the new alignment
     open my $IDTABLE, '>', "IDs_table_$sid.txt"
         or croak "$0 : failed to open  output file 'IDs_table_$sid.txt' : $!\n";
-   
+
     my %taxa_from_seq; #used to test if seq id is duplicated
     foreach my $x (0..$#seq_objects) {
-        
+
         my $taxon_name = $seq_objects[$x]->id();
         my $new_seq_id =  'X_' . ($x+1) . '_X';
-        
+
         print {$IDTABLE} $taxon_name, $taxa_seperator, $new_seq_id, "\n";
 
         #test for duplicated seq ids
@@ -215,11 +223,11 @@ sub format_checking_for_Alignment {
         }
         $taxa_from_seq{$taxon_name}++;
 
-        #Setting up the new sequence ID 
+        #Setting up the new sequence ID
         $seq_objects[$x]->display_id($new_seq_id);
         $renamed_align_object->add_seq($seq_objects[$x]);
     }
- 
+
     close $IDTABLE
         or carp "$0 : failed to close output file 'IDs_table_$sid.txt' : $!\n";
 
@@ -230,7 +238,7 @@ sub format_checking_for_Alignment {
         create_output_alignment($renamed_align_object, 'phylip');
     }
     elsif ($align_format eq 'nexus') {
-        
+
         my ($are_partitions, @error_found) = Nexus_partitioning::get_partitions($filename, $renamed_align_object, 'phylip');
 
         if ($error_found[0]) {
@@ -245,7 +253,7 @@ sub format_checking_for_Alignment {
             $return_msg .= " Partitions named [$are_partitions] has been created.";
         }
 
-        
+
     }
 
     return 1, $return_msg;
@@ -256,7 +264,7 @@ sub format_checking_for_Alignment {
 ####################################################
 sub guess_align_format {
     my ($infile_name) = @_;
-    
+
     open  my $INFILE, '<', $infile_name
         or croak  "$0 : failed to open  input file '$infile_name' : $!\n";
     my @file_content = <$INFILE>;
@@ -264,7 +272,7 @@ sub guess_align_format {
         or carp "$0 : failed to close input file '$infile_name' : $!\n";
 
     my $first_noempty_line = first {$_ =~ /\S/xm} @file_content;
-    #We only get defined values for the next two variables if file equal 
+    #We only get defined values for the next two variables if file equal
     #nexus format
     my $datatype_line = first {$_ =~ /datatype/ixm} @file_content;
     my $datatype = 'unidentified';
