@@ -4,7 +4,7 @@
 */
 /*--------------------------------------------------------------------*/
 
-DataSet myData = ReadDataFile ("../chr1_918.nex");
+DataSet myData = ReadDataFile ("Alignment.phylip");
 
 DataSetFilter myFilter = CreateFilter (myData,1);
 
@@ -13,8 +13,7 @@ ACCEPT_ROOTED_TREES = 1;
  
 /* Reading tree file in newick format, only one line */
 /* Is this the only way? */ 
-// fscanf ("#TREE#","String", Treestr);
-Treestr = "(danRer6:174.0,(oryLat2:100.0,(gasAcu1:93.0,(fr2:37.0,tetNig2:37.0):56.0):7.0):74.0)";
+fscanf ("Tree_100_174.000.newick","String", Treestr);
 
 UseModel(USE_NO_MODEL);
 Tree chronogram = Treestr;
@@ -23,18 +22,18 @@ Tree chronogram = Treestr;
 /* HarvestFrequencies (Freqs, myFilter, 1, 1, 1); */
 
              /* A     C     G      T*/
-Freqs = {{0.14}{0.19}{0.33}{0.34}};
+Freqs = {{0.25}{0.25}{0.25}{0.25}};
 
 
 /* Model values */
 /* JC all values equal 1 with equal base freqs*/
             
-global          AC := 0.96;
-global          AT := 0.58;
+global          AC := 1;
+global          AT := 1;
 global          AG := 1;
-global	        CG := 0.36;
-global          CT := 1.87;
-global          GT := 0.51;
+global	        CG := 1;
+global          CT := 1;
+global          GT := 1;
 
                 /* A        C        G          T */                           
 GTRRateMatrix = {{*,       AC*t,     AG*t,     AT*t}
@@ -49,7 +48,7 @@ global siteRate 	= 1;
 Tree   siteTree 	= Treestr;
 
 chronoBranches = BranchLength(chronogram,-1);
-chronoNames	   = BranchName (chronogram,-1);
+chronoNames = BranchName(chronogram,-1);
 chronoLength   = 0;
 	
 for (i=0; i< Columns(chronoBranches); i=i+1) 	{
