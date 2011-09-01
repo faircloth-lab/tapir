@@ -4,6 +4,7 @@ import os
 import sys
 import numpy
 import argparse
+import dendropy
 from scipy import vectorize
 from subprocess import Popen, PIPE
 from scipy.integrate import quad
@@ -32,7 +33,7 @@ def get_args():
 
 def parse_site_rates(rate_file):
     """parse the site rate file returned from hyphy to a vector of rates"""
-    rates = numpy.array([float(line.split(',')[2]) 
+    rates = numpy.array([float(line.split(',')[2])
         for line in open(rate_file, 'rU') if not line.startswith('site')])
     return numpy.reshape(rates, (-1,1))
 
@@ -42,14 +43,35 @@ def get_townsend_pi(time, rates):
 def integrate(start, stop, rate):
     return quad(get_townsend_pi, start, stop, args=(rate))
 
+def correct_branch_lengths(tree_file, d = ""):
+    """The Townsend phydesign code corrects branch lengths based on an algorithm
+    implement that in python"""
+    tree = dendropy.Tree.get_from_path(tree_file, 'newick')
+    depth = tree.seed_node.distance_from_tip()
+    mean_branch_length = tree.length()/(2 * len(tree.leaf_nodes()) - 3)
+    string_len = len(str(int(mean_branch_length + 0.5)))
+    if string_len > 1:
+        correction_factor = 10 ** string_len
+    else:
+        correction_factor = 1
+    for edge in tree.preorder_edge_iter():
+        if edge.length:
+            edge.length /= correction_factor
+    pth = os.path.join(d, 'Tree_{}_{}.newick'.format(correction_factor, depth))
+    tree.write_to_path(pth, 'newick')
+    return depth, correction_factor, pth
+
+
 def main():
     """main loop"""
     args = get_args()
+    # correct branch lengths
+    depth, correction, tree = correct_branch_lengths(args.tree)
     # generate a vector of times given start and stops
     time = numpy.array(range(args.start, args.end + 1, args.step))
     hyphy = Popen([args.hyphy, 'templates/models_and_rates.bf'], stdin=PIPE, stdout=PIPE)
     output = os.path.join(args.output, os.path.basename(args.alignment) + '.rates')
-    towrite = "\n".join([args.alignment, args.tree, output])
+    towrite = "\n".join([args.alignment, tree, output])
     stdout, stderr = hyphy.communicate(towrite)
     rates = parse_site_rates(output)
     # send column of times and vector of site rates to get_townsend_pi.
@@ -62,7 +84,7 @@ def main():
     # TODO:  figure out how we want to handle diff. time intervals here
     integral, error = vec_integrate(30, 50, rates)
     pdb.set_trace()
-    
+
 
 if __name__ == '__main__':
     main()
