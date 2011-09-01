@@ -8,14 +8,14 @@
 
 * parse the input tree and alignment (test-data/chr1_918.nex and test-data/Euteleost.tree) and modify tree using phydesign code
 
-    perl phydesign.pl
+        perl phydesign.pl
 
 * run hyphy against tree (here use hyphy1 since it yields results similar to phydesign)
 
-    hyphy1 SiteRates_jukescantor_template.bf > test.jukescantor.hyphy_output
+        hyphy1 SiteRates_jukescantor_template.bf > test.jukescantor.hyphy_output
 
 * convert those sites rates in phydesign fashion
 
-    perl correction.pl
+        perl correction.pl
 
 Note now that the differences are not so large and generally on the order of the results returned from phydesign.  The difference is largely due to the binary of hyphy that we use.
