@@ -31,11 +31,11 @@ def get_args():
     #parser.add_argument('--test', action='store_true')
     return parser.parse_args()
 
-def parse_site_rates(rate_file):
+def parse_site_rates(rate_file, correction = 1):
     """parse the site rate file returned from hyphy to a vector of rates"""
     rates = numpy.array([float(line.split(',')[2])
         for line in open(rate_file, 'rU') if not line.startswith('site')])
-    return numpy.reshape(rates, (-1,1))
+    return numpy.reshape(rates/correction, (-1,1))
 
 def get_townsend_pi(time, rates):
     return 16 * (rates**2) * time * numpy.exp(-(4 * rates * time))
@@ -73,7 +73,7 @@ def main():
     output = os.path.join(args.output, os.path.basename(args.alignment) + '.rates')
     towrite = "\n".join([args.alignment, tree, output])
     stdout, stderr = hyphy.communicate(towrite)
-    rates = parse_site_rates(output)
+    rates = parse_site_rates(output, correction = correction)
     # send column of times and vector of site rates to get_townsend_pi.
     # Because of structure, we can take advantage of numpy's
     # elementwise speedup

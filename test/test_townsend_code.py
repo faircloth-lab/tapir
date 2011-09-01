@@ -17,10 +17,16 @@ import pdb
 
 class TestTransform(unittest.TestCase):
     def setUp(self):
-        self.rates = parse_site_rates('test/test-data/test-uniform-draw-weights.csv')
+        self.expected = numpy.load('test/test-data/test-parsed-rates.npy')
 
-    def runTest(self):
-        assert self.rates.all() == numpy.load('test/test-data/test-parsed-rates.npy').all()
+    def test_uncorrected_site_rates(self):
+        observed = parse_site_rates('test/test-data/test-uniform-draw-weights.csv')
+        assert observed.all() == self.expected.all()
+
+    def test_rate_correction(self):
+        observed = parse_site_rates('test/test-data/test-uniform-draw-weights.csv', 10.)
+        corrected_expected = self.expected/10.
+        assert observed.all() == corrected_expected.all()
 
     def tearDown(self):
         pass
