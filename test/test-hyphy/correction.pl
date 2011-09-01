@@ -42,35 +42,6 @@ foreach my $hyphy_outfile (@hyphy_outfiles) {
 close $ALLRATES
     or carp "$0 : failed to close output file '$allrates_file' : $!\n";
 
-#Creating table with results              
-my $table = build_HTML_table(%rates_summary_for);
-
-sub build_HTML_table {
-    my ( %rates_summary_for )= @_;
-    my $table;
-    my $count = 1;
-
-    foreach my $partition (keys %rates_summary_for) {
-        $table .=  <<"END_TABLE";
- 
-                     <tr><td class="col1">$count</td>
-                     <td class="col2">$partition</td>
-                     <td class="col3">
-                     <a href="$rates_summary_for{$partition}[0]">hyphy</a></td>
-                     <td class="col4">$rates_summary_for{$partition}[1]</td>
-                     <td class="col5">$rates_summary_for{$partition}[2]</td>
-                     <td class="col6">$rates_summary_for{$partition}[3]</td>
-                     <td class="col7"><input class="part_check" name="_getPI_$partition" type="checkbox" /></td>
-                     <td NOWRAP><input class="colorPicker" name="_c_$partition" size="7" value="" type="text" /></td>
-
-END_TABLE
-
-        $count++;
-    }
-
-    return $table;
-}# ----------  end of subroutine build_HTML_table  ----------
-
 
 #########################################
 # Reading the hyphy file and getting 

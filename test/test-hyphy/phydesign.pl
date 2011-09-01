@@ -17,10 +17,10 @@ my $one_leaf_node;
 my $taxa_seperator = '*=*';
 my $sid="bcf";
 
-my $y = format_checking_for_Alignment("chr1_918.nex");
+my $y = format_checking_for_Alignment("../test-data/chr1_918.nex");
 
 eval {
-    $tree_object = new Bio::TreeIO(-file => "test.tre",
+    $tree_object = new Bio::TreeIO(-file => "../test-data/Euteleost.tree",
                                    -format => 'newick',)->next_tree();
     foreach my $leaf ($tree_object->get_leaf_nodes) {
         $taxa_tree{$leaf->id}++; #get leaf name
