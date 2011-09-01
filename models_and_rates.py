@@ -24,9 +24,11 @@ def get_args():
     parser.add_argument('end', help="The end time of interest (MYA)", type=int)
     parser.add_argument('--step', dest='step', help="The step distances between"
         +"`start` and `end`", default=1, type=int)
+    parser.add_argument('--tree-format', dest='tree_format', help="The format of the tree",
+        choices=['nexus','newick'], default='newick')
     parser.add_argument('--output', dest='output', help="The path to the output"
         +" directory", default=os.getcwd(), action=FullPaths)
-    parser.add_argument('--hyphy', dest='hyphy', default="HYPHY", help="The "
+    parser.add_argument('--hyphy', dest='hyphy', default="hyphy1", help="The "
         +"path to hyphy (if not in $PATH)")
     #parser.add_argument('--test', action='store_true')
     return parser.parse_args()
@@ -43,10 +45,10 @@ def get_townsend_pi(time, rates):
 def integrate(start, stop, rate):
     return quad(get_townsend_pi, start, stop, args=(rate))
 
-def correct_branch_lengths(tree_file, d = ""):
+def correct_branch_lengths(tree_file, format, d = ""):
     """The Townsend phydesign code corrects branch lengths based on an algorithm
     implement that in python"""
-    tree = dendropy.Tree.get_from_path(tree_file, 'newick')
+    tree = dendropy.Tree.get_from_path(tree_file, format)
     depth = tree.seed_node.distance_from_tip()
     mean_branch_length = tree.length()/(2 * len(tree.leaf_nodes()) - 3)
     string_len = len(str(int(mean_branch_length + 0.5)))
@@ -66,18 +68,21 @@ def main():
     """main loop"""
     args = get_args()
     # correct branch lengths
-    depth, correction, tree = correct_branch_lengths(args.tree)
+    depth, correction, tree = correct_branch_lengths(args.tree, args.tree_format, d=args.output)
     # generate a vector of times given start and stops
     time = numpy.array(range(args.start, args.end + 1, args.step))
-    hyphy = Popen([args.hyphy, 'templates/models_and_rates.bf'], stdin=PIPE, stdout=PIPE)
+    hyphy = Popen([args.hyphy, 'templates/models_and_rates.bf'], \
+        stdin=PIPE, stdout=PIPE)
     output = os.path.join(args.output, os.path.basename(args.alignment) + '.rates')
     towrite = "\n".join([args.alignment, tree, output])
+    #pdb.set_trace()
     stdout, stderr = hyphy.communicate(towrite)
     rates = parse_site_rates(output, correction = correction)
     # send column of times and vector of site rates to get_townsend_pi.
     # Because of structure, we can take advantage of numpy's
     # elementwise speedup
-    phylogenetic_informativeness = get_townsend_pi(time, numpy.array([rates,]*len(time)))
+    phylogenetic_informativeness = \
+        get_townsend_pi(time, numpy.array([rates,]*len(time)))
     # vectorize the integral function to take our rates array as input
     vec_integrate = vectorize(integrate)
     # scipy.integrate returns tuple of (integral, upper-error-bound)
