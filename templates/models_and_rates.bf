@@ -8,6 +8,10 @@ fscanf(stdin, "String", FILE_TREE);
 //fprintf(stdout, "Output file: ");
 fscanf(stdin, "String", FILE_OUTPUT);
 
+fscanf(stdin, "String", BASE_FREQS);
+fscanf(stdin, "String", AVG_SUBS);
+
+
 // FILE_NUCLEOTIDES = "chr1_918.nex";
 // FILE_TREE        = "Euteleost.tree";
 // FILE_OUTPUT      = "model.out";
@@ -892,8 +896,8 @@ if (modelType) {
 
 
 /*--------------------------------------------------------------------*/
-/* 
-	MAIN BODY 
+/*
+	MAIN BODY
 */
 /*--------------------------------------------------------------------*/
 
@@ -905,11 +909,11 @@ DataSetFilter myFilter = CreateFilter (myData,1);
 
 /* Force to accept rooted trees */
 ACCEPT_ROOTED_TREES = 1;
- 
+
 // fscanf(stdin, "String", FILE_TREE);
 //FILE_TREE = "Euteleost.tree";
 
-    fscanf (FILE_TREE, REWIND, "Raw", treeString);
+    // fscanf (FILE_TREE, REWIND, "Raw", treeString);
 
     treeStringPattern = treeString$"^#NEXUS";
     if (treeStringPattern[0] >= 0) {
@@ -985,7 +989,7 @@ global          CT := 1;
 global          GT := 1;
 */
 
-                /* A        C        G          T */                           
+                /* A        C        G          T */
 GTRRateMatrix = {{*,       AC*t,     AG*t,     AT*t}
                  {AC*t,    *,        CG*t,     CT*t}
                  {AG*t,    CG*t,     *,        GT*t}
@@ -1000,43 +1004,48 @@ Tree   siteTree 	= Treestr;
 chronoBranches = BranchLength(chronogram,-1);
 chronoNames	   = BranchName (chronogram,-1);
 chronoLength   = 0;
-	
+
 for (i=0; i< Columns(chronoBranches); i=i+1) 	{
 	   chronoLength = chronoLength + chronoBranches[i];
 	   ExecuteCommands ("siteTree." +  chronoNames[i] + ".t:=" + chronoBranches[i] + "*siteRate;");
 }
 
 fprintf (stdout, "\nChronogram length (time units): ", chronoLength, "\n");
-fprintf (stdout, "\nBase freqs: ", Freqs, "\n");
-fprintf (stdout, "\nSubstitution matrix values:\n",
-                              "\t\tAC: ", AC, "\n",
-                              "\t\tAG: ", AG, "\n",
-                              "\t\tAT: ", AT, "\n",
-                              "\t\tCG: ", CG, "\n",
-                              "\t\tCT: ", CT, "\n",
-                              "\t\tGT: ", GT, "\n\n\n",);
+//fprintf (BASE_FREQS, "\nBase freqs: ", Freqs, "\n");
+//fprintf (FILE_OUTPUT,CLEAR_FILE,"base_freqs = [[",Freqs[0],"],[",Freqs[1],"],[",Freqs[2],"],[",Freqs[3],"]]",);
+fprintf (FILE_OUTPUT,CLEAR_FILE,"base_freqs = {'A':",Freqs[0],",'C':",Freqs[1],",'G':",Freqs[2],",'T':",Freqs[3],"}",);
+//fprintf (FILE_OUTPUT, "\nBase freqs: ", Freqs, "\n");
+fprintf (FILE_OUTPUT, "\nsubs_matrix = {",
+                              "'AC':", AC, ",",
+                              "'AG':", AG, ",",
+                              "'AT':", AT, ",",
+                              "'CG':", CG, ",",
+                              "'CT':", CT, ",",
+                              "'GT':", GT, "}","\n");
 
 doneSites    = {myFilter.unique_sites,3}; /* Getting the different site patterns */
 fullSites    = {myFilter.sites,3};
 GetDataInfo    (dupInfo, myFilter); /*DupInfo is a matrix with the different categories/patterns of sites, duplicated sites info*/
 alreadyDone  = {};
 
-fprintf (FILE_OUTPUT, CLEAR_FILE, "site,subst,rate,logL", "\n"); // csv column headers
+//fprintf (FILE_OUTPUT, CLEAR_FILE, "site,subst,rate,logL", "\n"); // csv column headers
+
+fprintf (FILE_OUTPUT, "site_rates = (",); // csv column headers
 
 for (siteCount = 0; siteCount < myFilter.sites; siteCount = siteCount+1) {
 			siteMap = dupInfo[siteCount];
 			if (alreadyDone[siteMap] == 0) {
 				filterString = "" + siteCount;
 				DataSetFilter siteFilter = CreateFilter (myData,1,filterString);
-				
+
                 /* to avoid that 'siteRate' variable was stuck
                 at the value estimated from the previous site */
                 siteRate = 1;
-                
+
                 LikelihoodFunction siteLikelihood = (siteFilter, siteTree);
                 Optimize (site_res, siteLikelihood);
 				alreadyDone[siteMap]  = 1;
-        
+
                 siteBranches = BranchLength (siteTree,-1);
                 siteLength = 0;
 	            for (i=0; i< Columns(siteBranches); i=i+1) 	{
@@ -1048,12 +1057,12 @@ for (siteCount = 0; siteCount < myFilter.sites; siteCount = siteCount+1) {
 				doneSites[siteMap][0] = siteLength;
                 doneSites[siteMap][1] = siteRate;
 				doneSites[siteMap][2] = site_res[1][0];/*Loglikelihood*/
-                
+
 			}
-			ReportSite (siteCount, siteMap);				
-}	
+			ReportSite (siteCount, siteMap);
+}
 
-
+fprintf (FILE_OUTPUT,")\n",); // csv column headers
 fprintf (stdout, "\nOutput written to ", FILE_OUTPUT, "\n");
 fprintf (stdout, "THE END\n");
 
@@ -1062,7 +1071,7 @@ fprintf (stdout, "THE END\n");
 
 function ReportSite (siteI, siteM)
 {
-	fullSites[siteI][0] = doneSites[siteM][0]; 
+	fullSites[siteI][0] = doneSites[siteM][0];
 	fullSites[siteI][1] = doneSites[siteM][1];
 	fullSites[siteI][2] = doneSites[siteM][2];
 
@@ -1070,14 +1079,14 @@ function ReportSite (siteI, siteM)
 	fprintf (stdout, " Site ", Format(siteI+1,4,0),
                      " Total subst = ", Format(fullSites[siteI][0],7,4), " subst,",
 					 " Rate = ", Format(fullSites[siteI][1],7,4), " subst/time,",
-					 " Log(L) ", Format(fullSites[siteI][2],7,4),"\n");		
-	
+					 " Log(L) ", Format(fullSites[siteI][2],7,4),"\n");
+
     fprintf(FILE_OUTPUT,
-        siteI+1, ",",             // site
-        Format(fullSites[siteI][0],0,4), ",", // subst
-        Format(fullSites[siteI][1],0,4), ",", // rate
-        Format(fullSites[siteI][2],0,4),// log-likelihood
-        "\n");
+        "(", siteI+1, ",",                      // site
+        Format(fullSites[siteI][0],0,4), ",",   // subst
+        Format(fullSites[siteI][1],0,4), ",",   // rate
+        Format(fullSites[siteI][2],0,4),        // log-likelihood
+        "),\n");
 	return 0;
 }
 
