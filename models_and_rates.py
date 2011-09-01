@@ -77,7 +77,7 @@ def main():
     # send column of times and vector of site rates to get_townsend_pi.
     # Because of structure, we can take advantage of numpy's
     # elementwise speedup
-    townsend = get_townsend_pi(time, numpy.array([rates,]*len(time)))
+    phylogenetic_informativeness = get_townsend_pi(time, numpy.array([rates,]*len(time)))
     # vectorize the integral function to take our rates array as input
     vec_integrate = vectorize(integrate)
     # scipy.integrate returns tuple of (integral, upper-error-bound)
