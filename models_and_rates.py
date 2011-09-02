@@ -7,17 +7,20 @@ import json
 import numpy
 import argparse
 import dendropy
+from scipy import integrate
 from scipy import vectorize
 from subprocess import Popen, PIPE
-from scipy import integrate
+
 
 import pdb
 
 class FullPaths(argparse.Action):
+    """Expand user- and relative-paths"""
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
 
 def get_epochs_from_list(string):
+    """Convert epochs/spans entered as string to nested list"""
     try:
         epochs = [[int(j) for j in i.split('-')] for i in string.split(',')]
     except:
@@ -25,15 +28,15 @@ def get_epochs_from_list(string):
     return epochs
 
 def get_times_from_list(string):
+    """Convert times input as string to a list"""
     try:
         times = [int(i) for i in string.split(',')]
     except:
         raise argparse.ArgumentTypeError("Cannot convert time to list of integers")
     return times
 
-
 def get_args():
-    """get CLI arguments and options"""
+    """Get CLI arguments and options"""
     parser = argparse.ArgumentParser(description='Select model and generate site rates')
     parser.add_argument('alignment', help="The input alignment", action=FullPaths)
     parser.add_argument('tree', help="The input tree", action=FullPaths)
@@ -49,25 +52,26 @@ def get_args():
     return parser.parse_args()
 
 def parse_site_rates(rate_file, correction = 1):
-    """parse the site rate file returned from hyphy to a vector of rates"""
+    """Parse the site rate file returned from hyphy to a vector of rates"""
     data = json.load(open(rate_file, 'r'))
     rates = numpy.array([line["rate"] for line in data["sites"]["rates"]])
-    #return numpy.reshape(rates/correction, (-1,1))
     return rates/correction
 
 def get_townsend_pi(time, rates):
+    """Townsend et al. Equation10 """
     return 16 * (rates**2) * time * numpy.exp(-(4 * rates * time))
 
 def get_integral_over_times(start, stop, rate):
+    """Integrate over start and stop times"""
     return integrate.quad(get_townsend_pi, start, stop, args=(rate))
 
 def get_time(start, stop, step = 1):
+    """Given start and stop times, return a column of times over which we're working"""
     # reshape array into columns from row
     return numpy.reshape(numpy.array(range(start, stop, step)), (-1,1))
 
 def correct_branch_lengths(tree_file, format, d = ""):
-    """The Townsend phydesign code corrects branch lengths based on an algorithm
-    implement that in python"""
+    """Scale branch lengths to values shorter than 100"""
     tree = dendropy.Tree.get_from_path(tree_file, format)
     depth = tree.seed_node.distance_from_tip()
     mean_branch_length = tree.length()/(2 * len(tree.leaf_nodes()) - 3)
@@ -84,10 +88,12 @@ def correct_branch_lengths(tree_file, format, d = ""):
     return depth, correction_factor, pth
 
 def get_net_pi_for_periods(pi, times):
+    """Sum across the PI values for the requested times"""
     sums = numpy.sum(pi, axis=1)[times]
     return dict(zip(times, sums))
 
 def get_net_integral_for_epochs(rates, epochs):
+    """Given a set of epochs, integrate rates over those start and stop times"""
     # vectorize the integral function to take our rates array as input
     vec_integrate = vectorize(get_integral_over_times)
     # scipy.integrate returns tuple of (integral, upper-error-bound)
@@ -102,7 +108,7 @@ def get_net_integral_for_epochs(rates, epochs):
     return epochs_results
 
 def main():
-    """main loop"""
+    """Main loop"""
     args = get_args()
     # correct branch lengths
     tree_depth, correction, tree = correct_branch_lengths(args.tree, args.tree_format, d = args.output)
@@ -118,8 +124,7 @@ def main():
     # send column of times and vector of site rates to get_townsend_pi.
     # Because of structure, we can take advantage of numpy's
     # elementwise speedup
-    phylogenetic_informativeness = \
-        get_townsend_pi(time, rates)
+    phylogenetic_informativeness = get_townsend_pi(time, rates)
     if args.times:
         print get_net_pi_for_periods(phylogenetic_informativeness, args.times)
     if args.epochs:
