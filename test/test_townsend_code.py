@@ -38,7 +38,7 @@ class TestTownsendAndIntegrationAgainstR(unittest.TestCase):
 
     def test_townsend_computation_against_R(self):
         townsend = get_townsend_pi(self.time, self.rates)
-        assert townsend.all() == numpy.load('test/test-data/test-smaller.npy').all()
+        assert townsend.all() == numpy.load('test/test-data/test-R-townsend-output.npy').all()
 
     def test_integration_against_R(self):
         vec_integrate = vectorize(integrate)
