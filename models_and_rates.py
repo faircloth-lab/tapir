@@ -9,7 +9,7 @@ import argparse
 import dendropy
 from scipy import vectorize
 from subprocess import Popen, PIPE
-from scipy.integrate import quad
+from scipy import integrate
 
 import pdb
 
@@ -17,15 +17,28 @@ class FullPaths(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
 
+def get_epochs_from_list(string):
+    try:
+        epochs = [[int(j) for j in i.split('-')] for i in string.split(',')]
+    except:
+        raise argparse.ArgumentTypeError("Cannot convert spans to list of integers")
+    return epochs
+
+def get_times_from_list(string):
+    try:
+        times = [int(i) for i in string.split(',')]
+    except:
+        raise argparse.ArgumentTypeError("Cannot convert time to list of integers")
+    return times
+
+
 def get_args():
     """get CLI arguments and options"""
     parser = argparse.ArgumentParser(description='Select model and generate site rates')
     parser.add_argument('alignment', help="The input alignment", action=FullPaths)
     parser.add_argument('tree', help="The input tree", action=FullPaths)
-    parser.add_argument('start', help="The start time of interest (MYA)", type=int)
-    parser.add_argument('end', help="The end time of interest (MYA)", type=int)
-    parser.add_argument('--step', dest='step', help="The step distances between"
-        +"`start` and `end`", default=1, type=int)
+    parser.add_argument('--times', help="The start time of interest (MYA)", type=get_times_from_list)
+    parser.add_argument('--epochs', help="The start time of interest (MYA)", type=get_epochs_from_list)
     parser.add_argument('--tree-format', dest='tree_format', help="The format of the tree",
         choices=['nexus','newick'], default='newick')
     parser.add_argument('--output', dest='output', help="The path to the output"
@@ -39,13 +52,18 @@ def parse_site_rates(rate_file, correction = 1):
     """parse the site rate file returned from hyphy to a vector of rates"""
     data = json.load(open(rate_file, 'r'))
     rates = numpy.array([line["rate"] for line in data["sites"]["rates"]])
-    return numpy.reshape(rates/correction, (-1,1))
+    #return numpy.reshape(rates/correction, (-1,1))
+    return rates/correction
 
 def get_townsend_pi(time, rates):
     return 16 * (rates**2) * time * numpy.exp(-(4 * rates * time))
 
-def integrate(start, stop, rate):
-    return quad(get_townsend_pi, start, stop, args=(rate))
+def get_integral_over_times(start, stop, rate):
+    return integrate.quad(get_townsend_pi, start, stop, args=(rate))
+
+def get_time(start, stop, step = 1):
+    # reshape array into columns from row
+    return numpy.reshape(numpy.array(range(start, stop, step)), (-1,1))
 
 def correct_branch_lengths(tree_file, format, d = ""):
     """The Townsend phydesign code corrects branch lengths based on an algorithm
@@ -65,14 +83,31 @@ def correct_branch_lengths(tree_file, format, d = ""):
     tree.write_to_path(pth, 'newick')
     return depth, correction_factor, pth
 
+def get_net_pi_for_periods(pi, times):
+    sums = numpy.sum(pi, axis=1)[times]
+    return dict(zip(times, sums))
+
+def get_net_integral_for_epochs(rates, epochs):
+    # vectorize the integral function to take our rates array as input
+    vec_integrate = vectorize(get_integral_over_times)
+    # scipy.integrate returns tuple of (integral, upper-error-bound)
+    # TODO:  figure out how we want to handle diff. time intervals here
+    epochs_results = {}
+    for span in epochs:
+        name = "{}-{}".format(span[0],span[1])
+        assert span[0] < span[1], \
+            "Start time [{}] is sooner than end time [{}]".format(span[0],span[1])
+        integral, error = vec_integrate(span[0],span[1], rates)
+        epochs_results[name] = {'sum(integral)':sum(integral), 'sum(error)':sum(error)}
+    return epochs_results
 
 def main():
     """main loop"""
     args = get_args()
     # correct branch lengths
-    depth, correction, tree = correct_branch_lengths(args.tree, args.tree_format, d=args.output)
+    tree_depth, correction, tree = correct_branch_lengths(args.tree, args.tree_format, d = args.output)
     # generate a vector of times given start and stops
-    time = numpy.array(range(args.start, args.end + 1, args.step))
+    time = get_time(0, int(tree_depth))
     hyphy = Popen([args.hyphy, 'templates/models_and_rates.bf'], \
         stdin=PIPE, stdout=PIPE)
     output = os.path.join(args.output, os.path.basename(args.alignment) + '.rates')
@@ -85,13 +120,10 @@ def main():
     # elementwise speedup
     phylogenetic_informativeness = \
         get_townsend_pi(time, rates)
-    # vectorize the integral function to take our rates array as input
-    vec_integrate = vectorize(integrate)
-    # scipy.integrate returns tuple of (integral, upper-error-bound)
-    # TODO:  figure out how we want to handle diff. time intervals here
-    integral, error = vec_integrate(0.5, 0.6, rates)
-    pdb.set_trace()
-
+    if args.times:
+        print get_net_pi_for_periods(phylogenetic_informativeness, args.times)
+    if args.epochs:
+        print get_net_integral_for_epochs(rates, args.epochs)
 
 
 if __name__ == '__main__':
