@@ -79,19 +79,19 @@ def main():
     towrite = "\n".join([args.alignment, tree, output])
     #pdb.set_trace()
     stdout, stderr = hyphy.communicate(towrite)
-    pdb.set_trace()
     rates = parse_site_rates(output, correction = correction)
     # send column of times and vector of site rates to get_townsend_pi.
     # Because of structure, we can take advantage of numpy's
     # elementwise speedup
     phylogenetic_informativeness = \
-        get_townsend_pi(time, numpy.array([rates,]*len(time)))
+        get_townsend_pi(time, rates)
     # vectorize the integral function to take our rates array as input
     vec_integrate = vectorize(integrate)
     # scipy.integrate returns tuple of (integral, upper-error-bound)
     # TODO:  figure out how we want to handle diff. time intervals here
-    integral, error = vec_integrate(30, 50, rates)
+    integral, error = vec_integrate(0.5, 0.6, rates)
     pdb.set_trace()
+
 
 
 if __name__ == '__main__':

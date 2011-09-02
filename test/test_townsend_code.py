@@ -31,16 +31,16 @@ class TestTransform(unittest.TestCase):
     def tearDown(self):
         pass
 
-class TestTownsendAndIntegration(unittest.TestCase):
+class TestTownsendAndIntegrationAgainstR(unittest.TestCase):
     def setUp(self):
         self.rates = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json')
         self.time = numpy.array(range(0, 100 + 1, 1))
 
-    def test_townsend_computation(self):
-        townsend = get_townsend_pi(self.time, numpy.array([self.rates,]*len(self.time)))
-        assert townsend.all() == numpy.load('test/test-data/test-townsend.npy').all()
+    def test_townsend_computation_against_R(self):
+        townsend = get_townsend_pi(self.time, self.rates)
+        assert townsend.all() == numpy.load('test/test-data/test-smaller.npy').all()
 
-    def test_integration(self):
+    def test_integration_against_R(self):
         vec_integrate = vectorize(integrate)
         # scipy.integrate returns tuple of (integral, upper-error-bound)
         integral, error = vec_integrate(30, 50, self.rates)
