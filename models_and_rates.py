@@ -51,11 +51,16 @@ def get_args():
     #parser.add_argument('--test', action='store_true')
     return parser.parse_args()
 
-def parse_site_rates(rate_file, correction = 1):
+def parse_site_rates(rate_file, correction = 1, test = False):
     """Parse the site rate file returned from hyphy to a vector of rates"""
     data = json.load(open(rate_file, 'r'))
     rates = numpy.array([line["rate"] for line in data["sites"]["rates"]])
-    return rates/correction
+    corrected = rates/correction
+    if not test:
+        data["sites"]["corrected_rates"] = [{"site":k + 1,"rate":v} \
+                for k,v in enumerate(corrected)]
+        json.dump(data, open(rate_file,'w'), indent = 4)
+    return corrected
 
 def get_townsend_pi(time, rates):
     """Townsend et al. Equation10 """
@@ -126,9 +131,9 @@ def main():
     # elementwise speedup
     phylogenetic_informativeness = get_townsend_pi(time, rates)
     if args.times:
-        print get_net_pi_for_periods(phylogenetic_informativeness, args.times)
+        print "Times: ", get_net_pi_for_periods(phylogenetic_informativeness, args.times)
     if args.epochs:
-        print get_net_integral_for_epochs(rates, args.epochs)
+        print "Epochs: ", get_net_integral_for_epochs(rates, args.epochs)
 
 
 if __name__ == '__main__':
