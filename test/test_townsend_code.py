@@ -20,11 +20,11 @@ class TestTransform(unittest.TestCase):
         self.expected = numpy.load('test/test-data/test-parsed-rates.npy')
 
     def test_uncorrected_site_rates(self):
-        observed = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json')
+        observed = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json', test = True)
         assert observed.all() == self.expected.all()
 
     def test_rate_correction(self):
-        observed = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json', 10.)
+        observed = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json', 10., test = True)
         corrected_expected = self.expected/10.
         assert observed.all() == corrected_expected.all()
 
@@ -33,7 +33,7 @@ class TestTransform(unittest.TestCase):
 
 class TestTownsendAndIntegrationAgainstPhydesign(unittest.TestCase):
     def setUp(self):
-        self.rates = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json')
+        self.rates = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json', test = True)
         self.time = get_time(0, 174)
 
     def test_townsend_pi_computation_against_phydesign(self):
