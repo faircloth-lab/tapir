@@ -2,7 +2,6 @@
 
 import os
 import sys
-import imp
 import json
 import numpy
 import argparse
