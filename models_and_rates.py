@@ -48,6 +48,8 @@ def get_args():
         +" directory", default=os.getcwd(), action=FullPaths)
     parser.add_argument('--hyphy', dest='hyphy', default="hyphy1", help="The "
         +"path to hyphy (if not in $PATH)")
+    parser.add_argument('--threshold', default=3, help="Minimum number of taxa"
+        +" without a gap for a site to be considered informative")
     #parser.add_argument('--test', action='store_true')
     return parser.parse_args()
 
@@ -124,12 +126,15 @@ def get_informative_sites(alignment, threshold):
             results[idx] += 1 if str(cell) == "-" else 0
     return [results[x] < threshold for x in sorted(results)]
 
+def cull_uninformative_rates(rates, inform):
+    """Zeroes out rates which are uninformative"""
+    return rates * inform
+
 def main():
     """Main loop"""
     args = get_args()
     # correct branch lengths
     tree_depth, correction, tree = correct_branch_lengths(args.tree, args.tree_format, d = args.output)
-    pdb.set_trace()
     # generate a vector of times given start and stops
     time = get_time(0, int(tree_depth))
     hyphy = Popen([args.hyphy, 'templates/models_and_rates.bf'], \
@@ -139,6 +144,8 @@ def main():
     #pdb.set_trace()
     stdout, stderr = hyphy.communicate(towrite)
     rates = parse_site_rates(output, correction = correction)
+    good_sites = get_informative_sites(args.alignment, args.threshold)
+    rates = cull_uninformative_rates(rates, good_sites)
     # send column of times and vector of site rates to get_townsend_pi.
     # Because of structure, we can take advantage of numpy's
     # elementwise speedup
