@@ -6,6 +6,7 @@ import json
 import numpy
 import argparse
 import dendropy
+from collections import defaultdict
 from scipy import integrate
 from scipy import vectorize
 from subprocess import Popen, PIPE
@@ -111,11 +112,24 @@ def get_net_integral_for_epochs(rates, epochs):
         epochs_results[name] = {'sum(integral)':sum(integral), 'sum(error)':sum(error)}
     return epochs_results
 
+def get_informative_sites(alignment, threshold):
+    """Returns a list, where True indicates a site which was at or over the
+    threshold for informativeness.
+    """
+    taxa = dendropy.DnaCharacterMatrix.get_from_path(alignment, 'nexus')
+    results = defaultdict(int)
+    for cells in taxa.vectors():
+        assert len(cells) == taxa.vector_size # should all have equal lengths
+        for idx, cell in enumerate(cells):
+            results[idx] += 1 if str(cell) == "-" else 0
+    return [results[x] < threshold for x in sorted(results)]
+
 def main():
     """Main loop"""
     args = get_args()
     # correct branch lengths
     tree_depth, correction, tree = correct_branch_lengths(args.tree, args.tree_format, d = args.output)
+    pdb.set_trace()
     # generate a vector of times given start and stops
     time = get_time(0, int(tree_depth))
     hyphy = Popen([args.hyphy, 'templates/models_and_rates.bf'], \
