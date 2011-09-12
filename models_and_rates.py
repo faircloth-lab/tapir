@@ -123,8 +123,8 @@ def get_informative_sites(alignment, threshold):
     for cells in taxa.vectors():
         assert len(cells) == taxa.vector_size # should all have equal lengths
         for idx, cell in enumerate(cells):
-            results[idx] += 1 if str(cell) == "-" else 0
-    return [results[x] < threshold for x in sorted(results)]
+            results[idx] += 0 if str(cell) == "-" else 1
+    return [results[x] > threshold for x in sorted(results)]
 
 def cull_uninformative_rates(rates, inform):
     """Zeroes out rates which are uninformative"""
