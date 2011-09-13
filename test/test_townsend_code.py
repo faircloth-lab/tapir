@@ -83,5 +83,16 @@ class TestTreeAdjustment(unittest.TestCase):
     def tearDown(self):
         os.remove(self.observed)
 
+class TestInformativenessCutoff(unittest.TestCase):
+    def setUp(self):
+        self.alignment = 'test/test-data/informativeness_cutoff.nex'
+        self.threshold = 3
+        self.expected_rates = [False, False, False, True]
+
+    def test_informativeness_cutoff(self):
+        rates = get_informative_sites(self.alignment, self.threshold)
+        assert rates == self.expected_rates
+    pass
+
 if __name__ == '__main__':
     unittest.main()
