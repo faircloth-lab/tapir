@@ -73,7 +73,7 @@ class TestTreeAdjustment(unittest.TestCase):
         self.expected_tree = \
             dendropy.Tree.get_from_string('(danRer6:1.74,(oryLat2:1,(gasAcu1:0.93,(fr2:0.37,tetNig2:0.37):0.56):0.07):0.74)', schema='newick')
 
-    def runTest(self):
+    def test_dendropy_tree_adjustment(self):
         depth, correction, self.observed = correct_branch_lengths('test/test-data/Euteleost.tree', 'newick')
         observed_tree = dendropy.Tree.get_from_path(self.observed, 'newick')
         #pdb.set_trace()
@@ -85,14 +85,33 @@ class TestTreeAdjustment(unittest.TestCase):
 
 class TestInformativenessCutoff(unittest.TestCase):
     def setUp(self):
-        self.alignment = 'test/test-data/informativeness_cutoff.nex'
         self.threshold = 3
-        self.expected_rates = [False, False, True, True]
+        self.expected_informative_sites = numpy.load('test/test-data/chr1_918-test-cutoff-values.npy')
 
     def test_informativeness_cutoff(self):
-        rates = get_informative_sites(self.alignment, self.threshold)
-        assert rates == self.expected_rates
-    pass
+        alignment = 'test/test-data/informativeness_cutoff.nex'
+        observed_informative_sites = get_informative_sites(alignment, self.threshold)
+        small_expected_informative_sites= numpy.array([False, False, True, True])
+        assert observed_informative_sites.all() == small_expected_informative_sites.all()
+
+    def test_full_informativeness_cutoff(self):
+        alignment = 'test/test-data/chr1_918.nex'
+        observed_informative_sites = get_informative_sites(alignment, self.threshold)
+        assert observed_informative_sites.all() == \
+            self.expected_informative_sites.all()
+
+    def test_cull_informative_rates(self):
+        alignment = 'test/test-data/chr1_918.nex'
+        expected_culled = numpy.load('test/test-data/test-culled-rates.npy')
+        # trim to 100 in length to fit w/ fake uniform data
+        observed_informative_sites = get_informative_sites(alignment,
+                self.threshold)[:100]
+        rates = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json', 10., test = True)
+        observed_culled = cull_uninformative_rates(observed_informative_sites, rates)
+        assert expected_culled.all() == observed_culled.all() 
+
+    def tearDown(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main()
