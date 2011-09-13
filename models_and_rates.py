@@ -114,9 +114,9 @@ def get_net_integral_for_epochs(rates, epochs):
         epochs_results[name] = {'sum(integral)':sum(integral), 'sum(error)':sum(error)}
     return epochs_results
 
-def get_informative_sites(alignment, threshold):
-    """Returns a list, where True indicates a site which was at or over the
-    threshold for informativeness.
+def get_informative_sites(alignment, threshold=4):
+    """Returns a list, where True indicates a site which was over the threshold
+    for informativeness.
     """
     taxa = dendropy.DnaCharacterMatrix.get_from_path(alignment, 'nexus')
     results = defaultdict(int)
