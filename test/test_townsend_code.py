@@ -87,7 +87,7 @@ class TestInformativenessCutoff(unittest.TestCase):
     def setUp(self):
         self.alignment = 'test/test-data/informativeness_cutoff.nex'
         self.threshold = 3
-        self.expected_rates = [False, False, False, True]
+        self.expected_rates = [False, False, True, True]
 
     def test_informativeness_cutoff(self):
         rates = get_informative_sites(self.alignment, self.threshold)
