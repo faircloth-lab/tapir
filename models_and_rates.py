@@ -123,7 +123,7 @@ def get_informative_sites(alignment, threshold=4):
     for cells in taxa.vectors():
         assert len(cells) == taxa.vector_size # should all have equal lengths
         for idx, cell in enumerate(cells):
-            results[idx] += 1 if str(cell) in "ATGC" else 0
+            results[idx] += 1 if str(cell).upper() in "ATGC" else 0
     return [results[x] >= threshold for x in sorted(results)]
 
 def cull_uninformative_rates(rates, inform):
