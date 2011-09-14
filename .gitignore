@@ -11,5 +11,5 @@
 *.pyc
 
 ## trash
-trash/*
+trash*/*
 shakedown/*
