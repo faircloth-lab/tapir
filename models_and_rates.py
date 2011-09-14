@@ -146,13 +146,12 @@ def cull_uninformative_rates(rates, inform):
 
 def worker(params):
     #pdb.set_trace()
-    time_vector, hyphy, towrite, output, correction, alignment, times, epochs, threshold = params
+    time_vector, hyphy, template, towrite, output, correction, alignment, times, epochs, threshold = params
     # if twowrite is set, run hyphy, else, we've sent site rates
     sys.stdout.write(".")
     sys.stdout.flush()
     if towrite:
-        hyphy = Popen([hyphy, 'templates/models_and_rates.bf'], \
-            stdin=PIPE, stdout=PIPE)
+        hyphy = Popen([hyphy, template], stdin=PIPE, stdout=PIPE)
         stdout, stderr = hyphy.communicate(towrite)
         rates = parse_site_rates(output, correction = correction)
         good_sites = get_informative_sites(alignment, threshold)
@@ -224,17 +223,20 @@ def main():
     # generate a vector of times given start and stops
     time_vector = get_time(0, int(tree_depth))
     params = []
+    # get path to batch/template file for hyphy
+    template = os.path.join(os.path.dirname(os.path.realpath(__file__)), \
+            'templates/models_and_rates.bf')
     if not args.site_rates:
         print "Estimating site rates and PI for files:"
         for alignment in get_files(args.alignments, '*.nex'):
             output = os.path.join(args.output, os.path.basename(alignment) + '.rates')
             towrite = "\n".join([alignment, tree, output])
-            params.append([time_vector, args.hyphy, towrite, output, correction, alignment,
+            params.append([time_vector, args.hyphy, template, towrite, output, correction, alignment,
                 args.times, args.epochs, args.threshold])
     else:
         print "Estimating PI for files (--site-rate option):"
         for rate_file in get_files(args.alignments, '*.rates'):
-            params.append([time_vector, args.hyphy, None, rate_file,
+            params.append([time_vector, args.hyphy, template, None, rate_file,
                 correction, rate_file, args.times, args.epochs,
                 args.threshold])
     if not args.multiprocessing:
