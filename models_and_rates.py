@@ -60,6 +60,8 @@ def get_args():
         +"path to hyphy (if not in $PATH)")
     parser.add_argument('--threshold', default=3, help="Minimum number of taxa"
         +" without a gap for a site to be considered informative")
+    parser.add_argument('--multiprocessing', default = False, action =
+        'store_true')
     #parser.add_argument('--test', action='store_true')
     return parser.parse_args()
 
@@ -149,7 +151,7 @@ def worker(params):
     print towrite
     #pdb.set_trace()
     stdout, stderr = hyphy.communicate(towrite)
-    time.sleep(0.5)
+    #time.sleep(0.5)
     rates = parse_site_rates(output, correction = correction)
     good_sites = get_informative_sites(alignment, threshold)
     rates = cull_uninformative_rates(rates, good_sites)
@@ -175,7 +177,12 @@ def main():
         towrite = "\n".join([alignment, tree, output])
         params.append([time_vector, args.hyphy, towrite, output, correction, alignment,
             args.times, args.epochs, args.threshold])
-    pis = map(worker, params)
+    if not args.multiprocessing:
+        pis = map(worker, params)
+    else:
+        from multiprocessing import Pool, cpu_count
+        pool = Pool(processes = cpu_count() - 1)
+        pis = pool.map(worker, params)
     pdb.set_trace()
     #if args.times:
     #    print "Times: ", get_net_pi_for_periods(phylogenetic_informativeness, args.times)
