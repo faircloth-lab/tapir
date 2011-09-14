@@ -57,7 +57,7 @@ def get_args():
         choices=['nexus','newick'], default='newick')
     parser.add_argument('--output', dest='output', help="The path to the output"
         +" directory", default=os.getcwd(), action=FullPaths)
-    parser.add_argument('--hyphy', dest='hyphy', default="hyphy1", help="The "
+    parser.add_argument('--hyphy', dest='hyphy', default="hyphy2", help="The "
         +"path to hyphy (if not in $PATH)")
     parser.add_argument('--threshold', default=3, help="Minimum number of taxa"
         +" without a gap for a site to be considered informative")
