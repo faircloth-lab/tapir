@@ -46,7 +46,8 @@ def get_times_from_list(string):
 
 def get_args():
     """Get CLI arguments and options"""
-    parser = argparse.ArgumentParser(description='Select model and generate site rates')
+    parser = argparse.ArgumentParser(description = "pd-ht:  High-throughput phydesign - "
+            +"profile phylogenetic informativeness")
     parser.add_argument('alignments', help="The input alignment",
             action=FullPaths, type = is_dir)
     parser.add_argument('tree', help="The input tree", action=FullPaths)
@@ -180,7 +181,7 @@ def create_probe_db(db_name):
             INITIALLY DEFERRED)''')
     except sqlite3.OperationalError, e:
         if e[0] == 'table loci already exists':
-            answer = raw_input("\nPI database already exists.  Overwrite [Y/n]? ")
+            answer = raw_input("\n\tPI database already exists.  Overwrite [Y/n]? ")
             if answer == "Y" or "YES":
                 os.remove(db_name)
                 conn, c = create_probe_db(db_name)
@@ -214,9 +215,39 @@ def get_files(d, extension):
     else:
         return files
 
+def welcome_message():
+    return '''
+    ***************************************************
+    *                                                 *
+    * pd-ht:  PhyDesign - High-Throughput             *
+    *                                                 *
+    * (c) 2011 Brant Faircloth, Jonathan Chang,       *
+    * Mike Alfaro                                     *
+    *                                                 *
+    * PhyDesign was created by the Townsend Lab       *
+    * (http://phydesign.townsend.yale.edu)            *
+    *                                                 *
+    * To cite Phydesign, please use:                  *
+    *                                                 *
+    *   - J.P. Townsend, 20007. Profiling             *
+    *     phylogenetic informativeness. Systematic    *
+    *     Biology, 56(2), 222-231.                    *
+    *                                                 *
+    *   - Pond, S.L.K., Frost, S.D.W., and S.V. Muse, *
+    *     2005. Hyphy: hypothesis testing using       *
+    *     phylogenies. Bioinformatics, 21(5), 676-9.  *
+    *                                                 *
+    * Many thanks to Francesc Lopez-Giraldez and      *
+    * Jeffrey Townsend for providing us with a copy   *
+    * of their web-application source code.           *
+    *                                                 *
+    ***************************************************\n\n'''
+
 def main():
     """Main loop"""
     args = get_args()
+    # print message
+    print welcome_message()
     # correct branch lengths
     tree_depth, correction, tree = correct_branch_lengths(args.tree, args.tree_format, d = args.output)
     # generate a vector of times given start and stops
@@ -247,10 +278,14 @@ def main():
     # store results somewhere
     db_name = os.path.join(args.output,
         'phylogenetic-informativeness.sqlite')
-    print "Storing results in {}...".format(db_name)
+    sys.stdout.write("\nStoring results in {}...".format(db_name))
+    sys.stdout.flush()
     conn, c = create_probe_db(db_name)
     insert_pi_data(conn, c, pis)
     conn.commit()
+    sys.stdout.write("DONE")
+    sys.stdout.flush()
+    print "\n"
     c.close()
     conn.close()
 
