@@ -2,6 +2,7 @@
 
 import os
 import sys
+import glob
 import json
 import numpy
 import argparse
@@ -18,6 +19,13 @@ class FullPaths(argparse.Action):
     """Expand user- and relative-paths"""
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
+
+def is_dir(dirname):
+    if not os.path.isdir:
+        msg = "{0} is not a directory".format(dirname)
+        raise argparse.ArgumentTypeError(msg)
+    else:
+        return dirname
 
 def get_epochs_from_list(string):
     """Convert epochs/spans entered as string to nested list"""
@@ -38,7 +46,8 @@ def get_times_from_list(string):
 def get_args():
     """Get CLI arguments and options"""
     parser = argparse.ArgumentParser(description='Select model and generate site rates')
-    parser.add_argument('alignment', help="The input alignment", action=FullPaths)
+    parser.add_argument('alignments', help="The input alignment",
+            action=FullPaths, type = is_dir)
     parser.add_argument('tree', help="The input tree", action=FullPaths)
     parser.add_argument('--times', help="The start time of interest (MYA)", type=get_times_from_list)
     parser.add_argument('--epochs', help="The start time of interest (MYA)", type=get_epochs_from_list)
@@ -97,6 +106,7 @@ def correct_branch_lengths(tree_file, format, d = ""):
 def get_net_pi_for_periods(pi, times):
     """Sum across the PI values for the requested times"""
     sums = numpy.sum(pi, axis=1)[times]
+    pdb.set_trace()
     return dict(zip(times, sums))
 
 def get_net_integral_for_epochs(rates, epochs):
@@ -130,31 +140,43 @@ def cull_uninformative_rates(rates, inform):
     """Zeroes out rates which are uninformative"""
     return rates * inform
 
+def worker(params):
+    #pdb.set_trace()
+    times, hyphy, towrite, output, correction, alignment, threshold = params
+    hyphy = Popen([hyphy, 'templates/models_and_rates.bf'], \
+        stdin=PIPE, stdout=PIPE)
+    stdout, stderr = hyphy.communicate(towrite)
+    rates = parse_site_rates(output, correction = correction)
+    good_sites = get_informative_sites(alignment, threshold)
+    rates = cull_uninformative_rates(rates, good_sites)
+    # send column of times and vector of site rates to get_townsend_pi.
+    # Because of structure, we can take advantage of numpy's
+    # elementwise speedup
+    phylogenetic_informativeness = get_townsend_pi(times, rates)
+    pi_times = get_net_pi_for_periods(phylogenetic_informativeness, times)
+    pi_epochs = get_net_integral_for_epochs(rates, args.epochs)
+    return alignment, pi_times, pi_epochs
+
+
 def main():
     """Main loop"""
     args = get_args()
     # correct branch lengths
     tree_depth, correction, tree = correct_branch_lengths(args.tree, args.tree_format, d = args.output)
     # generate a vector of times given start and stops
-    time = get_time(0, int(tree_depth))
-    hyphy = Popen([args.hyphy, 'templates/models_and_rates.bf'], \
-        stdin=PIPE, stdout=PIPE)
-    output = os.path.join(args.output, os.path.basename(args.alignment) + '.rates')
-    towrite = "\n".join([args.alignment, tree, output])
-    #pdb.set_trace()
-    stdout, stderr = hyphy.communicate(towrite)
-    rates = parse_site_rates(output, correction = correction)
-    good_sites = get_informative_sites(args.alignment, args.threshold)
-    rates = cull_uninformative_rates(rates, good_sites)
-    # send column of times and vector of site rates to get_townsend_pi.
-    # Because of structure, we can take advantage of numpy's
-    # elementwise speedup
-    phylogenetic_informativeness = get_townsend_pi(time, rates)
-    if args.times:
-        print "Times: ", get_net_pi_for_periods(phylogenetic_informativeness, args.times)
-    if args.epochs:
-        print "Epochs: ", get_net_integral_for_epochs(rates, args.epochs)
-
+    times = get_time(0, int(tree_depth))
+    params = []
+    for alignment in glob.glob(os.path.join(args.alignments, '*.nex')):
+        output = os.path.join(args.output, os.path.basename(alignment) + '.rates')
+        towrite = "\n".join([alignment, tree, output])
+        params.append([times, args.hyphy, towrite, output, correction, alignment,
+            args.threshold])
+    pis = map(worker, params)
+    pdb.set_trace()
+    #if args.times:
+    #    print "Times: ", get_net_pi_for_periods(phylogenetic_informativeness, args.times)
+    #if args.epochs:
+    #    print "Epochs: ", 
 
 if __name__ == '__main__':
     main()
