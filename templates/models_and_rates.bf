@@ -1072,7 +1072,7 @@ for (siteCount = 0; siteCount < myFilter.sites; siteCount = siteCount+1) {
 fprintf (FILE_OUTPUT,"\n\t\t]\n\t}\n}",); // csv column headers
 fprintf (stdout, "\nOutput written to ", FILE_OUTPUT, "\n");
 fprintf (stdout, "THE END\n");
-
+return 0;
 
 /*------------------------------------------------------------------------*/
 
