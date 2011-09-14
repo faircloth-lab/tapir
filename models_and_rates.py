@@ -62,6 +62,7 @@ def get_args():
         +" without a gap for a site to be considered informative")
     parser.add_argument('--multiprocessing', default = False, action =
         'store_true')
+    parser.add_argument('--site-rates', default = False, action = 'store_true')
     #parser.add_argument('--test', action='store_true')
     return parser.parse_args()
 
@@ -145,16 +146,16 @@ def cull_uninformative_rates(rates, inform):
 def worker(params):
     #pdb.set_trace()
     time_vector, hyphy, towrite, output, correction, alignment, times, epochs, threshold = params
-    print 'constructing hyphy statement for {}'.format(alignment)
-    hyphy = Popen([hyphy, 'templates/models_and_rates.bf'], \
-        stdin=PIPE, stdout=PIPE)
-    print towrite
-    #pdb.set_trace()
-    stdout, stderr = hyphy.communicate(towrite)
-    #time.sleep(0.5)
-    rates = parse_site_rates(output, correction = correction)
-    good_sites = get_informative_sites(alignment, threshold)
-    rates = cull_uninformative_rates(rates, good_sites)
+    # if twowrite is set, run hyphy, else, we've sent site rates
+    if towrite:
+        hyphy = Popen([hyphy, 'templates/models_and_rates.bf'], \
+            stdin=PIPE, stdout=PIPE)
+        stdout, stderr = hyphy.communicate(towrite)
+        rates = parse_site_rates(output, correction = correction)
+        good_sites = get_informative_sites(alignment, threshold)
+        rates = cull_uninformative_rates(rates, good_sites)
+    else:
+        rates = parse_site_rates(output, correction = correction)
     # send column of times and vector of site rates to get_townsend_pi.
     # Because of structure, we can take advantage of numpy's
     # elementwise speedup
@@ -172,11 +173,17 @@ def main():
     # generate a vector of times given start and stops
     time_vector = get_time(0, int(tree_depth))
     params = []
-    for alignment in glob.glob(os.path.join(args.alignments, '*.nex')):
-        output = os.path.join(args.output, os.path.basename(alignment) + '.rates')
-        towrite = "\n".join([alignment, tree, output])
-        params.append([time_vector, args.hyphy, towrite, output, correction, alignment,
-            args.times, args.epochs, args.threshold])
+    if not args.site_rates:
+        for alignment in glob.glob(os.path.join(args.alignments, '*.nex')):
+            output = os.path.join(args.output, os.path.basename(alignment) + '.rates')
+            towrite = "\n".join([alignment, tree, output])
+            params.append([time_vector, args.hyphy, towrite, output, correction, alignment,
+                args.times, args.epochs, args.threshold])
+    else:
+        for rate_file in glob.glob(os.path.join(args.alignments, '*.rates')):
+            params.append([time_vector, args.hyphy, None, rate_file,
+                correction, None, args.times, args.epochs,
+                args.threshold])
     if not args.multiprocessing:
         pis = map(worker, params)
     else:
