@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 import glob
 import json
 import numpy
@@ -106,7 +107,6 @@ def correct_branch_lengths(tree_file, format, d = ""):
 def get_net_pi_for_periods(pi, times):
     """Sum across the PI values for the requested times"""
     sums = numpy.sum(pi, axis=1)[times]
-    pdb.set_trace()
     return dict(zip(times, sums))
 
 def get_net_integral_for_epochs(rates, epochs):
@@ -142,19 +142,23 @@ def cull_uninformative_rates(rates, inform):
 
 def worker(params):
     #pdb.set_trace()
-    times, hyphy, towrite, output, correction, alignment, threshold = params
+    time_vector, hyphy, towrite, output, correction, alignment, times, epochs, threshold = params
+    print 'constructing hyphy statement for {}'.format(alignment)
     hyphy = Popen([hyphy, 'templates/models_and_rates.bf'], \
         stdin=PIPE, stdout=PIPE)
+    print towrite
+    #pdb.set_trace()
     stdout, stderr = hyphy.communicate(towrite)
+    time.sleep(0.5)
     rates = parse_site_rates(output, correction = correction)
     good_sites = get_informative_sites(alignment, threshold)
     rates = cull_uninformative_rates(rates, good_sites)
     # send column of times and vector of site rates to get_townsend_pi.
     # Because of structure, we can take advantage of numpy's
     # elementwise speedup
-    phylogenetic_informativeness = get_townsend_pi(times, rates)
+    phylogenetic_informativeness = get_townsend_pi(time_vector, rates)
     pi_times = get_net_pi_for_periods(phylogenetic_informativeness, times)
-    pi_epochs = get_net_integral_for_epochs(rates, args.epochs)
+    pi_epochs = get_net_integral_for_epochs(rates, epochs)
     return alignment, pi_times, pi_epochs
 
 
@@ -164,13 +168,13 @@ def main():
     # correct branch lengths
     tree_depth, correction, tree = correct_branch_lengths(args.tree, args.tree_format, d = args.output)
     # generate a vector of times given start and stops
-    times = get_time(0, int(tree_depth))
+    time_vector = get_time(0, int(tree_depth))
     params = []
     for alignment in glob.glob(os.path.join(args.alignments, '*.nex')):
         output = os.path.join(args.output, os.path.basename(alignment) + '.rates')
         towrite = "\n".join([alignment, tree, output])
-        params.append([times, args.hyphy, towrite, output, correction, alignment,
-            args.threshold])
+        params.append([time_vector, args.hyphy, towrite, output, correction, alignment,
+            args.times, args.epochs, args.threshold])
     pis = map(worker, params)
     pdb.set_trace()
     #if args.times:
