@@ -6,6 +6,7 @@ import time
 import glob
 import json
 import numpy
+import sqlite3
 import argparse
 import dendropy
 from collections import defaultdict
@@ -147,6 +148,8 @@ def worker(params):
     #pdb.set_trace()
     time_vector, hyphy, towrite, output, correction, alignment, times, epochs, threshold = params
     # if twowrite is set, run hyphy, else, we've sent site rates
+    sys.stdout.write(".")
+    sys.stdout.flush()
     if towrite:
         hyphy = Popen([hyphy, 'templates/models_and_rates.bf'], \
             stdin=PIPE, stdout=PIPE)
@@ -164,6 +167,54 @@ def worker(params):
     pi_epochs = get_net_integral_for_epochs(rates, epochs)
     return alignment, pi_times, pi_epochs
 
+def create_probe_db(db_name):
+    """docstring for create_probe_database"""
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    c.execute("PRAGMA foreign_keys = ON")
+    try:
+        c.execute("CREATE TABLE loci (id INTEGER PRIMARY KEY AUTOINCREMENT, locus TEXT)")
+        c.execute('''CREATE TABLE time (id INT, time INT, pi FLOAT, 
+            FOREIGN KEY(id) REFERENCES loci(id) DEFERRABLE INITIALLY
+            DEFERRED)''')
+        c.execute('''CREATE TABLE epoch (id INT, epoch TEXT, sum_integral FLOAT,
+            sum_error FLOAT, FOREIGN KEY(id) REFERENCES loci(id) DEFERRABLE
+            INITIALLY DEFERRED)''')
+    except sqlite3.OperationalError, e:
+        if e[0] == 'table loci already exists':
+            answer = raw_input("\nPI database already exists.  Overwrite [Y/n]? ")
+            if answer == "Y" or "YES":
+                os.remove(db_name)
+                conn, c = create_probe_db(db_name)
+            else:
+                sys.exit(2)
+        else:
+            raise sqlite3.OperationalError 
+            pdb.set_trace()
+    return conn, c
+
+def insert_pi_data(conn, c, pis):
+    for locus in pis:
+        name, times, epochs = locus
+        c.execute("INSERT INTO loci(locus) values (?)",
+                (os.path.basename(name),))
+        key = c.lastrowid
+        if times:
+            for k,v in times.iteritems():
+                c.execute("INSERT INTO time values (?,?,?)", (key, k, v))
+        if epochs:
+            for k,v in epochs.iteritems():
+                c.execute("INSERT INTO epoch VALUES (?,?,?,?)", (key, k,
+                v['sum(integral)'], v['sum(error)']))
+    return
+
+def get_files(d, extension):
+    files = glob.glob(os.path.join(d, extension))
+    if files == []:
+        print "There appear to be no files of {} type in {}".format(extension, d)
+        sys.exit(2)
+    else:
+        return files
 
 def main():
     """Main loop"""
@@ -174,15 +225,17 @@ def main():
     time_vector = get_time(0, int(tree_depth))
     params = []
     if not args.site_rates:
-        for alignment in glob.glob(os.path.join(args.alignments, '*.nex')):
+        print "Estimating site rates and PI for files:"
+        for alignment in get_files(args.alignments, '*.nex'):
             output = os.path.join(args.output, os.path.basename(alignment) + '.rates')
             towrite = "\n".join([alignment, tree, output])
             params.append([time_vector, args.hyphy, towrite, output, correction, alignment,
                 args.times, args.epochs, args.threshold])
     else:
-        for rate_file in glob.glob(os.path.join(args.alignments, '*.rates')):
+        print "Estimating PI for files (--site-rate option):"
+        for rate_file in get_files(args.alignments, '*.rates'):
             params.append([time_vector, args.hyphy, None, rate_file,
-                correction, None, args.times, args.epochs,
+                correction, rate_file, args.times, args.epochs,
                 args.threshold])
     if not args.multiprocessing:
         pis = map(worker, params)
@@ -190,11 +243,14 @@ def main():
         from multiprocessing import Pool, cpu_count
         pool = Pool(processes = cpu_count() - 1)
         pis = pool.map(worker, params)
-    pdb.set_trace()
-    #if args.times:
-    #    print "Times: ", get_net_pi_for_periods(phylogenetic_informativeness, args.times)
-    #if args.epochs:
-    #    print "Epochs: ", 
+    # store results somewhere
+    db_name = os.path.join(args.output,
+        'phyogenetic-informativeness.sqlite')
+    conn, c = create_probe_db(db_name)
+    insert_pi_data(conn, c, pis)
+    conn.commit()
+    c.close()
+    conn.close()
 
 if __name__ == '__main__':
     main()
