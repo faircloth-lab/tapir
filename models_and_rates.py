@@ -227,7 +227,7 @@ def main():
     template = os.path.join(os.path.dirname(os.path.realpath(__file__)), \
             'templates/models_and_rates.bf')
     if not args.site_rates:
-        print "Estimating site rates and PI for files:"
+        print "\nEstimating site rates and PI for files:"
         for alignment in get_files(args.alignments, '*.nex'):
             output = os.path.join(args.output, os.path.basename(alignment) + '.rates')
             towrite = "\n".join([alignment, tree, output])
@@ -247,7 +247,8 @@ def main():
         pis = pool.map(worker, params)
     # store results somewhere
     db_name = os.path.join(args.output,
-        'phyogenetic-informativeness.sqlite')
+        'phylogenetic-informativeness.sqlite')
+    print "Storing results in {}...".format(db_name)
     conn, c = create_probe_db(db_name)
     insert_pi_data(conn, c, pis)
     conn.commit()
