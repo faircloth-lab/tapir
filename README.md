@@ -34,7 +34,7 @@
 
 ## Installation
 
- * git clone git://github.com/BadDNA/pd-ht.git /path/to/pd-ht
+    git clone git://github.com/BadDNA/pd-ht.git /path/to/pd-ht
 
 ## Use
 
@@ -70,3 +70,25 @@ Results will be in an [sqlite](http://www.sqlite.org/) database in the
 output directory of your choosing.  This directory also holds site rate
 files in [JSON](http://www.json.org/) format for each locus passed
 through `estimate_p_i.py`.
+
+ * crank up sqlite
+
+        sqlite3  Output_Directory/phylogenetic-informativeness.sqlite
+
+ * get integral data for all epochs
+
+        select loci.locus, epoch.epoch, epoch.sum_integral from loci, epoch where loci.id = epoch.id
+
+ * get integral data for a specific epoch
+
+        select loci.locus, epoch.epoch, epoch.sum_integral from loci, epoch 
+            where epoch = '95-105' and loci.id = epoch.id;
+
+ * get the count of loci having max(PI) at different epochs:
+
+        create temporary table max as select id, max(sum_integral) as max from epoch group by id;
+
+        create temporary table t as select epoch.id, epoch.epoch, max.max from epoch, max 
+            where epoch.sum_integral = max.max;
+
+        select epoch, count(*) from t group by epoch;
