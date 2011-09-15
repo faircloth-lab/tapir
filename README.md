@@ -32,10 +32,41 @@
  * scipy
  * dendropy
 
+## Installation
+
+ * git clone git://github.com/BadDNA/pd-ht.git /path/to/pd-ht
+
 ## Use
 
-    python estimate_p_i.py Input_Folder_of_Nexus_files/ Input.tree \
+The `estimate_p_i.py` code calls a batch file for hyphy that is in
+`templates/`.  This file needs to be in the same position relative to
+wherever you put `estimate_p_i.py`.
+
+    cd /path/to/pd-ht/
+
+    python estimate_p_i.py Input_Folder_of_Nexus_Files/ Input.tree \
         --output Output_Directory \
         --epochs=32-42,88-98,95-105,164-174 \
         --times=37,93,100,170 \
         --multiprocessing
+
+`--multiprocessing` is optional, without it, each locus will be run
+consecutively.
+
+If you have already run the above and saved results to your output
+folder (see below), you can use the pre-existing site-rate records
+rather than estimating those again with:
+
+     python estimate_p_i.py Input_Folder_of_Site_Rate_JSON_Files/ Input.tree \
+        --output Output_Directory \
+        --epochs=32-42,88-98,95-105,164-174 \
+        --times=37,93,100,170 \
+        --multiprocessing \
+        --site-rates
+
+## Results
+
+Results will be in an [sqlite](http://www.sqlite.org/) database in the
+output directory of your choosing.  This directory also holds site rate
+files in [JSON](http://www.json.org/) format for each locus passed
+through `estimate_p_i.py`.
