@@ -36,6 +36,11 @@
 
     git clone git://github.com/BadDNA/pd-ht.git /path/to/pd-ht
 
+To run tests:
+
+    cd /path/to/pd-ht/
+    python test/test_townsend_code.py
+
 ## Use
 
 The `estimate_p_i.py` code calls a batch file for hyphy that is in
