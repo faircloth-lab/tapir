@@ -26,7 +26,7 @@
 
 ## Dependencies
 
- * hyphy (please [download](https://github.com/downloads/BadDNA/pd-ht/hyphy2.osx.gz) or build the single-threaded hyphy2)
+ * hyphy2 (please [download](https://github.com/BadDNA/pd-ht/downloads) or build a single-threaded hyphy2)
  * Python 2.7
  * numpy
  * scipy
