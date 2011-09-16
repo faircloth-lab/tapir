@@ -59,7 +59,7 @@ def get_args():
         +" directory", default=os.getcwd(), action=FullPaths)
     parser.add_argument('--hyphy', dest='hyphy', default="hyphy2", help="The "
         +"path to hyphy (if not in $PATH)")
-    parser.add_argument('--threshold', default=3, help="Minimum number of taxa"
+    parser.add_argument('--threshold', default=3, type = int, help="Minimum number of taxa"
         +" without a gap for a site to be considered informative")
     parser.add_argument('--multiprocessing', default = False, action =
         'store_true')
@@ -110,7 +110,7 @@ def correct_branch_lengths(tree_file, format, d = ""):
 
 def get_net_pi_for_periods(pi, times):
     """Sum across the PI values for the requested times"""
-    sums = numpy.sum(pi, axis=1)[times]
+    sums = numpy.nansum(pi, axis=1)[times]
     return dict(zip(times, sums))
 
 def get_net_integral_for_epochs(rates, epochs):
@@ -138,7 +138,7 @@ def get_informative_sites(alignment, threshold=4):
         assert len(cells) == taxa.vector_size # should all have equal lengths
         for idx, cell in enumerate(cells):
             results[idx] += 1 if str(cell).upper() in "ATGC" else 0
-    return numpy.array([results[x] >= threshold for x in sorted(results)])
+    return numpy.array([1 if results[x] >= threshold else numpy.nan for x in sorted(results)])
 
 def cull_uninformative_rates(rates, inform):
     """Zeroes out rates which are uninformative"""
@@ -158,13 +158,21 @@ def worker(params):
         rates = cull_uninformative_rates(rates, good_sites)
     else:
         rates = parse_site_rates(output, correction = correction)
+    # compute the mean, ensuring we mask the nans.
+    mean_rate = numpy.mean(numpy.ma.masked_array(rates, numpy.isnan(rates)))
     # send column of times and vector of site rates to get_townsend_pi.
     # Because of structure, we can take advantage of numpy's
     # elementwise speedup
-    phylogenetic_informativeness = get_townsend_pi(time_vector, rates)
-    pi_times = get_net_pi_for_periods(phylogenetic_informativeness, times)
-    pi_epochs = get_net_integral_for_epochs(rates, epochs)
-    return alignment, pi_times, pi_epochs
+    pi = get_townsend_pi(time_vector, rates)
+    # len(rates) gives the number of "#Sites" per PhyDesign website
+    # numpy.sum(numpy.isnan(rates)) counts undefined sites
+    # numpy.sum(numpy.isfinite(rates)) counts #Rates per PhyDesign website
+    # pdb.set_trace()
+    pi_net = numpy.nansum(pi, axis = 1)
+    pi_times = get_net_pi_for_periods(pi, times)
+    # remove the numpy.nan records before computing the integral
+    pi_epochs = get_net_integral_for_epochs(rates[numpy.isfinite(rates)], epochs)
+    return alignment, rates, mean_rate, pi, pi_net, pi_times, pi_epochs
 
 def create_probe_db(db_name):
     """docstring for create_probe_database"""
@@ -179,6 +187,9 @@ def create_probe_db(db_name):
         c.execute('''CREATE TABLE epoch (id INT, epoch TEXT, sum_integral FLOAT,
             sum_error FLOAT, FOREIGN KEY(id) REFERENCES loci(id) DEFERRABLE
             INITIALLY DEFERRED)''')
+        c.execute('''CREATE TABLE informativeness (id INT, mya INT, pi FLOAT,
+            FOREIGN KEY(id) REFERENCES loci(id) DEFERRABLE INITIALLY
+            DEFERRED)''')
     except sqlite3.OperationalError, e:
         if e[0] == 'table loci already exists':
             answer = raw_input("\n\tPI database already exists.  Overwrite [Y/n]? ")
@@ -194,10 +205,11 @@ def create_probe_db(db_name):
 
 def insert_pi_data(conn, c, pis):
     for locus in pis:
-        name, times, epochs = locus
+        name, rates, mean_rate, pi, pi_net, times, epochs = locus
         c.execute("INSERT INTO loci(locus) values (?)",
                 (os.path.basename(name),))
         key = c.lastrowid
+        pdb.set_trace()
         if times:
             for k,v in times.iteritems():
                 c.execute("INSERT INTO time values (?,?,?)", (key, k, v))
