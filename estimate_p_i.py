@@ -181,15 +181,15 @@ def create_probe_db(db_name):
     c.execute("PRAGMA foreign_keys = ON")
     try:
         c.execute("CREATE TABLE loci (id INTEGER PRIMARY KEY AUTOINCREMENT, locus TEXT)")
+        c.execute('''CREATE TABLE net_informativeness (id INT, mya INT, pi FLOAT,
+            FOREIGN KEY(id) REFERENCES loci(id) DEFERRABLE INITIALLY
+            DEFERRED)''')
         c.execute('''CREATE TABLE time (id INT, time INT, pi FLOAT, 
             FOREIGN KEY(id) REFERENCES loci(id) DEFERRABLE INITIALLY
             DEFERRED)''')
         c.execute('''CREATE TABLE epoch (id INT, epoch TEXT, sum_integral FLOAT,
             sum_error FLOAT, FOREIGN KEY(id) REFERENCES loci(id) DEFERRABLE
             INITIALLY DEFERRED)''')
-        c.execute('''CREATE TABLE informativeness (id INT, mya INT, pi FLOAT,
-            FOREIGN KEY(id) REFERENCES loci(id) DEFERRABLE INITIALLY
-            DEFERRED)''')
     except sqlite3.OperationalError, e:
         if e[0] == 'table loci already exists':
             answer = raw_input("\n\tPI database already exists.  Overwrite [Y/n]? ")
@@ -209,7 +209,10 @@ def insert_pi_data(conn, c, pis):
         c.execute("INSERT INTO loci(locus) values (?)",
                 (os.path.basename(name),))
         key = c.lastrowid
-        pdb.set_trace()
+        #pdb.set_trace()
+        for k,v in enumerate(pi_net):
+            c.execute("INSERT INTO net_informativeness VALUES (?,?,?)", (key, k,
+                v))
         if times:
             for k,v in times.iteritems():
                 c.execute("INSERT INTO time values (?,?,?)", (key, k, v))
