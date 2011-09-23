@@ -27,7 +27,7 @@
 ## Dependencies
 
  * hyphy2 (please [download](https://github.com/BadDNA/pd-ht/downloads) or build a single-threaded hyphy2)
- * Python 2.7
+ * Python 2.6
  * numpy
  * scipy
  * dendropy
