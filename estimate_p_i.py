@@ -244,7 +244,7 @@ def welcome_message():
     *                                                 *
     * To cite Phydesign, please use:                  *
     *                                                 *
-    *   - J.P. Townsend, 20007. Profiling             *
+    *   - J.P. Townsend, 2007. Profiling              *
     *     phylogenetic informativeness. Systematic    *
     *     Biology, 56(2), 222-231.                    *
     *                                                 *
