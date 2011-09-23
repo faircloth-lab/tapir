@@ -104,7 +104,7 @@ def correct_branch_lengths(tree_file, format, d = ""):
     for edge in tree.preorder_edge_iter():
         if edge.length:
             edge.length /= correction_factor
-    pth = os.path.join(d, 'Tree_{}_{}.newick'.format(correction_factor, depth))
+    pth = os.path.join(d, 'Tree_{0}_{1}.newick'.format(correction_factor, depth))
     tree.write_to_path(pth, 'newick')
     return depth, correction_factor, pth
 
@@ -121,9 +121,9 @@ def get_net_integral_for_epochs(rates, epochs):
     # TODO:  figure out how we want to handle diff. time intervals here
     epochs_results = {}
     for span in epochs:
-        name = "{}-{}".format(span[0],span[1])
+        name = "{0}-{1}".format(span[0],span[1])
         assert span[0] < span[1], \
-            "Start time [{}] is sooner than end time [{}]".format(span[0],span[1])
+            "Start time [{0}] is sooner than end time [{1}]".format(span[0],span[1])
         integral, error = vec_integrate(span[0],span[1], rates)
         epochs_results[name] = {'sum(integral)':sum(integral), 'sum(error)':sum(error)}
     return epochs_results
@@ -225,7 +225,7 @@ def insert_pi_data(conn, c, pis):
 def get_files(d, extension):
     files = glob.glob(os.path.join(d, extension))
     if files == []:
-        print "There appear to be no files of {} type in {}".format(extension, d)
+        print "There appear to be no files of {0} type in {1}".format(extension, d)
         sys.exit(2)
     else:
         return files
@@ -293,7 +293,7 @@ def main():
     # store results somewhere
     db_name = os.path.join(args.output,
         'phylogenetic-informativeness.sqlite')
-    sys.stdout.write("\nStoring results in {}...".format(db_name))
+    sys.stdout.write("\nStoring results in {0}...".format(db_name))
     sys.stdout.flush()
     conn, c = create_probe_db(db_name)
     insert_pi_data(conn, c, pis)
