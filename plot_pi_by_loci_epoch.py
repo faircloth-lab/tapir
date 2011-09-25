@@ -7,6 +7,7 @@ import argparse
 import sqlite3
 
 import numpy
+import matplotlib
 import matplotlib.pyplot as pyplot
 import matplotlib.cm as cm
 
@@ -62,6 +63,9 @@ def main():
     for row in c:
         # 0 = loci; 1 = epoch; 2 = PI
         results[row[0]][row[1]] = row[2]
+
+    # set fonts
+    matplotlib.rc('font', family=args.font)
 
     # Each epoch has a width of "1", including an empty spacer bar.
     width = 1 / float(len(results.keys()) + 1)
