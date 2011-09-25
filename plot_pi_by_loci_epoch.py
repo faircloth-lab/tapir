@@ -47,6 +47,10 @@ def get_args():
         default="Helvetica")
     parser.add_argument('--colormap', help="matplotlib color map to use",
         default="summer", type=get_colormap)
+    parser.add_argument('--width', help="figure width, in inches", default=8,
+        type=float)
+    parser.add_argument('--height', help="figure height, in inches", default=6,
+        type=float)
     return parser.parse_args()
 
 def main():
@@ -64,8 +68,9 @@ def main():
         # 0 = loci; 1 = epoch; 2 = PI
         results[row[0]][row[1]] = row[2]
 
-    # set fonts
+    # set defaults
     matplotlib.rc('font', family=args.font)
+    matplotlib.rc('figure', figsize=[args.width, args.height])
 
     # Each epoch has a width of "1", including an empty spacer bar.
     width = 1 / float(len(results.keys()) + 1)
@@ -89,6 +94,7 @@ def main():
 
     # increase the width of the plot because the legend does not use all
     # of the extra space allocated to it on the 2x1 grid
+    # TODO: Make this work for different widths
     pos = list(ax.get_position().bounds)
     pos[2] *= 1.5
     ax.set_position(pos)
@@ -109,7 +115,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
