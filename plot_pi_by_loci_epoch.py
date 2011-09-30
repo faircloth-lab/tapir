@@ -111,20 +111,21 @@ def create_box_plot(data, fig, colors):
     tmp = collections.defaultdict(list)
     for locus, epoch in data.iteritems():
         loci.append(locus)
-        for key in natural_sort(epoch.keys()):
-            tmp[key].append(epoch[key])
+        for key, value in epoch.iteritems():
+            tmp[key].append(value)
 
-    epochs = tmp.keys()
-    pi = tmp.values()
+    for key in natural_sort(tmp.keys()):
+        epochs.append(key)
+        pi.append(tmp[key])
 
-    ax = fig.add_subplot(111)
+    ax = fig.add_axes([0.1, 0.1, 0.7, 0.8])
     boxes = ax.boxplot(pi, notch=0, sym='', vert=1, whis=1.5)
     # get the location of the center of each boxplot
     medians = [numpy.average(x.get_xdata()) for x in boxes["medians"]]
     # overplot with points
     points = ax.plot(medians, pi, marker="o", ls='None')
     ax.set_xticklabels(epochs)
-    leg = ax.legend(points, loci, loc="center right", title="Loci")
+    fig.legend(points, loci, "center right")
 
 def main():
     args = get_args()
