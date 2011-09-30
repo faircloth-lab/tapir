@@ -54,6 +54,7 @@ def get_args():
         type=float)
     parser.add_argument('--height', help="figure height, in inches", default=6,
         type=float)
+    parser.add_argument('--keep-extension', help="keep the .nex extension in loci names", action="store_true")
     return parser.parse_args()
 
 def create_rects_plot(data, fig, colormap):
@@ -131,8 +132,10 @@ def main():
     # results = {loci1: {epoch1: PI, epoch2: PI, ...}, ...}
     results = collections.defaultdict(dict)
     for row in c:
-        # 0 = loci; 1 = epoch; 2 = PI
-        results[row[0]][row[1]] = row[2]
+        loci, epoch, pi = list(row)
+        if not args.keep_extension:
+            loci = loci.split('.')[0]
+        results[loci][epoch] = pi
 
     # set defaults
     matplotlib.rc('font', family=args.font)
