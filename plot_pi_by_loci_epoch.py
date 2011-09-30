@@ -57,13 +57,18 @@ def get_args():
     parser.add_argument('--keep-extension', help="keep the .nex extension in loci names", action="store_true")
     return parser.parse_args()
 
+def nice_grid(ax):
+    """Puts a nice grid behind a plot for the major y axis."""
+    ax.yaxis.grid(True, linestyle="-", which="major", color="grey", alpha=0.5)
+    ax.set_axisbelow(True)
+
 def create_rects_plot(data, fig, colormap):
     """Creates a bar plot of the PI grouped by locus and epoch"""
     # Each epoch has a width of "1", including an empty spacer bar.
     width = 1 / float(len(data.keys()) + 1)
 
-    # Plot in the left box on a 2x1 grid to leave space for the legend
-    ax = fig.add_subplot(121)
+    # adjust axes to leave room for legend
+    ax = fig.add_axes([0.1, 0.1, 0.7, 0.8])
 
     rects = []  # stores each bar, necessary for correct legend labels
     counter = 0 # tracks colors, necessary for correct tick labels
@@ -79,28 +84,18 @@ def create_rects_plot(data, fig, colormap):
         rects.append(ax.bar(index + counter * width, epoch_values, width, color=color))
         counter += 1
 
-    # increase the width of the plot because the legend does not use all
-    # of the extra space allocated to it on the 2x1 grid
-    # TODO: Make this work for different widths
-    pos = list(ax.get_position().bounds)
-    pos[2] *= 1.5
-    ax.set_position(pos)
-
     # Make a nice grid behind the plots
-    ax.yaxis.grid(True, linestyle="-", which="major", color="grey", alpha=0.5)
-    ax.set_axisbelow(True)
+    nice_grid(ax)
 
     ax.set_ylabel("Phylogenetic informativeness")
     ax.set_title("Phylogenetic informativeness by loci and epoch")
 
-    # XXX: unsure about the math but it seems to work fine
     ax.set_xticks(index + width * counter / 2)
     ax.set_xticklabels(epochs_sorted)
     ax.set_xlabel("Epochs")
 
-    # Place legend at the topright outside corner with 0.05 units of padding
-    ax.legend(rects, data.keys(), loc=2, title="Loci",
-        bbox_to_anchor=(1.05, 1))
+    # Place legend outside the axes
+    ax.legend(rects, data.keys(), loc=(1.03, 0.0), title="Loci")
 
 def create_box_plot(data, fig, colors):
     """Creates a box plot by epoch"""
@@ -120,12 +115,20 @@ def create_box_plot(data, fig, colors):
 
     ax = fig.add_axes([0.1, 0.1, 0.7, 0.8])
     boxes = ax.boxplot(pi, notch=0, sym='', vert=1, whis=1.5)
-    # get the location of the center of each boxplot
+    # get the location of the vertical center of each boxplot
     medians = [numpy.average(x.get_xdata()) for x in boxes["medians"]]
     # overplot with points
+    # TODO: make colors not give seizure
     points = ax.plot(medians, pi, marker="o", ls='None')
+
+    # make legend
+    ax.legend(points, loci, loc=(1.03, 0.0))
+
+    # prettiness etc
     ax.set_xticklabels(epochs)
-    fig.legend(points, loci, "center right")
+    ax.set_xlabel("Epochs")
+    ax.set_ylabel("Phylogenetic informativeness")
+    nice_grid(ax)
 
 def main():
     args = get_args()
