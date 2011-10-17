@@ -223,7 +223,11 @@ def insert_pi_data(conn, c, pis):
     return
 
 def get_files(d, extension):
-    files = glob.glob(os.path.join(d, extension))
+    if ',' in extension:
+        extension = extension.strip(' ').split()
+    files = []
+    for e in extension:
+        files.extend(glob.glob(os.path.join(d, e)))
     if files == []:
         print "There appear to be no files of {0} type in {1}".format(extension, d)
         sys.exit(2)
@@ -273,7 +277,7 @@ def main():
             'templates/models_and_rates.bf')
     if not args.site_rates:
         print "\nEstimating site rates and PI for files:"
-        for alignment in get_files(args.alignments, '*.nex'):
+        for alignment in get_files(args.alignments, '*.nex,*.nexus'):
             output = os.path.join(args.output, os.path.basename(alignment) + '.rates')
             towrite = "\n".join([alignment, tree, output])
             params.append([time_vector, args.hyphy, template, towrite, output, correction, alignment,
