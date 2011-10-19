@@ -224,7 +224,7 @@ def insert_pi_data(conn, c, pis):
 
 def get_files(d, extension):
     if ',' in extension:
-        extension = extension.strip(' ').split()
+        extension = extension.strip(' ').split(',')
     files = []
     for e in extension:
         files.extend(glob.glob(os.path.join(d, e)))
