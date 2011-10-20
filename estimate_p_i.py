@@ -46,24 +46,26 @@ def get_times_from_list(string):
 
 def get_args():
     """Get CLI arguments and options"""
-    parser = argparse.ArgumentParser(description = "pd-ht:  High-throughput phydesign - "
-            +"profile phylogenetic informativeness")
-    parser.add_argument('alignments', help="The input alignment",
-            action=FullPaths, type = is_dir)
+    parser = argparse.ArgumentParser(description="""pd-ht:  High-throughput
+        phydesign - profile phylogenetic informativeness""")
+    parser.add_argument('alignments', help="The folder of alignments",
+        action=FullPaths, type=is_dir)
     parser.add_argument('tree', help="The input tree", action=FullPaths)
-    parser.add_argument('--times', help="The start time of interest (MYA)", type=get_times_from_list)
-    parser.add_argument('--epochs', help="The start time of interest (MYA)", type=get_epochs_from_list)
-    parser.add_argument('--tree-format', dest='tree_format', help="The format of the tree",
-        choices=['nexus','newick'], default='newick')
-    parser.add_argument('--output', dest='output', help="The path to the output"
-        +" directory", default=os.getcwd(), action=FullPaths)
-    parser.add_argument('--hyphy', dest='hyphy', default="hyphy2", help="The "
-        +"path to hyphy (if not in $PATH)")
-    parser.add_argument('--threshold', default=3, type = int, help="Minimum number of taxa"
-        +" without a gap for a site to be considered informative")
-    parser.add_argument('--multiprocessing', default = False, action =
-        'store_true')
-    parser.add_argument('--site-rates', default = False, action = 'store_true')
+    parser.add_argument('--times', help="The start time of interest (MYA)",
+        type=get_times_from_list)
+    parser.add_argument('--epochs', help="The start time of interest (MYA)",
+        type=get_epochs_from_list)
+    parser.add_argument('--tree-format', help="The format of the tree",
+        dest='tree_format', choices=['nexus','newick'], default='newick')
+    parser.add_argument('--output', help="The path to the output directory",
+        default=os.getcwd(), action=FullPaths)
+    parser.add_argument('--hyphy', help="The path to hyphy (if not in $PATH)",
+        default="hyphy2")
+    parser.add_argument('--threshold', help="""Minimum number of taxa without
+        a gap for a site to be considered informative""", default=3, type=int)
+    parser.add_argument('--multiprocessing', help="""Enable parallel
+        calculation of rates""", default=False, action='store_true')
+    parser.add_argument('--site-rates', default=False, action='store_true')
     #parser.add_argument('--test', action='store_true')
     return parser.parse_args()
 
