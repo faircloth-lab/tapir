@@ -99,7 +99,6 @@ def create_rects_plot(data, fig, colormap):
 
 def create_box_plot(data, fig, colors):
     """Creates a box plot by epoch"""
-    # TODO: Needs overplotting w/ loci
     epochs = []
     loci = []
     pi = []
@@ -128,32 +127,79 @@ def create_box_plot(data, fig, colors):
     ax.set_xticklabels(epochs)
     ax.set_xlabel("Epochs")
     ax.set_ylabel("Phylogenetic informativeness")
+    ax.set_title("PI by loci and epoch")
     nice_grid(ax)
 
-def main():
-    args = get_args()
-    conn = sqlite3.connect(args.database)
+def create_line_plot(data, fig, colors):
+    ax = fig.add_axes([0.1, 0.1, 0.7, 0.8])
+    all_pi = []
+    for locus, pi in data.iteritems():
+        x = []
+        for a, b in sorted(pi.iteritems()):
+            x.append(b)
+        all_pi.append(x)
+
+    # transpose because plot() processes 2d array columnwise
+    all_pi = numpy.transpose(all_pi)
+    points = ax.plot(all_pi)
+
+    ax.set_xlim(ax.get_xlim()[::-1]) # reverse x axis
+    ax.legend(points, data.keys(), loc=(1.03, 0.0))
+    ax.set_xlabel("MYA")
+    ax.set_ylabel("net PI")
+    ax.set_title("Net PI over time")
+    nice_grid(ax)
+
+
+def get_epochs(conn):
     c = conn.cursor()
-    c.execute("""SELECT loci.locus, epoch.epoch, epoch.sum_integral
-                 FROM loci, epoch
-                 WHERE loci.id = epoch.id""")
+    c.execute("""SELECT loci.locus, epoch, sum_integral
+                  FROM epoch JOIN loci USING (id)""")
 
     # Rearrange data into the following format:
     # results = {loci1: {epoch1: PI, epoch2: PI, ...}, ...}
     results = collections.defaultdict(dict)
     for row in c:
         loci, epoch, pi = list(row)
-        if not args.keep_extension:
-            loci = loci.split('.')[0]
         results[loci][epoch] = pi
+    return results
+
+def get_net_pi(conn):
+    c = conn.cursor()
+    c.execute("""SELECT loci.locus, mya, pi
+                 FROM net_informativeness JOIN loci USING (id)""")
+
+    results = collections.defaultdict(dict)
+    for row in c:
+        loci, mya, pi = list(row)
+        results[loci][mya] = pi
+    return results
+
+def rm_ext(dd):
+    """Removes the ".nex" extension from keys in the dictionary `dd`."""
+    keys = dd.keys()
+    for key in keys:
+        new = key.split('.')[0]
+        dd[new] = dd.pop(key)
+    return dd
+
+def main():
+    args = get_args()
+    conn = sqlite3.connect(args.database)
+    epoch_data = get_epochs(conn)
+    net_pi_data = get_net_pi(conn)
+
+    if not args.keep_extension:
+        epoch_data, net_pi_data = [rm_ext(x) for x in [epoch_data, net_pi_data]]
 
     # set defaults
     matplotlib.rc('font', family=args.font)
     matplotlib.rc('figure', figsize=[args.width, args.height])
 
     # make plots
-    create_rects_plot(results, pyplot.figure(), args.colormap)
-    create_box_plot(results, pyplot.figure(), args.colormap)
+    create_rects_plot(epoch_data, pyplot.figure(), args.colormap)
+    create_box_plot(epoch_data, pyplot.figure(), args.colormap)
+    create_line_plot(net_pi_data, pyplot.figure(), args.colormap)
 
     # For each plot, create a separate image (or separate page for PDFs)
     # TODO: Make this work for more than PDFs
