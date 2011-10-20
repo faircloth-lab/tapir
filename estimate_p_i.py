@@ -159,7 +159,12 @@ def worker(params):
     sys.stdout.write(".")
     sys.stdout.flush()
     if towrite:
-        hyphy = Popen([hyphy, template], stdin=PIPE, stdout=PIPE)
+        try:
+            hyphy = Popen([hyphy, template], stdin=PIPE, stdout=PIPE)
+        except OSError as e:
+            if e.errno == 2:
+                raise Exception("hyphy not found")
+            raise Exception("couldn't communicate with hyphy: {0}".format(e))
         stdout, stderr = hyphy.communicate(towrite)
         rates = parse_site_rates(output, correction = correction)
         good_sites = get_informative_sites(alignment, threshold)
