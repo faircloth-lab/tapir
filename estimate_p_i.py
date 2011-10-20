@@ -41,7 +41,7 @@ def get_times_from_list(string):
     """Convert times input as string to a list"""
     try:
         times = [int(i) for i in string.split(',')]
-    except:
+    except Exception:
         raise argparse.ArgumentTypeError("Cannot convert time to list of integers")
     return times
 
@@ -49,24 +49,29 @@ def get_args():
     """Get CLI arguments and options"""
     parser = argparse.ArgumentParser(description="""pd-ht:  High-throughput
         phydesign - profile phylogenetic informativeness""")
+
     parser.add_argument('alignments', help="The folder of alignments",
         action=FullPaths, type=is_dir)
     parser.add_argument('tree', help="The input tree", action=FullPaths)
-    parser.add_argument('--times', help="The start time of interest (MYA)",
-        type=get_times_from_list)
-    parser.add_argument('--epochs', help="The start time of interest (MYA)",
-        type=get_epochs_from_list)
+
+    required = parser.add_argument_group("required arguments")
+    required.add_argument('--times', help="""Comma-separated list of start
+        times of interest (MYA)""", type=get_times_from_list, required=True)
+    required.add_argument('--epochs', help="""Comma-separated list of epoch
+        ranges of interest (MYA)""", type=get_epochs_from_list, required=True)
+
     parser.add_argument('--tree-format', help="The format of the tree",
         dest='tree_format', choices=['nexus','newick'], default='newick')
     parser.add_argument('--output', help="The path to the output directory",
-        default=os.getcwd(), action=FullPaths)
+        default=os.getcwd(), action=FullPaths, type=is_dir)
     parser.add_argument('--hyphy', help="The path to hyphy (if not in $PATH)",
         default="hyphy2")
     parser.add_argument('--threshold', help="""Minimum number of taxa without
         a gap for a site to be considered informative""", default=3, type=int)
     parser.add_argument('--multiprocessing', help="""Enable parallel
         calculation of rates""", default=False, action='store_true')
-    parser.add_argument('--site-rates', default=False, action='store_true')
+    parser.add_argument('--site-rates', default=False, action='store_true',
+        help="Use previously calculated site rates")
     #parser.add_argument('--test', action='store_true')
     return parser.parse_args()
 
