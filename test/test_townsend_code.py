@@ -11,7 +11,7 @@ Copyright 2011 Brant C. Faircloth. All rights reserved.
 import os
 import numpy
 import unittest
-from models_and_rates import *
+from estimate_p_i import *
 
 import pdb
 
@@ -91,7 +91,7 @@ class TestInformativenessCutoff(unittest.TestCase):
     def test_informativeness_cutoff(self):
         alignment = 'test/test-data/informativeness_cutoff.nex'
         observed_informative_sites = get_informative_sites(alignment, self.threshold)
-        small_expected_informative_sites= numpy.array([False, False, True, True])
+        small_expected_informative_sites= numpy.array([numpy.nan, numpy.nan, 1., 1.])
         assert observed_informative_sites.all() == small_expected_informative_sites.all()
 
     def test_full_informativeness_cutoff(self):
