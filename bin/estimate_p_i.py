@@ -220,7 +220,7 @@ def insert_pi_data(conn, c, pis):
     for locus in pis:
         name, rates, mean_rate, pi, pi_net, times, epochs = locus
         c.execute("INSERT INTO loci(locus) values (?)",
-                (os.path.basename(name),))
+                (os.path.splitext(os.path.basename(name))[0],))
         key = c.lastrowid
         #pdb.set_trace()
         for k,v in enumerate(pi_net):
