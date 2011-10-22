@@ -7,6 +7,10 @@
 *.out
 *.rates
 
+## ignore png or pdf files in bin/
+bin/*.png
+bin/*.pdf
+
 ## python
 *.pyc
 
