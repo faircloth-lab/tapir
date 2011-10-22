@@ -11,10 +11,12 @@ Description: support functions for R plotting in picme
 
 import rpy2.robjects as robjects
 from rpy2.rinterface import RRuntimeError
+from rpy2.robjects.packages import importr
 
 import pdb
 
 def load_ggplot(e):
+    """if ggplot2 library not present, install"""
     if '''no item called "package:ggplot2"''' in e[0]:
         answer = raw_input("\nggplot2 is not installed.  Install it (and "+
                 "dependencies) [Y/n]? ")
@@ -29,6 +31,7 @@ def load_ggplot(e):
 
 
 def load_sqlite():
+    """load the RSQLite library.  install if not present"""
     try:
         robjects.r('library(RSQLite)')
     except RRuntimeError as e:
@@ -45,15 +48,35 @@ def load_sqlite():
             print e[0]
 
 def get_db_conn(db):
+    """open a connection to an sqlite db in R using SQLite"""
     robjects.r('''drv <- dbDriver("SQLite")''')
     conn_string = '''con <- dbConnect(drv, dbname = "{}")'''.format(db)
     robjects.r(conn_string)
 
-def close_db_conn(db):
-    pass
+def close_db_conn():
+    """close the db conn"""
+    robjects.r('''dbDisconnect(con)''')
 
 def remove_nexus_from_name(frame, col):
+    """sometimes locus names contain nexus, remove that"""
     for k,v in enumerate(frame[col]):
         #pdb.set_trace()
         frame[col][k] = v.strip('.nexus')
     return frame
+
+def setup_plotter(name, typ = 'png', width = 512, height = 512,
+        dpi = 300):
+    """we need to setup plotting to the output device (a file, in our case)"""
+    grdevices = importr('grDevices')
+    if typ == 'png':
+        grdevices.png(file = name, width = width, height = height, res=dpi)
+        return grdevices
+    elif typ == 'pdf':
+        grdevices.pdf(file = name, width = width, height = height)
+        return grdevices
+    elif typ == 'tiff':
+        grdevices.tiff(file = name, width = width, height = height, res=dpi)
+        return grdevices
+    elif typ == 'jpeg':
+        grdevices.jpeg(file = name, width = width, height = height, res=dpi)
+        return grdevices
