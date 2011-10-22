@@ -66,6 +66,24 @@ def single_locus_net_informativeness(locus_table, net_pi_table, locus):
             ggplot2.scale_x_reverse() + ggplot2.opts(title = locus)
     return plot
 
+def multiple_locus_net_informativeness_scatterplot(locus_table, net_pi_table,
+        loci):
+    if loci[0].lower() != 'all':
+        qry = '''"SELECT {0}.locus, mya, pi FROM {0}, {1} 
+            WHERE {0}.id = {1}.id and locus in {2}"'''.format(locus_table,
+            net_pi_table, tuple(loci))
+    else:
+        qry = '''"SELECT {0}.locus, mya, pi FROM {0}, {1} 
+            WHERE {0}.id = {1}.id"'''.format(locus_table,
+            net_pi_table)
+    frame = robjects.r('''dbGetQuery(con, {})'''.format(qry))
+    gg_frame = ggplot2.ggplot(frame)
+    plot = gg_frame + ggplot2.aes_string(x = 'mya', y = 'pi') + \
+            ggplot2.geom_point(ggplot2.aes_string(colour = 'locus'), \
+            size = 3, alpha = 0.4) + ggplot2.scale_x_reverse()
+    return plot
+
+
 def multiple_locus_net_informativeness_facet(locus_table, net_pi_table, loci):
     if loci[0].lower() != 'all':
         qry = '''"SELECT {0}.locus, mya, pi FROM {0}, {1} 
@@ -81,7 +99,7 @@ def multiple_locus_net_informativeness_facet(locus_table, net_pi_table, loci):
         ggplot2.geom_point(ggplot2.aes_string(colour = 'locus'), size = 3, \
         alpha = 0.4) + ggplot2.scale_x_reverse() + \
         ggplot2.facet_wrap(robjects.Formula('~ locus')) + \
-        ggplot2.theme_bw() + ggplot2.opts(**{'legend.position' : 'none'})
+        + ggplot2.opts(**{'legend.position' : 'none'})
     return plot
 
 def make_plot(args):
@@ -92,6 +110,10 @@ def make_plot(args):
     elif args.plot_type == 'multiple-locus-net-pi-facet' and \
             args.loci is not None:
         plots.append(multiple_locus_net_informativeness_facet(LOCUS, PI,
+            args.loci))
+    elif args.plot_type == 'multiple-locus-net-pi-scatterplot' and \
+            args.loci is not None:
+        plots.append(multiple_locus_net_informativeness_scatterplot(LOCUS, PI,
             args.loci))
 
     plotter = setup_plotter(args.output, get_output_type(args.output), args.width,
