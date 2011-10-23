@@ -19,14 +19,14 @@ def create_probe_db(db_name):
     c.execute("PRAGMA foreign_keys = ON")
     try:
         c.execute("CREATE TABLE loci (id INTEGER PRIMARY KEY AUTOINCREMENT, locus TEXT)")
-        c.execute('''CREATE TABLE net_informativeness (id INT, mya INT, pi FLOAT,
+        c.execute('''CREATE TABLE net (id INT, time INT, pi FLOAT,
             FOREIGN KEY(id) REFERENCES loci(id) DEFERRABLE INITIALLY
             DEFERRED)''')
-        c.execute('''CREATE TABLE time (id INT, time INT, pi FLOAT, 
+        c.execute('''CREATE TABLE discrete (id INT, time INT, pi FLOAT, 
             FOREIGN KEY(id) REFERENCES loci(id) DEFERRABLE INITIALLY
             DEFERRED)''')
-        c.execute('''CREATE TABLE epoch (id INT, epoch TEXT, sum_integral FLOAT,
-            sum_error FLOAT, FOREIGN KEY(id) REFERENCES loci(id) DEFERRABLE
+        c.execute('''CREATE TABLE interval (id INT, interval TEXT, pi FLOAT,
+            error FLOAT, FOREIGN KEY(id) REFERENCES loci(id) DEFERRABLE
             INITIALLY DEFERRED)''')
     except sqlite3.OperationalError, e:
         if e[0] == 'table loci already exists':
@@ -44,18 +44,18 @@ def create_probe_db(db_name):
 def insert_pi_data(conn, c, pis):
     for locus in pis:
         name, rates, mean_rate, pi, pi_net, times, epochs = locus
-        c.execute("INSERT INTO loci(locus) values (?)",
+        c.execute("INSERT INTO loci(locus) VALUES (?)",
                 (os.path.splitext(os.path.basename(name))[0],))
         key = c.lastrowid
         #pdb.set_trace()
         for k,v in enumerate(pi_net):
-            c.execute("INSERT INTO net_informativeness VALUES (?,?,?)", (key, k,
+            c.execute("INSERT INTO net VALUES (?,?,?)", (key, k,
                 v))
         if times:
             for k,v in times.iteritems():
-                c.execute("INSERT INTO time values (?,?,?)", (key, k, v))
+                c.execute("INSERT INTO discrete VALUES (?,?,?)", (key, k, v))
         if epochs:
             for k,v in epochs.iteritems():
-                c.execute("INSERT INTO epoch VALUES (?,?,?,?)", (key, k,
+                c.execute("INSERT INTO interval VALUES (?,?,?,?)", (key, k,
                 v['sum(integral)'], v['sum(error)']))
     return
