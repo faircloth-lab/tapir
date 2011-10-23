@@ -8,7 +8,6 @@ import numpy
 import sqlite3
 import argparse
 
-
 from subprocess import Popen, PIPE
 
 import picme
@@ -37,13 +36,14 @@ def get_args():
         default=os.getcwd(), action=picme.FullPaths, type=picme.is_dir)
     parser.add_argument('--hyphy', help="The path to hyphy (if not in $PATH)",
         default="hyphy2")
+    parser.add_argument('--template', help="""Path to the hypy
+        temlate file if in non-standard location""", default = None,)
     parser.add_argument('--threshold', help="""Minimum number of taxa without
         a gap for a site to be considered informative""", default=3, type=int)
     parser.add_argument('--multiprocessing', help="""Enable parallel
         calculation of rates""", default=False, action='store_true')
     parser.add_argument('--site-rates', default=False, action='store_true',
         help="Use previously calculated site rates")
-    #parser.add_argument('--test', action='store_true')
     return parser.parse_args()
 
 def welcome_message():
@@ -120,8 +120,11 @@ def main():
     time_vector = picme.get_time(0, int(tree_depth))
     params = []
     # get path to batch/template file for hyphy
-    template = os.path.join(os.path.dirname(os.path.realpath(__file__)), \
-            'templates/models_and_rates.bf')
+    if not args.template:
+        template = picme.get_hyphy_conf()
+    else:
+        template = args.template
+    pdb.set_trace()
     if not args.site_rates:
         print "\nEstimating site rates and PI for files:"
         for alignment in picme.get_files(args.alignments, '*.nex,*.nexus'):

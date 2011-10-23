@@ -13,6 +13,7 @@ import os
 import sys
 import glob
 import argparse
+from pkg_resources import Requirement, resource_filename
 
 class FullPaths(argparse.Action):
     """Expand user- and relative-paths"""

@@ -13,3 +13,7 @@ from db import *
 from base import *
 from compute import *
 #from rfunctions import *
+from pkg_resources import resource_string
+
+def get_hyphy_conf():
+    return resource_filename(__name__, 'data/models_and_rates.bf')
