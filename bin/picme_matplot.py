@@ -12,13 +12,9 @@ import matplotlib.pyplot as pyplot
 import matplotlib.cm as cm
 from matplotlib.backends.backend_pdf import PdfPages
 
-import pdb
+from picme.base import FullPaths
 
-# from estimate_p_i.py, possible TODO: create common library
-class FullPaths(argparse.Action):
-    """Expand user- and relative-paths"""
-    def __call__(self, parser, namespace, values, option_string=None):
-        setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
+import pdb
 
 # lifted from Coding Horror blog
 def natural_sort(l):

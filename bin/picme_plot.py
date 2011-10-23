@@ -1,5 +1,5 @@
 """
-File: create_r_plots.py
+File: picme_plot.py
 Author: Brant Faircloth
 
 Created by Brant Faircloth on 22 October 2011 08:10 PDT (-0700)
@@ -9,8 +9,10 @@ Description: create plots from data in SQLite
 
 """
 
-from picme import *
-from picme.rfunctions import *
+import os
+import argparse
+
+import picme
 
 from rpy2 import robjects
 from rpy2.rinterface import RRuntimeError
@@ -34,14 +36,14 @@ def get_args():
         phylogenetic informativeness based on the
         output of picme.py""")
     parser.add_argument('database', help="SQLite database containing picme output",
-        action=FullPaths)
+        action=picme.FullPaths)
     parser.add_argument('plot_type',help="The type of plot to make")
     # single-locus-net-pi
     # multiple-locus-net-pi
     # 
-    parser.add_argument('--loci', help = "", type=get_strings_from_items, \
+    parser.add_argument('--loci', help = "", type=picme.get_strings_from_items, \
             default = None)
-    parser.add_argument('--epochs', help = "", type=get_strings_from_items, \
+    parser.add_argument('--epochs', help = "", type=picme.get_strings_from_items, \
             default = None)
     parser.add_argument('--output', help="Name of the output file. Format "
         + "will be automatically determined based on the extension. Format "
@@ -187,8 +189,8 @@ def make_plot(args):
         plots.append(interval(LOCUS, INTERVAL, args.epochs, args.loci,
             boxplot = False))
     
-    plotter = setup_plotter(args.output, get_output_type(args.output), args.width,
-            args.height, "in", args.dpi)
+    plotter = picme.setup_plotter(args.output, picme.get_output_type(args.output),
+            args.width, args.height, "in", args.dpi)
     for plot in plots:
         plot.plot()
     plotter.dev_off()
@@ -197,11 +199,11 @@ def main():
     args = get_args()
     # ggplot2 gets loaded as a module.  here load sqlite
     # and iterface through robjects
-    load_sqlite()
+    picme.load_sqlite()
     # connect R to db
-    get_db_conn(args.database)
+    picme.get_db_conn(args.database)
     make_plot(args)
-    close_db_conn()
+    picme.close_db_conn()
 
 if __name__ == '__main__':
     main()
