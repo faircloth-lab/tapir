@@ -5,27 +5,28 @@ from setuptools import setup, find_packages
 
 if __name__ == '__main__':
     setup(
-        name='pd-ht',
+        name="picme",
         version="1.0",
-        description="Parallel computation of phylogenetic informativeness",
+        description="phylogenetic informativeness calculator for marker evaluation",
         author="Brant Faircloth, Jonathan Chang, Mike Alfaro",
-        author_email="brant.faircloth+pdht@gmail.com",
-        url="http://github.com/faircloth-lab/pd-ht/",
+        author_email="brant.faircloth+picme@gmail.com",
+        url="http://github.com/faircloth-lab/picme/",
         license="http://www.opensource.org/licenses/BSD-3-Clause",
         classifiers=[
-            'Development Status :: 4 - Beta',
-            'Environment :: Console',
-            'Operating System :: OS Independent',
-            'Intended Audience :: Science/Research',
-            'License :: OSI Approved :: BSD License',
-            'Programming Language :: Python',
-            'Topic :: Scientific/Engineering :: Bio-Informatics',
+            "Development Status :: 4 - Beta",
+            "Environment :: Console",
+            "Operating System :: OS Independent",
+            "Intended Audience :: Science/Research",
+            "License :: OSI Approved :: BSD License",
+            "Programming Language :: Python",
+            "Topic :: Scientific/Engineering :: Bio-Informatics",
              ],
-        requires=['dendropy','matplotlib','numpy','scipy'],
-        long_description=open('README.rst').read(),
+        requires=["dendropy","matplotlib","numpy","scipy","rpy2"],
+        long_description=open("README.rst").read(),
         packages=[],
-        scripts=['bin/estimate_p_i.py',
-                'bin/create_plots.py',
+        scripts=["bin/picme_compute.py",
+                "bin/picme_plot.py",
+                "bin/picme_matplot.py"
                 ],
         )
 
