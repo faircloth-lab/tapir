@@ -39,9 +39,10 @@ def get_args():
     # single-locus-net-pi
     # multiple-locus-net-pi
     # 
-    parser.add_argument('--loci', help = "", type=get_strings_from_items)
-    parser.add_argument('--epoch',help = "", type=get_list_from_ranges)
-
+    parser.add_argument('--loci', help = "", type=get_strings_from_items, \
+            default = None)
+    parser.add_argument('--epochs', help = "", type=get_strings_from_items, \
+            default = None)
     parser.add_argument('--output', help="Name of the output file. Format "
         + "will be automatically determined based on the extension. Format "
         + "choices include PDF, PNG, and TIFF",
@@ -102,6 +103,44 @@ def multiple_locus_net_informativeness_facet(locus_table, net_pi_table, loci):
         + ggplot2.opts(**{'legend.position' : 'none'})
     return plot
 
+def order_epochs(epochs):
+    e = {int(e.split('-')[0]):e for e in epochs}
+    ky = e.keys()
+    ky.sort()
+    sorted_epochs = [e[k] for k in ky]
+    return "c{0}".format(tuple(sorted_epochs))
+
+def interval_boxplot(locus_table, interval_table, epochs, loci):
+    if epochs[0].lower() != 'all' and loci is None:
+        qry = '''"SELECT {0}.locus, epoch, sum_integral FROM {0}, {1} 
+            WHERE {0}.id = {1}.id and epoch in {2}"'''.format(locus_table,
+            interval_table, tuple(epochs))
+    elif epochs[0].lower() != 'all' and loci[0].lower() != 'all':
+        qry = '''"SELECT {0}.locus, epoch, sum_integral FROM {0}, {1} 
+            WHERE {0}.id = {1}.id and epoch in {2} and locus in {3}"'''.format(locus_table,
+            interval_table, tuple(epochs), tuple(loci))
+    elif epochs[0].lower() == 'all' and loci[0].lower() != 'all':
+        qry = '''"SELECT {0}.locus, epoch, sum_integral FROM {0}, {1} 
+            WHERE {0}.id = {1}.id and locus in {2}"'''.format(locus_table,
+            interval_table, tuple(loci))
+    else:
+        qry = '''"SELECT {0}.locus, epoch, sum_integral FROM {0}, {1} 
+            WHERE {0}.id = {1}.id"'''.format(locus_table,
+            interval_table)
+    frame = robjects.r('''data <- dbGetQuery(con, {})'''.format(qry))
+    # because we're sorting by epoch, which is a factor, we need to
+    # explicitly re-sort the data by the first integer value
+    # of the interval.  This is a bit cumbersome, because sorting
+    # in R is less than pleasant.
+    sort_string = '''data$epoch <- factor(data$epoch, {})'''.format(order_epochs(frame[1]))
+    robjects.r(sort_string)
+    gg_frame = ggplot2.ggplot(robjects.r('''data'''))
+    plot = gg_frame + ggplot2.aes_string(x = 'epoch', y = 'sum_integral') + \
+        ggplot2.geom_boxplot(**{'outlier.size':0}) + \
+        ggplot2.geom_jitter(ggplot2.aes_string(color = 'locus'), size = 3, \
+        alpha = 0.6, position=ggplot2.position_jitter(width=0.25))
+    return plot
+
 def make_plot(args):
     plots = []
     if args.plot_type == 'single-locus-net-pi' and args.loci is not None:
@@ -115,6 +154,8 @@ def make_plot(args):
             args.loci is not None:
         plots.append(multiple_locus_net_informativeness_scatterplot(LOCUS, PI,
             args.loci))
+    elif args.plot_type == 'interval-boxplot' and args.epochs is not None:
+        plots.append(interval_boxplot(LOCUS, INTERVAL, args.epochs, args.loci))
 
     plotter = setup_plotter(args.output, get_output_type(args.output), args.width,
             args.height, args.dpi)
