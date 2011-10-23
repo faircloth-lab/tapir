@@ -22,7 +22,7 @@ When using picme, please cite:
 Dependencies
 ************
 
-- hyphy2 (please `download <https://github.com/faircloth-lab/picme/downloads>`_) or build a **single-threaded** hyphy2)
+- hyphy2 (please `download <https://github.com/faircloth-lab/picme/downloads>`_ or build a **single-threaded** hyphy2)
 - Python 2.6
 - numpy
 - scipy
