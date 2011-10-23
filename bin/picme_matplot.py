@@ -149,8 +149,8 @@ def create_line_plot(data, fig, colors):
 
 def get_epochs(conn):
     c = conn.cursor()
-    c.execute("""SELECT loci.locus, epoch, sum_integral
-                  FROM epoch JOIN loci USING (id)""")
+    c.execute("""SELECT loci.locus, interval, pi
+                  FROM interval JOIN loci USING (id)""")
 
     # Rearrange data into the following format:
     # results = {loci1: {epoch1: PI, epoch2: PI, ...}, ...}
@@ -162,8 +162,8 @@ def get_epochs(conn):
 
 def get_net_pi(conn):
     c = conn.cursor()
-    c.execute("""SELECT loci.locus, mya, pi
-                 FROM net_informativeness JOIN loci USING (id)""")
+    c.execute("""SELECT loci.locus, time, pi
+                 FROM net JOIN loci USING (id)""")
 
     results = collections.defaultdict(dict)
     for row in c:
