@@ -110,7 +110,7 @@ def order_epochs(epochs):
     sorted_epochs = [e[k] for k in ky]
     return "c{0}".format(tuple(sorted_epochs))
 
-def interval_boxplot(locus_table, interval_table, epochs, loci):
+def interval(locus_table, interval_table, epochs, loci, boxplot = True):
     if epochs[0].lower() != 'all' and loci is None:
         qry = '''"SELECT {0}.locus, epoch, sum_integral FROM {0}, {1} 
             WHERE {0}.id = {1}.id and epoch in {2}"'''.format(locus_table,
@@ -135,10 +135,20 @@ def interval_boxplot(locus_table, interval_table, epochs, loci):
     sort_string = '''data$epoch <- factor(data$epoch, {})'''.format(order_epochs(frame[1]))
     robjects.r(sort_string)
     gg_frame = ggplot2.ggplot(robjects.r('''data'''))
-    plot = gg_frame + ggplot2.aes_string(x = 'epoch', y = 'sum_integral') + \
-        ggplot2.geom_boxplot(**{'outlier.size':0}) + \
-        ggplot2.geom_jitter(ggplot2.aes_string(color = 'locus'), size = 3, \
-        alpha = 0.6, position=ggplot2.position_jitter(width=0.25))
+    if boxplot:
+        plot = gg_frame + ggplot2.aes_string(x = 'epoch', y = 'sum_integral') + \
+                ggplot2.geom_boxplot(**{'outlier.size':0}) + \
+                ggplot2.geom_jitter(ggplot2.aes_string(color = 'locus'), size = 3, \
+                alpha = 0.6, position=ggplot2.position_jitter(width=0.25))
+    else:
+        plot = gg_frame + ggplot2.aes_string(x = 'epoch', y = 'sum_integral',
+                fill='locus') + ggplot2.geom_bar() + \
+                ggplot2.facet_wrap(robjects.Formula('~ locus')) + \
+                ggplot2.opts(**{
+                    'axis.text.x':ggplot2.theme_text(angle = -90,  hjust = 0),
+                    'legend.position':'none'
+                    }) + \
+                ggplot2.scale_y_continuous('pi')
     return plot
 
 def make_plot(args):
@@ -155,7 +165,10 @@ def make_plot(args):
         plots.append(multiple_locus_net_informativeness_scatterplot(LOCUS, PI,
             args.loci))
     elif args.plot_type == 'interval-boxplot' and args.epochs is not None:
-        plots.append(interval_boxplot(LOCUS, INTERVAL, args.epochs, args.loci))
+        plots.append(interval(LOCUS, INTERVAL, args.epochs, args.loci))
+    elif args.plot_type == 'interval-barplot' and args.epochs is not None:
+        plots.append(interval(LOCUS, INTERVAL, args.epochs, args.loci,
+            boxplot = False))
 
     plotter = setup_plotter(args.output, get_output_type(args.output), args.width,
             args.height, args.dpi)
