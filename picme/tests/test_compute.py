@@ -11,20 +11,20 @@ Copyright 2011 Brant C. Faircloth. All rights reserved.
 import os
 import numpy
 import unittest
-from estimate_p_i import *
+from picme.compute import *
 
 import pdb
 
 class TestTransform(unittest.TestCase):
     def setUp(self):
-        self.expected = numpy.load('test/test-data/test-parsed-rates.npy')
+        self.expected = numpy.load('test-data/test-parsed-rates.npy')
 
     def test_uncorrected_site_rates(self):
-        observed = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json', test = True)
+        observed = parse_site_rates('test-data/test-uniform-draw-weights.rates.json', test = True)
         assert observed.all() == self.expected.all()
 
     def test_rate_correction(self):
-        observed = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json', 10., test = True)
+        observed = parse_site_rates('test-data/test-uniform-draw-weights.rates.json', 10., test = True)
         corrected_expected = self.expected/10.
         assert observed.all() == corrected_expected.all()
 
@@ -33,7 +33,7 @@ class TestTransform(unittest.TestCase):
 
 class TestTownsendAndIntegrationAgainstPhydesign(unittest.TestCase):
     def setUp(self):
-        self.rates = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json', test = True)
+        self.rates = parse_site_rates('test-data/test-uniform-draw-weights.rates.json', test = True)
         self.time = get_time(0, 174)
 
     def test_townsend_pi_computation_against_phydesign(self):
@@ -74,7 +74,7 @@ class TestTreeAdjustment(unittest.TestCase):
             dendropy.Tree.get_from_string('(danRer6:1.74,(oryLat2:1,(gasAcu1:0.93,(fr2:0.37,tetNig2:0.37):0.56):0.07):0.74)', schema='newick')
 
     def test_dendropy_tree_adjustment(self):
-        depth, correction, self.observed = correct_branch_lengths('test/test-data/Euteleost.tree', 'newick')
+        depth, correction, self.observed = correct_branch_lengths('test-data/Euteleost.tree', 'newick')
         observed_tree = dendropy.Tree.get_from_path(self.observed, 'newick')
         #pdb.set_trace()
         assert observed_tree.as_string('newick') == \
@@ -86,27 +86,27 @@ class TestTreeAdjustment(unittest.TestCase):
 class TestInformativenessCutoff(unittest.TestCase):
     def setUp(self):
         self.threshold = 3
-        self.expected_informative_sites = numpy.load('test/test-data/chr1_918-test-cutoff-values.npy')
+        self.expected_informative_sites = numpy.load('test-data/chr1_918-test-cutoff-values.npy')
 
     def test_informativeness_cutoff(self):
-        alignment = 'test/test-data/informativeness_cutoff.nex'
+        alignment = 'test-data/informativeness_cutoff.nex'
         observed_informative_sites = get_informative_sites(alignment, self.threshold)
         small_expected_informative_sites= numpy.array([numpy.nan, numpy.nan, 1., 1.])
         assert observed_informative_sites.all() == small_expected_informative_sites.all()
 
     def test_full_informativeness_cutoff(self):
-        alignment = 'test/test-data/chr1_918.nex'
+        alignment = 'test-data/chr1_918.nex'
         observed_informative_sites = get_informative_sites(alignment, self.threshold)
         assert observed_informative_sites.all() == \
             self.expected_informative_sites.all()
 
     def test_cull_informative_rates(self):
-        alignment = 'test/test-data/chr1_918.nex'
-        expected_culled = numpy.load('test/test-data/test-culled-rates.npy')
+        alignment = 'test-data/chr1_918.nex'
+        expected_culled = numpy.load('test-data/test-culled-rates.npy')
         # trim to 100 in length to fit w/ fake uniform data
         observed_informative_sites = get_informative_sites(alignment,
                 self.threshold)[:100]
-        rates = parse_site_rates('test/test-data/test-uniform-draw-weights.rates.json', 10., test = True)
+        rates = parse_site_rates('test-data/test-uniform-draw-weights.rates.json', 10., test = True)
         observed_culled = cull_uninformative_rates(observed_informative_sites, rates)
         assert expected_culled.all() == observed_culled.all() 
 
