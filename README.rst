@@ -14,10 +14,10 @@ When using picme, please cite:
   phylogenetic informativeness.
 
 - Townsend JP: Profiling phylogenetic informativeness. Systematic Biol. 2007,
-  56:222–231.
+  56:222-231.
 
 - Pond SLK, Frost SDW, Muse SV: HyPhy: hypothesis testing using phylogenies.
-  Bioinformatics 2005, 21:676–679.
+  Bioinformatics 2005, 21:676-679.
 
 Dependencies
 ************
