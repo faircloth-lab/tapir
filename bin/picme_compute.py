@@ -46,6 +46,34 @@ def get_args():
     #parser.add_argument('--test', action='store_true')
     return parser.parse_args()
 
+def welcome_message():
+    return '''
+    ***************************************************
+    *                                                 *
+    * pd-ht:  PhyDesign - High-Throughput             *
+    *                                                 *
+    * (c) 2011 Brant Faircloth, Jonathan Chang,       *
+    * Mike Alfaro                                     *
+    *                                                 *
+    * PhyDesign was created by the Townsend Lab       *
+    * (http://phydesign.townsend.yale.edu)            *
+    *                                                 *
+    * To cite Phydesign, please use:                  *
+    *                                                 *
+    *   - J.P. Townsend, 2007. Profiling              *
+    *     phylogenetic informativeness. Systematic    *
+    *     Biology, 56(2), 222-231.                    *
+    *                                                 *
+    *   - Pond, S.L.K., Frost, S.D.W., and S.V. Muse, *
+    *     2005. Hyphy: hypothesis testing using       *
+    *     phylogenies. Bioinformatics, 21(5), 676-9.  *
+    *                                                 *
+    * Many thanks to Francesc Lopez-Giraldez and      *
+    * Jeffrey Townsend for providing us with a copy   *
+    * of their web-application source code.           *
+    *                                                 *
+    ***************************************************\n\n'''
+
 def worker(params):
     #pdb.set_trace()
     time_vector, hyphy, template, towrite, output, correction, alignment, times, epochs, threshold = params
@@ -80,34 +108,6 @@ def worker(params):
     # remove the numpy.nan records before computing the integral
     pi_epochs = picme.get_net_integral_for_epochs(rates[numpy.isfinite(rates)], epochs)
     return alignment, rates, mean_rate, pi, pi_net, pi_times, pi_epochs
-
-def welcome_message():
-    return '''
-    ***************************************************
-    *                                                 *
-    * pd-ht:  PhyDesign - High-Throughput             *
-    *                                                 *
-    * (c) 2011 Brant Faircloth, Jonathan Chang,       *
-    * Mike Alfaro                                     *
-    *                                                 *
-    * PhyDesign was created by the Townsend Lab       *
-    * (http://phydesign.townsend.yale.edu)            *
-    *                                                 *
-    * To cite Phydesign, please use:                  *
-    *                                                 *
-    *   - J.P. Townsend, 2007. Profiling              *
-    *     phylogenetic informativeness. Systematic    *
-    *     Biology, 56(2), 222-231.                    *
-    *                                                 *
-    *   - Pond, S.L.K., Frost, S.D.W., and S.V. Muse, *
-    *     2005. Hyphy: hypothesis testing using       *
-    *     phylogenies. Bioinformatics, 21(5), 676-9.  *
-    *                                                 *
-    * Many thanks to Francesc Lopez-Giraldez and      *
-    * Jeffrey Townsend for providing us with a copy   *
-    * of their web-application source code.           *
-    *                                                 *
-    ***************************************************\n\n'''
 
 def main():
     """Main loop"""
