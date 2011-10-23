@@ -1,25 +1,28 @@
 Purpose
 *******
 
-*pd-ht* contains programs to estimate and plot phylogenetic informativeness for
+*picme* contains programs to estimate and plot phylogenetic informativeness for
 large datasets.
 
 
-Citing pd-ht
+Citing picme
 ************
 
-When using pd-ht, please cite:
+When using picme, please cite:
 
-- J.P. Townsend, 2007. Profiling phylogenetic informativeness. Systematic
-  Biology, 56(2), 222-231.
+- Faircloth BC, Chang J, Alfaro ME: *picme* enables high throughput analysis of
+  phylogenetic informativeness.
 
-- Pond, S.L.K., Frost, S.D.W., and S.V. Muse, 2005.  Hyphy: hypothesis testing
-  using phylogenies. Bioinformatics, 21(5), 676-9.
+- Townsend JP: Profiling phylogenetic informativeness. Systematic Biol. 2007,
+  56:222–231.
+
+- Pond SLK, Frost SDW, Muse SV: HyPhy: hypothesis testing using phylogenies.
+  Bioinformatics 2005, 21:676–679.
 
 Dependencies
 ************
 
-- hyphy2 (please [download](https://github.com/BadDNA/pd-ht/downloads) or build a single-threaded hyphy2)
+- hyphy2 (please `download <https://github.com/faircloth-lab/picme/downloads>`_) or build a **single-threaded** hyphy2)
 - Python 2.6
 - numpy
 - scipy
@@ -29,11 +32,11 @@ Installation
 ************
 For the moment, the easiest way to install the program is::
 
-    git clone git://github.com/BadDNA/pd-ht.git /path/to/pd-ht
+    git clone git://github.com/faircloth-lab/picme.git /path/to/picme
 
 To run tests::
 
-    cd /path/to/pd-ht/
+    cd /path/to/picme/
     python test/test_townsend_code.py
 
 Use
@@ -46,7 +49,7 @@ be fine, for the moment.
 
 To run::
 
-    cd /path/to/pd-ht/
+    cd /path/to/picme/
 
     python estimate_p_i.py Input_Folder_of_Nexus_Files/ Input.tree \
         --output Output_Directory \
@@ -71,7 +74,7 @@ rather than estimating those again with::
 Results
 *******
 
-pd-ht writes results to a [sqlite](http://www.sqlite.org/) database in the
+picme writes results to a [sqlite](http://www.sqlite.org/) database in the
 output directory of your choosing.  This directory also holds site rate
 files in [JSON](http://www.json.org/) format for each locus passed
 through `estimate_p_i.py`.
