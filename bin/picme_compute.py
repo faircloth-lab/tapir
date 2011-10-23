@@ -124,7 +124,6 @@ def main():
         template = picme.get_hyphy_conf()
     else:
         template = args.template
-    pdb.set_trace()
     if not args.site_rates:
         print "\nEstimating site rates and PI for files:"
         for alignment in picme.get_files(args.alignments, '*.nex,*.nexus'):
