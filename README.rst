@@ -51,7 +51,7 @@ To run::
 
     cd /path/to/picme/
 
-    python estimate_p_i.py Input_Folder_of_Nexus_Files/ Input.tree \
+    python picme_compute.py Input_Folder_of_Nexus_Files/ Input.tree \
         --output Output_Directory \
         --epochs=32-42,88-98,95-105,164-174 \
         --times=37,93,100,170 \
@@ -64,7 +64,7 @@ If you have already run the above and saved results to your output
 folder (see below), you can use the pre-existing site-rate records
 rather than estimating those again with::
 
-     python estimate_p_i.py Input_Folder_of_Site_Rate_JSON_Files/ Input.tree \
+     python picme_compute.py Input_Folder_of_Site_Rate_JSON_Files/ Input.tree \
         --output Output_Directory \
         --epochs=32-42,88-98,95-105,164-174 \
         --times=37,93,100,170 \
@@ -77,7 +77,11 @@ Results
 picme writes results to a [sqlite](http://www.sqlite.org/) database in the
 output directory of your choosing.  This directory also holds site rate
 files in [JSON](http://www.json.org/) format for each locus passed
-through `estimate_p_i.py`.
+through `picme_compute.py`.
+
+You can access the results in the database as follows.  For more examples,
+including plotting, see the 
+`documentation <http://faircloth-lab.github.com/picme/>`_
 
 - crank up sqlite::
 
@@ -85,24 +89,25 @@ through `estimate_p_i.py`.
 
 - get integral data for all epochs::
 
-    select loci.locus, epoch.epoch, epoch.sum_integral from loci, epoch where loci.id = epoch.id
+    select locus, interval, pi from loci, interval where loci.id = interval.id
 
 - get integral data for a specific epoch::
 
-    select loci.locus, epoch.epoch, epoch.sum_integral from loci, epoch 
-    where epoch = '95-105' and loci.id = epoch.id;
+    select locus, interval, pi from loci, interval 
+    where interval = '95-105' and loci.id = interval.id;
 
 - get the count of loci having max(PI) at different epochs::
 
-    create temporary table max as select id, max(sum_integral) as max from epoch group by id;
+    create temporary table max as select id, max(pi) as max from interval group by id;
 
-    create temporary table t as select epoch.id, epoch.epoch, max.max from epoch, max 
-    where epoch.sum_integral = max.max;
+    create temporary table t as select interval.id, interval, max from interval, max 
+    where interval.pi = max.max;
 
-    select epoch, count(*) from t group by epoch;
+    select interval, count(*) from t group by interval;
 
 Acknowledgements
 ****************
 
-Many thanks to Francesc Lopez-Giraldez and Jeffrey Townsend for providing us
-with a copy of their web-application source code.
+We thank Francesc Lopez-Giraldez and Jeffrey Townsend for providing us
+with a copy of their web-application source code.  BCF thanks S Hubbell
+and P Gowaty.
