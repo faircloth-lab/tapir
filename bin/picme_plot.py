@@ -13,6 +13,7 @@ import os
 import argparse
 
 import picme
+import picme.rfunctions
 
 from rpy2 import robjects
 from rpy2.rinterface import RRuntimeError
@@ -20,7 +21,7 @@ from rpy2.rinterface import RRuntimeError
 try:
     import rpy2.robjects.lib.ggplot2 as ggplot2
 except RRuntimeError as e:
-    load_ggplot(e)
+    picme.rfunctions.load_ggplot(e)
 
 import pdb
 
@@ -187,7 +188,7 @@ def make_plot(args):
         plots.append(interval(LOCUS, INTERVAL, args.intervals, args.loci,
             boxplot = False))
 
-    plotter = picme.setup_plotter(args.output, picme.get_output_type(args.output),
+    plotter = picme.rfunctions.setup_plotter(args.output, picme.get_output_type(args.output),
             args.width, args.height, "in", args.dpi)
     for plot in plots:
         plot.plot()
@@ -197,11 +198,11 @@ def main():
     args = get_args()
     # ggplot2 gets loaded as a module.  here load sqlite
     # and iterface through robjects
-    picme.load_sqlite()
+    picme.rfunctions.load_sqlite()
     # connect R to db
-    picme.get_db_conn(args.database)
+    picme.rfunctions.get_db_conn(args.database)
     make_plot(args)
-    picme.close_db_conn()
+    picme.rfunctions.close_db_conn()
 
 if __name__ == '__main__':
     main()
