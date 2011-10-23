@@ -21,8 +21,8 @@ class FullPaths(argparse.Action):
 def get_output_type(name):
     """get extension from filename"""
     ext = os.path.splitext(name)[1].lstrip('.').lower()
-    assert ext in ['pdf','png','tiff'], "Filetype must be one of pdf, png " +\
-        "or tiff"
+    assert ext in ['pdf','png','tiff','jpeg', 'jpg'], "Filetype must be " +\ 
+        "one of pdf, png, tiff, or jpeg"
     return ext
 
 def get_ints_from_items(string, name = 'time'):

@@ -47,13 +47,12 @@ def get_args():
         + "will be automatically determined based on the extension. Format "
         + "choices include PDF, PNG, and TIFF",
         default="pi.png")
-    parser.add_argument('--width', help="Figure width, in inches", default=8,
-        type=float)
-    parser.add_argument('--height', help="Figure height, in inches", default=6,
-        type=float)
-    parser.add_argument('--dpi', help="Figure dpi", default=300,
+    parser.add_argument('--width', help="Figure width, in inches",
+            default = 8.0, type=float)
+    parser.add_argument('--height', help="Figure height, in inches",
+            default = 6.0, type=float)
+    parser.add_argument('--dpi', help="Figure dpi", default = 150,
         type=int)
-
     return parser.parse_args()
 
 def single_locus_net_informativeness(locus_table, net_pi_table, locus):
@@ -64,7 +63,9 @@ def single_locus_net_informativeness(locus_table, net_pi_table, locus):
     gg_frame = ggplot2.ggplot(frame)
     plot = gg_frame + ggplot2.aes_string(x = 'mya', y='pi') + \
             ggplot2.geom_point(size = 3, alpha = 0.4) + \
-            ggplot2.scale_x_reverse() + ggplot2.opts(title = locus)
+            ggplot2.scale_x_reverse() + ggplot2.opts(title = locus) + \
+            ggplot2.scale_y_continuous('phylogenetic informativeness') + \
+            ggplot2.scale_x_discreete('years ago')
     return plot
 
 def multiple_locus_net_informativeness_scatterplot(locus_table, net_pi_table,
@@ -81,9 +82,11 @@ def multiple_locus_net_informativeness_scatterplot(locus_table, net_pi_table,
     gg_frame = ggplot2.ggplot(frame)
     plot = gg_frame + ggplot2.aes_string(x = 'mya', y = 'pi') + \
             ggplot2.geom_point(ggplot2.aes_string(colour = 'locus'), \
-            size = 3, alpha = 0.4) + ggplot2.scale_x_reverse()
-    return plot
+            size = 3, alpha = 0.4) + ggplot2.scale_x_reverse() + \
+            ggplot2.scale_y_continuous('phylogenetic informativeness') + \
+            ggplot2.scale_x_discrete('years ago')
 
+    return plot
 
 def multiple_locus_net_informativeness_facet(locus_table, net_pi_table, loci):
     if loci[0].lower() != 'all':
@@ -100,7 +103,9 @@ def multiple_locus_net_informativeness_facet(locus_table, net_pi_table, loci):
         ggplot2.geom_point(ggplot2.aes_string(colour = 'locus'), size = 3, \
         alpha = 0.4) + ggplot2.scale_x_reverse() + \
         ggplot2.facet_wrap(robjects.Formula('~ locus')) + \
-        + ggplot2.opts(**{'legend.position' : 'none'})
+        ggplot2.opts(**{'legend.position' : 'none'}) + \
+        ggplot2.scale_y_continuous('phylogenetic informativeness') + \
+        ggplot2.scale_x_discrete('years ago')
     return plot
 
 def order_epochs(epochs):
@@ -110,7 +115,7 @@ def order_epochs(epochs):
     sorted_epochs = [e[k] for k in ky]
     return "c{0}".format(tuple(sorted_epochs))
 
-def interval(locus_table, interval_table, epochs, loci, boxplot = True):
+def get_interval_query(epochs, loci, locus_table, interval_table):
     if epochs[0].lower() != 'all' and loci is None:
         qry = '''"SELECT {0}.locus, epoch, sum_integral FROM {0}, {1} 
             WHERE {0}.id = {1}.id and epoch in {2}"'''.format(locus_table,
@@ -127,6 +132,10 @@ def interval(locus_table, interval_table, epochs, loci, boxplot = True):
         qry = '''"SELECT {0}.locus, epoch, sum_integral FROM {0}, {1} 
             WHERE {0}.id = {1}.id"'''.format(locus_table,
             interval_table)
+    return qry
+
+def interval(locus_table, interval_table, epochs, loci, boxplot = True):
+    qry = get_interval_query(epochs, loci, locus_table, interval_table)
     frame = robjects.r('''data <- dbGetQuery(con, {})'''.format(qry))
     # because we're sorting by epoch, which is a factor, we need to
     # explicitly re-sort the data by the first integer value
@@ -137,9 +146,16 @@ def interval(locus_table, interval_table, epochs, loci, boxplot = True):
     gg_frame = ggplot2.ggplot(robjects.r('''data'''))
     if boxplot:
         plot = gg_frame + ggplot2.aes_string(x = 'epoch', y = 'sum_integral') + \
-                ggplot2.geom_boxplot(**{'outlier.size':0}) + \
+                ggplot2.geom_boxplot(**{
+                    'outlier.size':0, 
+                    'alpha':0.3
+                    }
+                ) + \
                 ggplot2.geom_jitter(ggplot2.aes_string(color = 'locus'), size = 3, \
-                alpha = 0.6, position=ggplot2.position_jitter(width=0.25))
+                alpha = 0.6, position=ggplot2.position_jitter(width=0.25)) + \
+                ggplot2.scale_y_continuous('phylogenetic informativeness') + \
+                ggplot2.scale_x_discrete('interval (years ago)')
+
     else:
         plot = gg_frame + ggplot2.aes_string(x = 'epoch', y = 'sum_integral',
                 fill='locus') + ggplot2.geom_bar() + \
@@ -148,19 +164,20 @@ def interval(locus_table, interval_table, epochs, loci, boxplot = True):
                     'axis.text.x':ggplot2.theme_text(angle = -90,  hjust = 0),
                     'legend.position':'none'
                     }) + \
-                ggplot2.scale_y_continuous('pi')
+                ggplot2.scale_y_continuous('phylogenetic informativeness') + \
+                ggplot2.scale_x_discrete('interval (years ago)')
     return plot
 
 def make_plot(args):
     plots = []
-    if args.plot_type == 'single-locus-net-pi' and args.loci is not None:
+    if args.plot_type == 'locus-pi' and args.loci is not None:
         for locus in args.loci:
             plots.append(single_locus_net_informativeness(LOCUS, PI, locus))
-    elif args.plot_type == 'multiple-locus-net-pi-facet' and \
+    elif args.plot_type == 'pi-facet' and \
             args.loci is not None:
         plots.append(multiple_locus_net_informativeness_facet(LOCUS, PI,
             args.loci))
-    elif args.plot_type == 'multiple-locus-net-pi-scatterplot' and \
+    elif args.plot_type == 'pi-scatterplot' and \
             args.loci is not None:
         plots.append(multiple_locus_net_informativeness_scatterplot(LOCUS, PI,
             args.loci))
@@ -169,9 +186,9 @@ def make_plot(args):
     elif args.plot_type == 'interval-barplot' and args.epochs is not None:
         plots.append(interval(LOCUS, INTERVAL, args.epochs, args.loci,
             boxplot = False))
-
+    
     plotter = setup_plotter(args.output, get_output_type(args.output), args.width,
-            args.height, args.dpi)
+            args.height, "in", args.dpi)
     for plot in plots:
         plot.plot()
     plotter.dev_off()

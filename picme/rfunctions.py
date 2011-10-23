@@ -64,19 +64,24 @@ def remove_nexus_from_name(frame, col):
         frame[col][k] = v.strip('.nexus')
     return frame
 
-def setup_plotter(name, typ = 'png', width = 512, height = 512,
-        dpi = 300):
+def setup_plotter(name, typ = "png", width = 4, height = 4, units = "in", 
+        ppi = 300):
     """we need to setup plotting to the output device (a file, in our case)"""
     grdevices = importr('grDevices')
     if typ == 'png':
-        grdevices.png(file = name, width = width, height = height, res=dpi)
+        grdevices.png(file = name, width = width, height = height, units=units,
+                res = ppi)
         return grdevices
     elif typ == 'pdf':
         grdevices.pdf(file = name, width = width, height = height)
         return grdevices
     elif typ == 'tiff':
-        grdevices.tiff(file = name, width = width, height = height, res=dpi)
+        grdevices.tiff(file = name, width = width, height = height, 
+                units = units, res = ppi)
         return grdevices
-    elif typ == 'jpeg':
-        grdevices.jpeg(file = name, width = width, height = height, res=dpi)
+    elif typ == 'jpeg' or typ == 'jpg':
+        grdevices.jpeg(file = name, width = width, height = height, 
+                units = units, res=ppi)
         return grdevices
+    else:
+        raise TypeError, "Unknown output format."
