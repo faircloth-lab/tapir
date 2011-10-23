@@ -13,7 +13,8 @@ import os
 import sys
 import glob
 import argparse
-from pkg_resources import Requirement, resource_filename
+
+#import pdb
 
 class FullPaths(argparse.Action):
     """Expand user- and relative-paths"""
@@ -64,11 +65,12 @@ def get_list_from_ranges(string):
 def get_files(d, extension):
     if ',' in extension:
         extension = extension.strip(' ').split(',')
+    else:
+        extension = [extension]
     files = []
     for e in extension:
         files.extend(glob.glob(os.path.join(d, e)))
     if files == []:
-        print "There appear to be no files of {0} type in {1}".format(extension, d)
-        sys.exit(2)
+        raise IOError, "There appear to be no files of {0} type in {1}".format(extension, d)
     else:
         return files
