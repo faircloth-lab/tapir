@@ -12,7 +12,6 @@ Description:
 from db import *
 from base import *
 from compute import *
-#from rfunctions import *
 from pkg_resources import resource_string
 
 def get_hyphy_conf():
