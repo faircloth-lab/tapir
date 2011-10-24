@@ -38,6 +38,7 @@ try:
 except ImportError: # pragma: no cover
     raise ImportError, 'dendropy does not seem to be installed. Please see the user guide.' # pragma: no cover
 
+from tests import test
 
 from db import *
 from base import *
