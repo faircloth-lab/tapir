@@ -17,8 +17,8 @@ import pdb
 
 def get_args():
     """Get CLI arguments and options"""
-    parser = argparse.ArgumentParser(description="""pd-ht:  High-throughput
-        phydesign - profile phylogenetic informativeness""")
+    parser = argparse.ArgumentParser(description="""picme:  compute the
+            phylogenetic informativeness of DNA loci""")
 
     parser.add_argument('alignments', help="The folder of alignments",
         action=picme.FullPaths, type=picme.is_dir)
@@ -27,8 +27,9 @@ def get_args():
     required = parser.add_argument_group("required arguments")
     required.add_argument('--times', help="""Comma-separated list of start
         times of interest (MYA)""", type=picme.get_list_from_ints, required=True)
-    required.add_argument('--epochs', help="""Comma-separated list of epoch
-        ranges of interest (MYA)""", type=picme.get_list_from_ranges, required=True)
+    required.add_argument('--intervals', help="""Comma-separated list of
+        interval ranges of interest (i,e. in MYA)""", type=picme.get_list_from_ranges, 
+        required=True)
 
     parser.add_argument('--tree-format', help="The format of the tree",
         dest='tree_format', choices=['nexus','newick'], default='newick')
@@ -50,7 +51,7 @@ def welcome_message():
     return '''
     ***************************************************
     *                                                 *
-    * pd-ht:  PhyDesign - High-Throughput             *
+    * picme:  PhyDesign - High-Throughput             *
     *                                                 *
     * (c) 2011 Brant Faircloth, Jonathan Chang,       *
     * Mike Alfaro                                     *
