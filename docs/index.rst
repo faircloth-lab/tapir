@@ -9,7 +9,17 @@ Welcome to picme's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
+
+    introduction
+    installation
+    computing
+    accessing
+    plotting
+    license
+    citation
+    funding
+    references
 
 Indices and tables
 ==================
