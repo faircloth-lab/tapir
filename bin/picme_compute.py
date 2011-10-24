@@ -115,6 +115,8 @@ def main():
     args = get_args()
     # print message
     print welcome_message()
+    # make output dir
+    mkdir(args.output)
     # correct branch lengths
     tree_depth, correction, tree = picme.correct_branch_lengths(args.tree, args.tree_format, d = args.output)
     # generate a vector of times given start and stops

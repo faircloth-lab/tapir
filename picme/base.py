@@ -29,6 +29,12 @@ def is_dir(dirname):
     else:
         return dirname
 
+def mkdir(path):
+    try:
+        os.mkdir(path)
+    except OSError:
+        pass
+
 def get_output_type(name):
     """get extension from filename"""
     ext = os.path.splitext(name)[1].lstrip('.').lower()
