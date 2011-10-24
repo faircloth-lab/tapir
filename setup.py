@@ -37,6 +37,7 @@ if __name__ == '__main__':
             'tests':['test-data/*'],
             'data':['*'],
             },
-        include_package_data = True
+        include_package_data = True,
+        test_suite = 'picme'
     )
 
