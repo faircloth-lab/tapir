@@ -1,0 +1,216 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Computing Phylogenetic Informativeness &mdash; picme v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="picme v1.0 documentation" href="index.html" />
+    <link rel="next" title="&lt;no title&gt;" href="accessing.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="_static/small_flask.css" type= "text/css" rel="stylesheet" />
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="accessing.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">picme v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="computing-phylogenetic-informativeness">
+<span id="computing"></span><h1>Computing Phylogenetic Informativeness<a class="headerlink" href="#computing-phylogenetic-informativeness" title="Permalink to this headline">¶</a></h1>
+<p>After you get the dependencies installed, computing the phylogenetic
+informativeness (PI) is rather easy.  The typical invocation of the
+program looks like:</p>
+<div class="highlight-bash"><div class="highlight"><pre>picme_compute.py /your/input/nexus/ <span class="se">\</span>
+    /your/data/treefile.tree <span class="se">\</span>
+    --output /path/to/the/output <span class="se">\</span>
+    --times 1,2,3,4 <span class="se">\</span>
+    --intervals 1-5,5-10
+</pre></div>
+</div>
+<p>This wil compute the PI from a folder of nexus files at
+<cite>/your/input/nexus/</cite>, against the tree that is located at
+<cite>/your/data/treefile.tree</cite>, for the the discrete times 1,2,3,4 and
+across the intervals (<em>aka</em> epochs) 1-5 and 5-10.</p>
+<p>We describe each option (<cite>picme_compute.py -h</cite>) in detail, below.  We
+have separated these options into those pertinent to
+<a class="reference internal" href="#initial-computation"><em>PI Computation Options</em></a> and those for <em class="xref std std-ref">re-computation</em>.</p>
+<div class="section" id="pi-computation-options">
+<span id="initial-computation"></span><h2>PI Computation Options<a class="headerlink" href="#pi-computation-options" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="positional-arguments">
+<h3>Positional arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p><strong>alignments</strong>  The folder of alignments</p>
+<p><strong>tree</strong>  The input tree</p>
+</div></blockquote>
+<p>Positional arguments are passed to the program by <em>position</em>.  For
+example, to send the above to <cite>picme_compute.py</cite>, you would type, on the
+command-line</p>
+<div class="highlight-bash"><div class="highlight"><pre>picme_compute.py alignments tree
+</pre></div>
+</div>
+</div>
+<div class="section" id="required-arguments">
+<h3>Required arguments<a class="headerlink" href="#required-arguments" title="Permalink to this headline">¶</a></h3>
+<p>We have several options that are requies, which can annoy some people.
+Here, we&#8217;ve made these options required because it makes the
+command-line invocation of the program less clumsy and more clear.</p>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--times <var>TIMES</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>Comma-separated list of start times of interest (MYA)</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--epochs <var>EPOCHS</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>Comma-separated list of epoch ranges of interest (MYA)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="optional-arguments">
+<h3>Optional arguments<a class="headerlink" href="#optional-arguments" title="Permalink to this headline">¶</a></h3>
+<p>These are true options in the sense that they are entirely optional -
+the defaults will be chose for you if you do not pass a value along with
+it&#8217;s corresponding option.</p>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>show this help message and exit</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--tree-format <var>FORMAT</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>The format of the tree (<cite>nexus</cite> or <cite>newick</cite>)</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--output <var>OUTPUT</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>The path to the output directory</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--hyphy <var>HYPHY</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>The path to hyphy (if not in $PATH)</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--template <var>TEMPLATE</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>Path to the hypy temlate file if in non-standard
+location</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--threshold <var>THRESHOLD</var></span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>Minimum number of taxa without a gap for a site
+to be considered informative</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--multiprocessing</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>Enable parallel calculation of rates</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">--site-rates</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>Use previously calculated site rates</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/pick-me.png" alt="Logo"/>
+  </a>
+</p>
+
+<p> <a href = 'https://github.com/faircloth-lab/picme'>picme</a> computes the
+phylo-genetic informativeness of DNA loci </p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Computing Phylogenetic Informativeness</a><ul>
+<li><a class="reference internal" href="#pi-computation-options">PI Computation Options</a><ul>
+<li><a class="reference internal" href="#positional-arguments">Positional arguments</a></li>
+<li><a class="reference internal" href="#required-arguments">Required arguments</a></li>
+<li><a class="reference internal" href="#optional-arguments">Optional arguments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="installation.html" title="previous chapter">Installation</a></li>
+      <li>Next: <a href="accessing.html" title="next chapter">&lt;no title&gt;</a></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/computing.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2011, Brant Faircloth, Jonathan Chang, Mike Alfaro.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+    </div>
+  </body>
+</html>

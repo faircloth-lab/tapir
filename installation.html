@@ -1,0 +1,178 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &mdash; picme v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="picme v1.0 documentation" href="index.html" />
+    <link rel="next" title="Computing Phylogenetic Informativeness" href="computing.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" />
+   
+  
+  <link media="only screen and (max-device-width: 480px)" href="_static/small_flask.css" type= "text/css" rel="stylesheet" />
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="computing.html" title="Computing Phylogenetic Informativeness"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">picme v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installation">
+<span id="id1"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://github.com/faircloth-lab/picme">picme</a> has several dependencies.  At a minimum you will need to install:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.datam0nk3y.org/hyphy/">hyphy 2</a> (must be
+single-threaded)</li>
+<li><a class="reference external" href="http://numpy.scipy.org">numpy 1.3.x</a></li>
+<li><a class="reference external" href="http://scipy.org">scipy 0.9.0</a></li>
+<li><a class="reference external" href="http://packages.python.org/DendroPy/">dendropy 3.9.0</a></li>
+</ul>
+<div class="section" id="installing-hyphy">
+<h2>Installing hyphy<a class="headerlink" href="#installing-hyphy" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://github.com/faircloth-lab/picme">picme</a> uses <a class="reference external" href="http://www.datam0nk3y.org/hyphy/">hyphy</a> for substitution model selection and site rate
+estimation.  Additionally, hyphy needs to be compiled as a
+single-threaded binary.  We provide appropriate binaries for:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/downloads/faircloth-lab/picme/hyphy2.osx.gz">os x 10.7</a></li>
+<li>linux</li>
+</ul>
+<p>You need to download these and place them within your <cite>$PATH</cite>.  If this
+statement confuses you, then you should <a class="reference external" href="http://kb.iu.edu/data/acar.html">read this article on UNIX paths</a>.</p>
+</div>
+<div class="section" id="installing-numpy">
+<h2>Installing numpy<a class="headerlink" href="#installing-numpy" title="Permalink to this headline">¶</a></h2>
+<p>You first need to install <a class="reference external" href="http://numpy.scipy.org">numpy</a>.  Barring platform-specific options, you can
+accomplish this by running:</p>
+<div class="highlight-python"><pre>easy_install numpy</pre>
+</div>
+<p>Sometimes on OSX, this is problematic.  There is a <a class="reference external" href="http://sourceforge.net/projects/numpy/files/NumPy/1.6.1/numpy-1.6.1-py2.6-python.org-macosx10.3.dmg/download">binary installer</a>
+that you can use in this case.</p>
+</div>
+<div class="section" id="installing-scipy">
+<h2>Installing scipy<a class="headerlink" href="#installing-scipy" title="Permalink to this headline">¶</a></h2>
+<p>You also need to install <a class="reference external" href="http://scipy.org">scipy</a>.   Barring platform-specific options, you can
+accomplish this by running:</p>
+<div class="highlight-python"><pre>easy_install scipy</pre>
+</div>
+<p>Sometimes on OSX, this is problematic.  There is a <a class="reference external" href="http://sourceforge.net/projects/scipy/files/scipy/0.9.0/scipy-0.9.0-py2.7-python.org-macosx10.6.dmg/download">binary installer</a>
+that you can use in this case.</p>
+</div>
+<div class="section" id="installing-dendropy">
+<h2>Installing dendropy<a class="headerlink" href="#installing-dendropy" title="Permalink to this headline">¶</a></h2>
+<p>Installing <a class="reference external" href="http://packages.python.org/DendroPy">dendropy</a> is easy using easy_install:</p>
+<div class="highlight-python"><pre>easy_install dendropy</pre>
+</div>
+</div>
+<div class="section" id="rpy2-optional">
+<h2>rpy2 [optional]<a class="headerlink" href="#rpy2-optional" title="Permalink to this headline">¶</a></h2>
+<p>To produce pretty and relatively pain-free graphics, you will need to
+install <a class="reference external" href="http://rpy.sourceforge.net/rpy2.html">rpy2</a>.  This is generally easily done using:</p>
+<div class="highlight-python"><pre>easy_install rpy2</pre>
+</div>
+<p>Although this is currently not working on OSX Lion
+(see <a class="reference external" href="https://bitbucket.org/lgautier/rpy2/issue/78/truncated-path-to-librblasdylib-on-os-x">here</a> for
+temporary workaround).</p>
+</div>
+<div class="section" id="matplotlib-optional">
+<h2>matplotlib [optional]<a class="headerlink" href="#matplotlib-optional" title="Permalink to this headline">¶</a></h2>
+<p>To produce more basic figures, you can use matplotlib which is installed
+using:</p>
+<div class="highlight-python"><pre>easy_install matplotlib</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/pick-me.png" alt="Logo"/>
+  </a>
+</p>
+
+<p> <a href = 'https://github.com/faircloth-lab/picme'>picme</a> computes the
+phylo-genetic informativeness of DNA loci </p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#installing-hyphy">Installing hyphy</a></li>
+<li><a class="reference internal" href="#installing-numpy">Installing numpy</a></li>
+<li><a class="reference internal" href="#installing-scipy">Installing scipy</a></li>
+<li><a class="reference internal" href="#installing-dendropy">Installing dendropy</a></li>
+<li><a class="reference internal" href="#rpy2-optional">rpy2 [optional]</a></li>
+<li><a class="reference internal" href="#matplotlib-optional">matplotlib [optional]</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="introduction.html" title="previous chapter">Introduction</a></li>
+      <li>Next: <a href="computing.html" title="next chapter">Computing Phylogenetic Informativeness</a></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/installation.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2011, Brant Faircloth, Jonathan Chang, Mike Alfaro.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+    </div>
+  </body>
+</html>
