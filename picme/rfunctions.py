@@ -35,7 +35,7 @@ def load_sqlite():
     try:
         robjects.r('library(RSQLite)')
     except RRuntimeError as e:
-        if "no package called 'SQLite'" in e[0]:
+        if "no package called 'RSQLite'" in e[0]:
             answer = raw_input("\nRSQLite is not installed.  Install it [Y/n]? ")
             if answer == "Y" or "YES":
                 # mirror selection choices should pass through on the CLI
