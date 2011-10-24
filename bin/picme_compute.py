@@ -131,12 +131,12 @@ def main():
             output = os.path.join(args.output, os.path.basename(alignment) + '.rates')
             towrite = "\n".join([alignment, tree, output])
             params.append([time_vector, args.hyphy, template, towrite, output, correction, alignment,
-                args.times, args.epochs, args.threshold])
+                args.times, args.intervals, args.threshold])
     else:
         print "Estimating PI for files (--site-rate option):"
         for rate_file in picme.get_files(args.alignments, '*.rates'):
             params.append([time_vector, args.hyphy, template, None, rate_file,
-                correction, rate_file, args.times, args.epochs,
+                correction, rate_file, args.times, args.intervals,
                 args.threshold])
     if not args.multiprocessing:
         pis = map(worker, params)
