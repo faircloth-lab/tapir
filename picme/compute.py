@@ -12,6 +12,7 @@ Description: functions for tree manip and pi computation
 import os
 import sys
 import json
+import time
 import numpy
 import dendropy
 
@@ -20,9 +21,20 @@ from scipy import vectorize
 from collections import defaultdict
 
 
-def parse_site_rates(rate_file, correction = 1, test = False):
+def parse_site_rates(rate_file, correction = 1, test = False, count = 0):
     """Parse the site rate file returned from hyphy to a vector of rates"""
-    data = json.load(open(rate_file, 'r'))
+    # for whatever reason, when run in a virtualenv (and perhaps in other
+    # cases, the file does not seem to be written quite before we try
+    # to read it.  so, pause and try to re-read up to three-times.
+    try:
+        data = json.load(open(rate_file, 'r'))
+    except IOError:
+        if count <= 3:
+            count += 1
+            time.sleep(0.1)
+            parse_site_rates(rate_file, correction, test, count)
+        else:
+            raise IOError, "Cannot open {}".format(rate_file)
     rates = numpy.array([line["rate"] for line in data["sites"]["rates"]])
     corrected = rates/correction
     if not test:
