@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 File: picme_plot.py
 Author: Brant Faircloth
