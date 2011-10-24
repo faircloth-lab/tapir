@@ -47,3 +47,6 @@ from pkg_resources import resource_filename
 
 def get_hyphy_conf():
     return resource_filename(__name__, 'data/models_and_rates.bf')
+
+def get_test_files():
+    return resource_filename(__name__, 'tests/test-data')

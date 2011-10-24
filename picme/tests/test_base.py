@@ -13,10 +13,14 @@ import shutil
 import unittest
 import tempfile
 from picme.base import *
+from picme import get_test_files
 
 #import pdb
 
 class TestTransform(unittest.TestCase):
+
+    def setUp(self):
+        self.loc = get_test_files()
 
     def test_is_dir(self):
         # create temp dir
@@ -42,11 +46,12 @@ class TestTransform(unittest.TestCase):
                 [[1,2],[2,3],[3,4]]
 
     def test_get_files_1(self):
-        observed = get_files('test-data/','*.nex,*.nexus')
+        observed = [os.path.basename(i) for i in
+                get_files(self.loc,'*.nex,*.nexus')]
         expected = [
-                'test-data/chr1_918.nex',
-                'test-data/informativeness_cutoff.nex',
-                'test-data/test-extension.nexus'
+                'chr1_918.nex',
+                'informativeness_cutoff.nex',
+                'test-extension.nexus'
             ]
         assert observed == expected
 
