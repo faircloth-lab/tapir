@@ -35,6 +35,30 @@ def mkdir(path):
     except OSError:
         pass
 
+def create_unique_dir(path):
+    """Attempts to create a directory `path`. Returns the name of the
+    directory actually created, which may or may not be the same as `path`.
+
+    e.g., if my_directory already exists, it tries to create my_directory.1,
+    my_directory.2, etc
+
+    Race conditions are possible.
+    """
+    original = path
+    cond = True
+    count = 1
+    while cond:
+        try:
+            os.mkdir(path)
+            print path
+            return path
+        except OSError as e:
+            if e.errno == 17: # file exists
+                path = "{0}.{1}".format(original, count)
+                count += 1
+            else:
+                raise
+
 def get_output_type(name):
     """get extension from filename"""
     ext = os.path.splitext(name)[1].lstrip('.').lower()
