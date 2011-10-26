@@ -28,13 +28,13 @@ def parse_site_rates(rate_file, correction = 1, test = False, count = 0):
     # to read it.  so, pause and try to re-read up to three-times.
     try:
         data = json.load(open(rate_file, 'r'))
-    except IOError:
+    except IOError as e:
         if count <= 3:
             count += 1
             time.sleep(0.1)
             parse_site_rates(rate_file, correction, test, count)
         else:
-            raise IOError, "Cannot open {}".format(rate_file)
+            raise IOError("Cannot open {0}: {1}".format(rate_file, e))
     rates = numpy.array([line["rate"] for line in data["sites"]["rates"]])
     corrected = rates/correction
     if not test:

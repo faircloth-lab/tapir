@@ -25,18 +25,18 @@ try: # pragma: no cover
     import numpy
     assert numpy.version.version > '1.3', "picme requires >= numpy 1.3"
 except ImportError: # pragma: no cover
-    raise ImportError, 'numpy does not seem to be installed. Please see the user guide.' # pragma: no cover
+    raise ImportError('numpy does not seem to be installed. Please see the user guide.') # pragma: no cover
 
 try: # pragma: no cover
     import scipy
     assert scipy.version.version > '0.9', "picme requires >= scipy 0.9.0"
 except ImportError: # pragma: no cover
-    raise ImportError, 'scipy does not seem to be installed. Please see the user guide.' # pragma: no cover
+    raise ImportError('scipy does not seem to be installed. Please see the user guide.') # pragma: no cover
 
 try:
     import dendropy
 except ImportError: # pragma: no cover
-    raise ImportError, 'dendropy does not seem to be installed. Please see the user guide.' # pragma: no cover
+    raise ImportError('dendropy does not seem to be installed. Please see the user guide.') # pragma: no cover
 
 from tests import test
 

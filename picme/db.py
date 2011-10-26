@@ -28,7 +28,7 @@ def create_probe_db(db_name):
         c.execute('''CREATE TABLE interval (id INT, interval TEXT, pi FLOAT,
             error FLOAT, FOREIGN KEY(id) REFERENCES loci(id) DEFERRABLE
             INITIALLY DEFERRED)''')
-    except sqlite3.OperationalError, e:
+    except sqlite3.OperationalError as e:
         if e[0] == 'table loci already exists':
             answer = raw_input("\n\tPI database already exists.  Overwrite [Y/n]? ")
             if answer == "Y" or "YES":

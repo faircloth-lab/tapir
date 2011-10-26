@@ -84,4 +84,4 @@ def setup_plotter(name, typ = "png", width = 4, height = 4, units = "in",
                 units = units, res=ppi)
         return grdevices
     else:
-        raise TypeError, "Unknown output format."
+        raise TypeError("Unknown output format `{0}`".format(typ))

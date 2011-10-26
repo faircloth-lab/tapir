@@ -32,7 +32,7 @@ def is_dir(dirname):
 def mkdir(path):
     try:
         os.mkdir(path)
-    except OSError:
+    except OSError as e:
         pass
 
 def create_unique_dir(path, limit=100):
@@ -57,7 +57,7 @@ def create_unique_dir(path, limit=100):
             else:
                 raise
     else:
-        msg = "could not create directory {0}: limit `{1}` reached"
+        msg = "could not uniquely create directory {0}: limit `{1}` reached"
         raise Exception(msg.format(original, limit))
 
 def get_output_type(name):
@@ -71,26 +71,27 @@ def get_list_from_ints(string, name = 'time'):
     """Convert times input as string to a list"""
     try:
         times = [int(i) for i in string.split(',')]
-    except Exception:
-        raise argparse.ArgumentTypeError("Cannot convert {} to list of " + \
-                "integers".format(name))
+    except StandardError as e:
+        msg = "Cannot convert {0} to a list of integers: {1}"
+        raise argparse.ArgumentTypeError(msg.format(name, e))
     return times
 
 def get_strings_from_items(string, name = 'locus'):
     """Convert times input as string to a list"""
     try:
         times = [str(i) for i in string.split(',')]
-    except Exception:
-        raise argparse.ArgumentTypeError("Cannot convert {} to list of " + \
-                "loci".format(name))
+    except StandardError as e:
+        msg = "Cannot convert {0} to a list of loci: {1}"
+        raise argparse.ArgumentTypeError(msg.format(name, e))
     return times
 
 def get_list_from_ranges(string):
     """Convert ranges entered as string to nested list"""
     try:
         ranges = [[int(j) for j in i.split('-')] for i in string.split(',')]
-    except:
-        raise argparse.ArgumentTypeError("Cannot convert spans to list of integers")
+    except StandardError as e:
+        msg = "Cannot convert spans to a list of integers: {0}"
+        raise argparse.ArgumentTypeError(msg.format(e))
     return ranges
 
 def get_files(d, extension):
@@ -102,6 +103,7 @@ def get_files(d, extension):
     for e in extension:
         files.extend(glob.glob(os.path.join(d, e)))
     if files == []:
-        raise IOError, "There appear to be no files of {0} type in {1}".format(extension, d)
+        msg = "There appear to be no files of {0} type in {1}"
+        raise IOError(msg.format(extension, d))
     else:
         return files
