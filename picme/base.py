@@ -50,7 +50,6 @@ def create_unique_dir(path):
     while cond:
         try:
             os.mkdir(path)
-            print path
             return path
         except OSError as e:
             if e.errno == 17: # file exists
