@@ -89,6 +89,8 @@ def worker(params):
                 raise Exception("hyphy not found")
             raise Exception("couldn't communicate with hyphy: {0}".format(e))
         stdout, stderr = hyphy.communicate(towrite)
+        if stdout.startswith("Error"):
+            raise Exception("hyphy error: {0}".format(stdout))
         rates = picme.parse_site_rates(output, correction = correction)
         good_sites = picme.get_informative_sites(alignment, threshold)
         rates = picme.cull_uninformative_rates(rates, good_sites)
