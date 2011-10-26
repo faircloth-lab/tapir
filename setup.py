@@ -34,8 +34,7 @@ if __name__ == '__main__':
             ],
         package_data = {
             '':['*.txt'],
-            'tests':['test-data/*'],
-            'data':['*'],
+            'picme':['tests/test-data/*', 'data/*']
             },
         include_package_data = True,
         test_suite = 'picme'
