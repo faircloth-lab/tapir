@@ -35,19 +35,18 @@ def mkdir(path):
     except OSError:
         pass
 
-def create_unique_dir(path):
+def create_unique_dir(path, limit=100):
     """Attempts to create a directory `path`. Returns the name of the
     directory actually created, which may or may not be the same as `path`.
 
     e.g., if my_directory already exists, it tries to create my_directory.1,
-    my_directory.2, etc
+    my_directory.2, ... until my_directory.`limit` is reached.
 
     Race conditions are possible.
     """
     original = path
-    cond = True
     count = 1
-    while cond:
+    while count < limit:
         try:
             os.mkdir(path)
             return path
@@ -57,6 +56,9 @@ def create_unique_dir(path):
                 count += 1
             else:
                 raise
+    else:
+        msg = "could not create directory {0}: limit `{1}` reached"
+        raise Exception(msg.format(original, limit))
 
 def get_output_type(name):
     """get extension from filename"""
