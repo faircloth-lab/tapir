@@ -6,6 +6,11 @@
 *.swp
 *.out
 *.rates
+*.egg-info
+
+## ignore png or pdf files in bin/
+bin/*.png
+bin/*.pdf
 
 ## python
 *.pyc

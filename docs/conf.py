@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# pd-ht documentation build configuration file, created by
+# picme documentation build configuration file, created by
 # sphinx-quickstart on Thu Oct 20 17:46:28 2011.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -40,7 +40,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'pd-ht'
+project = u'picme'
 copyright = u'2011, Brant Faircloth, Jonathan Chang, Mike Alfaro'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -133,7 +133,8 @@ html_static_path = ['_static']
 #html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
-#html_sidebars = {}
+html_sidebars = {'**': ['sidebarlogo.html', 'localtoc.html', 'relations.html',
+                 'sourcelink.html', 'searchbox.html']}
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
@@ -166,7 +167,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'pd-htdoc'
+htmlhelp_basename = 'picmedoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -180,7 +181,7 @@ htmlhelp_basename = 'pd-htdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'pd-ht.tex', u'pd-ht Documentation',
+  ('index', 'picme.tex', u'picme Documentation',
    u'Brant Faircloth, Jonathan Chang, Mike Alfaro', 'manual'),
 ]
 
@@ -213,6 +214,6 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'pd-ht', u'pd-ht Documentation',
+    ('index', 'picme', u'picme Documentation',
      [u'Brant Faircloth, Jonathan Chang, Mike Alfaro'], 1)
 ]
