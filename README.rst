@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Purpose
 *******
 
@@ -103,3 +104,9 @@ Acknowledgements
 
 Many thanks to Francesc Lopez-Giraldez and Jeffrey Townsend for providing us
 with a copy of their web-application source code.
+=======
+Repository moved
+****************
+
+**pd-ht** has been renamed and moved to http://github.com/faircloth-lab/picme/
+>>>>>>> b3120e2734be45978d9e16d8c93a8abde69db042
