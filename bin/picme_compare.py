@@ -65,8 +65,11 @@ def get_args():
     parser.add_argument('--dpi', help="Figure dpi", default = 150, type=int)
     args = parser.parse_args()
 
+    # factor out the common prefix in database names
+    prefix = os.path.commonprefix(args.db)
+    dbs = [x[len(prefix):] for x in args.db]
     # add in some "sensible" database names if none were provided
-    for idx, db in enumerate(args.db):
+    for idx, db in enumerate(dbs):
         try:
             args.db_names[idx]
         except IndexError:
