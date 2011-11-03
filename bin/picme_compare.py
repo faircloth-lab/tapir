@@ -39,33 +39,39 @@ def get_args():
     parser = argparse.ArgumentParser(description="""Creates plots comparing
             phylogenetic informativeness of two databases
             output by picme_compute.py""")
-    parser.add_argument('db', help="SQLite database containing picme output",
+    parser.add_argument('db', help="SQLite databases containing picme output",
         type=picme.to_full_paths, nargs="+")
-    parser.add_argument('plot_type',help="The type of plot to make")
-    parser.add_argument('--top', help="""The number of best results across which
-            to average""", default = '10')
-    parser.add_argument('--db-names', help="SQLite database containing picme output", default=[], type=picme.get_strings_from_items)
-    parser.add_argument('--loci', help = "The loci to use in the plot", 
-        type=picme.get_strings_from_items, default = None)
-    parser.add_argument('--intervals', help = "The intervals to use in the "
-        "+ plot.  Must be same between both databases.", 
-        type=picme.get_strings_from_items, default = None)
-    parser.add_argument('--output', help="Name of the output file. Format "
-        + "will be automatically determined based on the extension. Format "
-        + "choices include PDF, PNG, and TIFF",
+    parser.add_argument('plot_type', help="The type of plot to make",
+        choices=["compare-mean-boxplot", "compare-mean-boxplot"])
+
+    parser.add_argument('--db-names', help="""names of the databases being
+        compared""", default=[], type=picme.get_strings_from_items)
+    parser.add_argument('--top', help="""The number of best results across
+        which to average""", default=10, type=str)
+    parser.add_argument('--loci', help="The loci to use in the plot",
+        type=picme.get_strings_from_items, default=None)
+    parser.add_argument('--intervals', help="""The intervals to use in the
+        plot.  Must be same between both databases.""",
+        type=picme.get_strings_from_items, default=None)
+
+    parser.add_argument('--output', help="""Name of the output file. Format
+        will be automatically determined based on the extension. Format
+        choices include PDF, PNG, and TIFF""",
         default=os.path.join(os.getcwd(), "pi.png"))
-    parser.add_argument('--width', help="Figure width, in inches",
-            default = 8.0, type=float)
-    parser.add_argument('--height', help="Figure height, in inches",
-            default = 6.0, type=float)
-    parser.add_argument('--dpi', help="Figure dpi", default = 150,
-        type=int)
+    parser.add_argument('--width', help="Figure width, in inches", default=8,
+        type=float)
+    parser.add_argument('--height', help="Figure height, in inches", default=6,
+        type=float)
+    parser.add_argument('--dpi', help="Figure dpi", default = 150, type=int)
     args = parser.parse_args()
+
+    # add in some "sensible" database names if none were provided
     for idx, db in enumerate(args.db):
         try:
             args.db_names[idx]
         except IndexError:
             args.db_names.append(db)
+
     return args
 
 def order_intervals(intervals):
@@ -88,17 +94,18 @@ def get_interval_query(interval, locus_table, interval_table, name, rows):
             interval_table, interval, name, rows)
     return qry
 
-def get_r_data_by_top(locus_table, interval_table, intervals, names,
-            rows):
+def get_r_data_by_top(locus_table, interval_table, intervals, names, rows):
     # it is faster here to iterate over intervals rather than try and do this
     # with a single query.
-    for con,name in names.iteritems():
+    for con, name in names.iteritems():
         for k, interval in enumerate(intervals):
-            qry = get_interval_query(interval, locus_table, interval_table, name, rows)
-            robjects.r('''con{0}_data{1} <- dbGetQuery(con{0}, {2})'''.format(con, k, qry))
+            qry = get_interval_query(interval, locus_table, interval_table,
+                name, rows)
+            robjects.r('''con{0}_data{1} <- dbGetQuery(con{0}, {2})'''.format(
+                con, k, qry))
     # prepare string for binding data sets into single stack
-    d_string = ','.join(["con{0}_data{1}".format(i,j) for i in range(1, len(names) + 1)
-            for j in range(k + 1)])
+    d_string = ','.join(["con{0}_data{1}".format(i,j)
+        for i in range(1, len(names) + 1) for j in range(k + 1)])
     #pdb.set_trace()
     frame = robjects.r('''data <- rbind({})'''.format(d_string))
     return frame
@@ -189,7 +196,7 @@ def main():
     # ggplot2 gets loaded as a module.  here load sqlite
     # and iterface through robjects
     picme.rfunctions.load_sqlite()
-    # Adds database connections `con1` through `conn` in the R namespace
+    # Adds database connections `con1` through `conN` in the R namespace
     names = {}
     for idx, db in enumerate(args.db, start=1):
         picme.rfunctions.get_db_conn(db, idx)
