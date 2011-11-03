@@ -47,10 +47,10 @@ def load_sqlite():
         else:
             print e[0]
 
-def get_db_conn(db):
+def get_db_conn(db, count = ''):
     """open a connection to an sqlite db in R using SQLite"""
     robjects.r('''drv <- dbDriver("SQLite")''')
-    conn_string = '''con <- dbConnect(drv, dbname = "{}")'''.format(db)
+    conn_string = '''con{} <- dbConnect(drv, dbname = "{}")'''.format(count, db)
     robjects.r(conn_string)
 
 def close_db_conn():
