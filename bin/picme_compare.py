@@ -39,17 +39,12 @@ def get_args():
     parser = argparse.ArgumentParser(description="""Creates plots comparing
             phylogenetic informativeness of two databases
             output by picme_compute.py""")
-    parser.add_argument('db1', help="SQLite database containing picme output",
-        action=picme.FullPaths)
-    parser.add_argument('db2', help="SQLite database containing picme output",
-        action=picme.FullPaths)
+    parser.add_argument('db', help="SQLite database containing picme output",
+        type=picme.to_full_paths, nargs="+")
     parser.add_argument('plot_type',help="The type of plot to make")
     parser.add_argument('--top', help="""The number of best results across which
             to average""", default = '10')
-    parser.add_argument('--db1-name', dest = 'db1_name', help="SQLite database containing picme output",
-        default = None)
-    parser.add_argument('--db2-name', dest = 'db2_name', help="SQLite database containing picme output",
-        default = None)
+    parser.add_argument('--db-names', help="SQLite database containing picme output", default=[], type=picme.get_strings_from_items)
     parser.add_argument('--loci', help = "The loci to use in the plot", 
         type=picme.get_strings_from_items, default = None)
     parser.add_argument('--intervals', help = "The intervals to use in the "
@@ -66,10 +61,11 @@ def get_args():
     parser.add_argument('--dpi', help="Figure dpi", default = 150,
         type=int)
     args = parser.parse_args()
-    if args.db1_name == None:
-        args.db1_name = args.db1
-    if args.db2_name == None:
-        args.db2_name = args.db2
+    for idx, db in enumerate(args.db):
+        try:
+            args.db_names[idx]
+        except IndexError:
+            args.db_names.append(db)
     return args
 
 def order_intervals(intervals):
@@ -170,7 +166,7 @@ def make_plot(args, names):
 
 def get_or_check_intervals(args, get=False):
     results = []
-    for db in [args.db1, args.db2]:
+    for db in args.db:
         con = sqlite3.connect(db)
         cur = con.cursor()
         cur.execute('''SELECT DISTINCT(interval) FROM interval ORDER BY
@@ -193,11 +189,11 @@ def main():
     # ggplot2 gets loaded as a module.  here load sqlite
     # and iterface through robjects
     picme.rfunctions.load_sqlite()
-    # this adds a primary connection `con1` to the R namespace
-    picme.rfunctions.get_db_conn(args.db1, 1)
-    # this adds a second connection `con2` to the R namespace
-    picme.rfunctions.get_db_conn(args.db2, 2)
-    names = {1:args.db1_name, 2:args.db2_name}
+    # Adds database connections `con1` through `conn` in the R namespace
+    names = {}
+    for idx, db in enumerate(args.db, start=1):
+        picme.rfunctions.get_db_conn(db, idx)
+        names[idx] = args.db_names[idx - 1] # python starts at 0
     make_plot(args, names)
 
 if __name__ == '__main__':
