@@ -21,6 +21,9 @@ class FullPaths(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
 
+def to_full_paths(string):
+    return os.path.abspath(os.path.expanduser(string))
+
 def is_dir(dirname):
     """Checks if a path is an actual directory"""
     if not os.path.isdir(dirname):
