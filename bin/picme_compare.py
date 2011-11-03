@@ -14,6 +14,7 @@ Description: Compare two data sets produced
 import os
 import argparse
 import sqlite3
+import itertools
 
 import picme
 import picme.rfunctions
@@ -183,7 +184,11 @@ def get_or_check_intervals(args, get=False):
                 interval''')
         results.append(cur.fetchall())
         cur.close()
-    assert results[0] == results[1], "Interval values are not equal."
+    # Ensure all intervals are equal
+    for aa, bb in itertools.combinations(range(len(results)), r=2):
+        if results[aa] != results[bb]:
+            msg = "Interval values in databases {0} and {1} are not equal."
+            raise Exception(msg.format(args.db[aa], args.db[bb]))
     if get:
         return [str(i[0]) for i in results[0]]
 
