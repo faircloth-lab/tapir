@@ -190,7 +190,7 @@ def get_or_check_intervals(args, get=False):
     # Ensure all intervals are equal
     for aa, bb in itertools.combinations(range(len(results)), r=2):
         if results[aa] != results[bb]:
-            msg = "Interval values in databases {0} and {1} are not equal."
+            msg = "Interval values in databases are not equal: {0}, {1}"
             raise Exception(msg.format(args.db[aa], args.db[bb]))
     if get:
         return [str(i[0]) for i in results[0]]
