@@ -26,7 +26,8 @@ if __name__ == '__main__':
         long_description=open("README.rst").read(),
         scripts=["bin/picme_compute.py",
                 "bin/picme_plot.py",
-                "bin/picme_matplot.py"
+                "bin/picme_matplot.py",
+                "bin/picme_compare.py"
             ],
         packages=[
             'picme',

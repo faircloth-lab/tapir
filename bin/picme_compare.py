@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 File: picme_compare.py
 Author: Brant Faircloth
