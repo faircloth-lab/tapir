@@ -42,7 +42,7 @@ def get_args():
     parser.add_argument('db', help="SQLite databases containing picme output",
         type=picme.to_full_paths, nargs="+")
     parser.add_argument('plot_type', help="The type of plot to make",
-        choices=["compare-mean-boxplot", "compare-mean-boxplot"])
+        choices=["compare-mean-boxplot", "compare-sum-barplot"])
 
     parser.add_argument('--db-names', help="""names of the databases being
         compared""", default=[], type=picme.get_strings_from_items)
