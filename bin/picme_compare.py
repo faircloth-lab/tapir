@@ -68,7 +68,10 @@ def get_args():
 
     # factor out the common prefix in database names
     prefix = os.path.commonprefix(args.db)
-    dbs = [x[len(prefix):] for x in args.db]
+    if len(args.db) > 1:
+        dbs = [x[len(prefix):] for x in args.db]
+    else:
+        dbs = [os.path.basename(args.db[0])] # special case for a single db
     # add in some "sensible" database names if none were provided
     for idx, db in enumerate(dbs):
         try:
