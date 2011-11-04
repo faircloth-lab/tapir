@@ -14,6 +14,7 @@ Description: Compare two data sets produced
 import os
 import argparse
 import sqlite3
+import itertools
 
 import picme
 import picme.rfunctions
@@ -65,8 +66,14 @@ def get_args():
     parser.add_argument('--dpi', help="Figure dpi", default = 150, type=int)
     args = parser.parse_args()
 
+    # factor out the common prefix in database names
+    prefix = os.path.commonprefix(args.db)
+    if len(args.db) > 1:
+        dbs = [x[len(prefix):] for x in args.db]
+    else:
+        dbs = [os.path.basename(args.db[0])] # special case for a single db
     # add in some "sensible" database names if none were provided
-    for idx, db in enumerate(args.db):
+    for idx, db in enumerate(dbs):
         try:
             args.db_names[idx]
         except IndexError:
@@ -180,7 +187,11 @@ def get_or_check_intervals(args, get=False):
                 interval''')
         results.append(cur.fetchall())
         cur.close()
-    assert results[0] == results[1], "Interval values are not equal."
+    # Ensure all intervals are equal
+    for aa, bb in itertools.combinations(range(len(results)), r=2):
+        if results[aa] != results[bb]:
+            msg = "Interval values in databases are not equal: {0}, {1}"
+            raise Exception(msg.format(args.db[aa], args.db[bb]))
     if get:
         return [str(i[0]) for i in results[0]]
 
