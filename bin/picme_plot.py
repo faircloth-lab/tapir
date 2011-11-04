@@ -119,7 +119,8 @@ def order_intervals(intervals):
     return "c{0}".format(tuple(sorted_intervals))
 
 def get_interval_query(intervals, loci, locus_table, interval_table):
-    if intervals[0].lower() != 'all' and loci is None:
+    #pdb.set_trace()
+    if intervals[0].lower() != 'all' and (loci is None or loci[0] == 'all'):
         qry = '''"SELECT {0}.locus, interval, pi FROM {0}, {1} 
             WHERE {0}.id = {1}.id and interval in {2}"'''.format(locus_table,
             interval_table, tuple(intervals))
