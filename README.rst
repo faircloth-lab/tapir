@@ -11,7 +11,7 @@ Citing tapir
 When using tapir, please cite:
 
 - Faircloth BC, Chang J, Alfaro ME: *tapir* enables high throughput analysis of
-  phylogenetic informativeness.
+  phylogenetic informativeness. `<https://github.com/faircloth-lab/tapir>`_
 
 - Townsend JP: Profiling phylogenetic informativeness. Systematic Biol. 2007,
   56:222-231.
@@ -30,7 +30,7 @@ Dependencies
 
 Installation
 ************
-For the moment, the easiest way to install the program is::
+At the moment, the easiest way to install the program is::
 
     git clone git://github.com/faircloth-lab/tapir.git /path/to/tapir
 
@@ -105,8 +105,21 @@ including plotting, see the
 
     select interval, count(*) from t group by interval;
 
+Plotting Results
+****************
+
+tapir contains plotting scripts to help you plot data within a results database
+and compare data between different databases.  tapir uses RPY and R to
+do this.  You can also plot data directly in R.  Until we finish the
+documentation, please see the 
+`wiki <https://github.com/faircloth-lab/tapir/wiki/getting-data-from-the-database>`_ 
+for examples.
+
 Acknowledgements
 ****************
-We thank Francesc Lopez-Giraldez and Jeffrey Townsend for providing us
-with a copy of their web-application source code.  BCF thanks S Hubbell
-and P Gowaty.
+
+BCF thanks SP Hubbell, PA Gowaty, RT Brumfield, TC Glenn, NG Crawford,
+JE McCormack, and M Reasel. JHLC and MEA thank J Eastman and J Brown for
+thoughtful comments about PI. We thank Francesc Lopéz-Giraldéz and
+Jeffrey Townsend for providing us with a copy of their web-application
+source code and helpful discussion.
