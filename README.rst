@@ -74,9 +74,9 @@ rather than estimating those again with::
 Results
 *******
 
-tapir writes results to a [sqlite](http://www.sqlite.org/) database in the
+tapir writes results to a `sqlite <http://www.sqlite.org/>`_ database in the
 output directory of your choosing.  This directory also holds site rate
-files in [JSON](http://www.json.org/) format for each locus passed
+files in `JSON <http://www.json.org/>`_ format for each locus passed
 through `tapir_compute.py`.
 
 You can access the results in the database as follows.  For more examples,
