@@ -12,7 +12,7 @@ import matplotlib.pyplot as pyplot
 import matplotlib.cm as cm
 from matplotlib.backends.backend_pdf import PdfPages
 
-from picme.base import FullPaths
+from tapir.base import FullPaths
 
 import pdb
 

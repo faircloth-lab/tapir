@@ -5,15 +5,15 @@ Author: Brant Faircloth
 Created by Brant Faircloth on 23 October 2011 16:10 PDT (-0700)
 Copyright (c) 2011 Brant C. Faircloth. All rights reserved.
 
-Description: test methods for picme.base
+Description: test methods for tapir.base
 
 """
 
 import shutil
 import unittest
 import tempfile
-from picme.base import *
-from picme import get_test_files
+from tapir.base import *
+from tapir import get_test_files
 
 #import pdb
 

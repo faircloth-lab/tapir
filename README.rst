@@ -1,16 +1,16 @@
 Purpose
 *******
 
-*picme* contains programs to estimate and plot phylogenetic informativeness for
+*tapir* contains programs to estimate and plot phylogenetic informativeness for
 large datasets.
 
 
-Citing picme
+Citing tapir
 ************
 
-When using picme, please cite:
+When using tapir, please cite:
 
-- Faircloth BC, Chang J, Alfaro ME: *picme* enables high throughput analysis of
+- Faircloth BC, Chang J, Alfaro ME: *tapir* enables high throughput analysis of
   phylogenetic informativeness.
 
 - Townsend JP: Profiling phylogenetic informativeness. Systematic Biol. 2007,
@@ -22,7 +22,7 @@ When using picme, please cite:
 Dependencies
 ************
 
-- hyphy2 (please `download <https://github.com/faircloth-lab/picme/downloads>`_ or build a **single-threaded** hyphy2)
+- hyphy2 (please `download <https://github.com/faircloth-lab/tapir/downloads>`_ or build a **single-threaded** hyphy2)
 - Python 2.6
 - numpy
 - scipy
@@ -32,11 +32,11 @@ Installation
 ************
 For the moment, the easiest way to install the program is::
 
-    git clone git://github.com/faircloth-lab/picme.git /path/to/picme
+    git clone git://github.com/faircloth-lab/tapir.git /path/to/tapir
 
 To run tests::
 
-    cd /path/to/picme/
+    cd /path/to/tapir/
     python test/test_townsend_code.py
 
 Use
@@ -49,9 +49,9 @@ be fine, for the moment.
 
 To run::
 
-    cd /path/to/picme/
+    cd /path/to/tapir/
 
-    python picme_compute.py Input_Folder_of_Nexus_Files/ Input.tree \
+    python tapir_compute.py Input_Folder_of_Nexus_Files/ Input.tree \
         --output Output_Directory \
         --epochs=32-42,88-98,95-105,164-174 \
         --times=37,93,100,170 \
@@ -64,7 +64,7 @@ If you have already run the above and saved results to your output
 folder (see below), you can use the pre-existing site-rate records
 rather than estimating those again with::
 
-     python picme_compute.py Input_Folder_of_Site_Rate_JSON_Files/ Input.tree \
+     python tapir_compute.py Input_Folder_of_Site_Rate_JSON_Files/ Input.tree \
         --output Output_Directory \
         --epochs=32-42,88-98,95-105,164-174 \
         --times=37,93,100,170 \
@@ -74,14 +74,14 @@ rather than estimating those again with::
 Results
 *******
 
-picme writes results to a [sqlite](http://www.sqlite.org/) database in the
+tapir writes results to a [sqlite](http://www.sqlite.org/) database in the
 output directory of your choosing.  This directory also holds site rate
 files in [JSON](http://www.json.org/) format for each locus passed
-through `picme_compute.py`.
+through `tapir_compute.py`.
 
 You can access the results in the database as follows.  For more examples,
 including plotting, see the 
-`documentation <http://faircloth-lab.github.com/picme/>`_
+`documentation <http://faircloth-lab.github.com/tapir/>`_
 
 - crank up sqlite::
 

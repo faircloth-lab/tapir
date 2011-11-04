@@ -11,8 +11,8 @@ Copyright 2011 Brant C. Faircloth. All rights reserved.
 import os
 import numpy
 import unittest
-from picme.compute import *
-from picme import get_test_files
+from tapir.compute import *
+from tapir import get_test_files
 
 import pdb
 

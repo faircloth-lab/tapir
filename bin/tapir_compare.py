@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-File: picme_compare.py
+File: tapir_compare.py
 Author: Brant Faircloth
 
 Created by Brant Faircloth on 01 November 2011 14:11 PDT (-0700)
@@ -16,8 +16,8 @@ import argparse
 import sqlite3
 import itertools
 
-import picme
-import picme.rfunctions
+import tapir
+import tapir.rfunctions
 
 from rpy2 import robjects
 from rpy2.rinterface import RRuntimeError
@@ -25,7 +25,7 @@ from rpy2.rinterface import RRuntimeError
 try:
     import rpy2.robjects.lib.ggplot2 as ggplot2
 except RRuntimeError as e:
-    picme.rfunctions.load_ggplot(e)
+    tapir.rfunctions.load_ggplot(e)
 
 import pdb
 
@@ -39,21 +39,21 @@ def get_args():
     """Get arguments / options"""
     parser = argparse.ArgumentParser(description="""Creates plots comparing
             phylogenetic informativeness of two databases
-            output by picme_compute.py""")
-    parser.add_argument('db', help="SQLite databases containing picme output",
-        type=picme.to_full_paths, nargs="+")
+            output by tapir_compute.py""")
+    parser.add_argument('db', help="SQLite databases containing tapir output",
+        type=tapir.to_full_paths, nargs="+")
     parser.add_argument('plot_type', help="The type of plot to make",
         choices=["compare-mean-boxplot", "compare-sum-barplot"])
 
     parser.add_argument('--db-names', help="""names of the databases being
-        compared""", default=[], type=picme.get_strings_from_items)
+        compared""", default=[], type=tapir.get_strings_from_items)
     parser.add_argument('--top', help="""The number of best results across
         which to average""", default=10, type=str)
     parser.add_argument('--loci', help="The loci to use in the plot",
-        type=picme.get_strings_from_items, default=None)
+        type=tapir.get_strings_from_items, default=None)
     parser.add_argument('--intervals', help="""The intervals to use in the
         plot.  Must be same between both databases.""",
-        type=picme.get_strings_from_items, default=None)
+        type=tapir.get_strings_from_items, default=None)
 
     parser.add_argument('--output', help="""Name of the output file. Format
         will be automatically determined based on the extension. Format
@@ -172,7 +172,7 @@ def make_plot(args, names):
     elif args.plot_type == 'compare-sum-barplot':
         plots.append(compare_sum_barplot(LOCUS, INTERVAL, args.intervals,
             args.loci, names, args.top))
-    plotter = picme.rfunctions.setup_plotter(args.output, picme.get_output_type(args.output),
+    plotter = tapir.rfunctions.setup_plotter(args.output, tapir.get_output_type(args.output),
             args.width, args.height, "in", args.dpi)
     for plot in plots:
         plot.plot()
@@ -206,11 +206,11 @@ def main():
         get_or_check_intervals(args)
     # ggplot2 gets loaded as a module.  here load sqlite
     # and iterface through robjects
-    picme.rfunctions.load_sqlite()
+    tapir.rfunctions.load_sqlite()
     # Adds database connections `con1` through `conN` in the R namespace
     names = {}
     for idx, db in enumerate(args.db, start=1):
-        picme.rfunctions.get_db_conn(db, idx)
+        tapir.rfunctions.get_db_conn(db, idx)
         names[idx] = args.db_names[idx - 1] # python starts at 0
     make_plot(args, names)
 

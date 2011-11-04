@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-File: picme_plot.py
+File: tapir_plot.py
 Author: Brant Faircloth
 
 Created by Brant Faircloth on 22 October 2011 08:10 PDT (-0700)
@@ -14,8 +14,8 @@ Description: create plots from data in SQLite
 import os
 import argparse
 
-import picme
-import picme.rfunctions
+import tapir
+import tapir.rfunctions
 
 from rpy2 import robjects
 from rpy2.rinterface import RRuntimeError
@@ -23,7 +23,7 @@ from rpy2.rinterface import RRuntimeError
 try:
     import rpy2.robjects.lib.ggplot2 as ggplot2
 except RRuntimeError as e:
-    picme.rfunctions.load_ggplot(e)
+    tapir.rfunctions.load_ggplot(e)
 
 import pdb
 
@@ -37,16 +37,16 @@ def get_args():
     """Get arguments / options"""
     parser = argparse.ArgumentParser(description="""Creates plots of
         phylogenetic informativeness based on the
-        output of picme.py""")
-    parser.add_argument('database', help="SQLite database containing picme output",
-        action=picme.FullPaths)
+        output of tapir.py""")
+    parser.add_argument('database', help="SQLite database containing tapir output",
+        action=tapir.FullPaths)
     parser.add_argument('plot_type',help="The type of plot to make")
     # single-locus-net-pi
     # multiple-locus-net-pi
     # 
-    parser.add_argument('--loci', help = "", type=picme.get_strings_from_items, \
+    parser.add_argument('--loci', help = "", type=tapir.get_strings_from_items, \
             default = None)
-    parser.add_argument('--intervals', help = "", type=picme.get_strings_from_items, \
+    parser.add_argument('--intervals', help = "", type=tapir.get_strings_from_items, \
             default = None)
     parser.add_argument('--output', help="Name of the output file. Format "
         + "will be automatically determined based on the extension. Format "
@@ -191,7 +191,7 @@ def make_plot(args):
         plots.append(interval(LOCUS, INTERVAL, args.intervals, args.loci,
             boxplot = False))
 
-    plotter = picme.rfunctions.setup_plotter(args.output, picme.get_output_type(args.output),
+    plotter = tapir.rfunctions.setup_plotter(args.output, tapir.get_output_type(args.output),
             args.width, args.height, "in", args.dpi)
     for plot in plots:
         plot.plot()
@@ -201,11 +201,11 @@ def main():
     args = get_args()
     # ggplot2 gets loaded as a module.  here load sqlite
     # and iterface through robjects
-    picme.rfunctions.load_sqlite()
+    tapir.rfunctions.load_sqlite()
     # connect R to db
-    picme.rfunctions.get_db_conn(args.database)
+    tapir.rfunctions.get_db_conn(args.database)
     make_plot(args)
-    picme.rfunctions.close_db_conn()
+    tapir.rfunctions.close_db_conn()
 
 if __name__ == '__main__':
     main()

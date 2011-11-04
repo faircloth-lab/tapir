@@ -2,16 +2,16 @@ import distribute_setup
 distribute_setup.use_setuptools()
 from setuptools import setup, find_packages
 
-import picme
+import tapir
 
 if __name__ == '__main__':
     setup(
-        name="picme",
-        version = picme.__version__,
-        description="phylogenetic informativeness calculator for marker evaluation (PICME)",
+        name="tapir",
+        version = tapir.__version__,
+        description="phylogenetic informativeness calculator for marker evaluation (tapir)",
         author="Brant Faircloth, Jonathan Chang, Mike Alfaro",
-        author_email="brant.faircloth+picme@gmail.com",
-        url="http://github.com/faircloth-lab/picme/",
+        author_email="brant.faircloth+tapir@gmail.com",
+        url="http://github.com/faircloth-lab/tapir/",
         license="http://www.opensource.org/licenses/BSD-3-Clause",
         classifiers=[
             "Development Status :: 4 - Beta",
@@ -24,20 +24,20 @@ if __name__ == '__main__':
              ],
         requires=["dendropy","numpy(>=1.3)","scipy(>=0.9.0)"],
         long_description=open("README.rst").read(),
-        scripts=["bin/picme_compute.py",
-                "bin/picme_plot.py",
-                "bin/picme_matplot.py",
-                "bin/picme_compare.py"
+        scripts=["bin/tapir_compute.py",
+                "bin/tapir_plot.py",
+                "bin/tapir_matplot.py",
+                "bin/tapir_compare.py"
             ],
         packages=[
-            'picme',
-            'picme.tests',
+            'tapir',
+            'tapir.tests',
             ],
         package_data = {
             '':['*.txt'],
-            'picme':['tests/test-data/*', 'data/*']
+            'tapir':['tests/test-data/*', 'data/*']
             },
         include_package_data = True,
-        test_suite = 'picme'
+        test_suite = 'tapir'
     )
 
