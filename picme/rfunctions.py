@@ -76,8 +76,8 @@ def setup_plotter(name, typ = "png", width = 4, height = 4, units = "in",
         grdevices.pdf(file = name, width = width, height = height)
         return grdevices
     elif typ == 'tiff':
-        grdevices.tiff(file = name, width = width, height = height, 
-                units = units, res = ppi)
+        grdevices.tiff(file = name, width = width, height = height, units =
+                units, res = ppi, type = "quartz", antialias = "default")
         return grdevices
     elif typ == 'jpeg' or typ == 'jpg':
         grdevices.jpeg(file = name, width = width, height = height, 
