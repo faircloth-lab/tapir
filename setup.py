@@ -8,7 +8,7 @@ if __name__ == '__main__':
     setup(
         name="tapir",
         version = tapir.__version__,
-        description="phylogenetic informativeness calculator for marker evaluation (tapir)",
+        description="Tally Approximations of Phylogenetic Informativeness Rapidly (TAPIR)",
         author="Brant Faircloth, Jonathan Chang, Mike Alfaro",
         author_email="brant.faircloth+tapir@gmail.com",
         url="http://github.com/faircloth-lab/tapir/",
