@@ -29,15 +29,83 @@ Dependencies
 - dendropy
 
 Installation
-************
-At the moment, the easiest way to install the program is::
+*************
 
-    git clone git://github.com/faircloth-lab/tapir.git /path/to/tapir
+For **ALL** platforms, you must download a hyphy binary for your
+platform (osx or linux) and place that within your $PATH::
 
-To run tests::
+    wget https://github.com/downloads/faircloth-lab/tapir/hyphy2.osx.gz
+    gunzip hyphy2.osx.gz
+    chmod 0700 hyphy2.osx
+    mv hyphy2.osx ~/Bin/
 
-    cd /path/to/tapir/
-    python test/test_townsend_code.py
+To install the other dependencies (numpy, scipy), you may need to
+install a Fortran compiler on linux/osx:
+
+Linux
+-----
+
+On linux (ubuntu/debian), use::
+
+    apt-get install gfortran libatlas-base-dev liblapack-dev
+
+Instal tapir and dependencies::
+
+    pip install tapir
+
+To plot results, you will also need to::
+
+    apt-get install r-base r-base-dev
+    pip install rpy2
+
+OSX
+---
+
+It is easiest just to install the `scipy superpack
+<http://stronginference.com/scipy-superpack/>`_.  This will install the
+dependencies that tapir needs.  After installing the superpack, using
+pip, install tapir::
+
+    pip install tapir
+
+Alternatively, you can simply try to install tapir using::
+
+    pip install tapir
+
+To plot results, you need to `install R
+<http://cran.r-project.org/bin/macosx/>`_ and then install rpy2::
+
+    pip install rpy2
+
+
+Other OSs
+----------
+
+Install `numpy <http://numpy.scipy.org>`_, `scipy <http://scipy.org>`_,
+and `dendropy <http://packages.python.org/DendroPy/>`_ for your
+platform.  Then::
+
+    wget http://pypi.python.org/packages/source/t/tapir/tapir-1.0.tar.gz
+    tar -xzvf tapir-1.0.tar.gz
+    cd tapir*
+    python setup.py build
+    python setup.py test
+    python setup.py install
+
+Plotting
+--------
+
+Plotting is optional.  To install the plotting dependencies, do the
+following:
+
+
+Testing
+*******
+
+If you didn't run the tests using `python setup.py test` above, you can also::
+
+    import tapir
+    tapir.test()
 
 Use
 ***
