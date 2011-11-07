@@ -21,7 +21,7 @@ def load_ggplot(e):
         answer = raw_input("\nggplot2 is not installed.  Install it (and "+
                 "dependencies) [Y/n]? ")
         if answer == "Y" or "YES":
-            robjects.r('''install.packages("ggplot2", dependencies = TRUE)''')
+            robjects.r('''install.packages("ggplot2")''')
             # there is an rpy2 interface to ggplot2, so let's use it
             import rpy2.robjects.lib.ggplot2 as ggplot2
         else:
@@ -39,7 +39,7 @@ def load_sqlite():
             answer = raw_input("\nRSQLite is not installed.  Install it [Y/n]? ")
             if answer == "Y" or "YES":
                 # mirror selection choices should pass through on the CLI
-                robjects.r('''install.packages("RSQLite", dependencies = TRUE)''')
+                robjects.r('''install.packages("RSQLite")''')
                 # load up library after installing:w
                 load_sqlite()
             else:
