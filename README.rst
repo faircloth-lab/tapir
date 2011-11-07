@@ -120,6 +120,6 @@ Acknowledgements
 
 BCF thanks SP Hubbell, PA Gowaty, RT Brumfield, TC Glenn, NG Crawford,
 JE McCormack, and M Reasel. JHLC and MEA thank J Eastman and J Brown for
-thoughtful comments about PI. We thank Francesc Lopéz-Giraldéz and
+thoughtful comments about PI. We thank Francesc Lopez-Giraldez and
 Jeffrey Townsend for providing us with a copy of their web-application
 source code and helpful discussion.
