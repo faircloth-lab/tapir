@@ -19,6 +19,7 @@ bin/*.pdf
 trash*
 shakedown/*
 speed_test2.py
+dist
 
 ##docs
 myhtmldocs
