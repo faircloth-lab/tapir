@@ -35,9 +35,9 @@ For **ALL** platforms, you must download a hyphy binary for your
 platform (osx or linux) and place that within your $PATH::
 
     wget https://github.com/downloads/faircloth-lab/tapir/hyphy2.osx.gz
-    gunzip hyphy2.osx.gz
-    chmod 0700 hyphy2.osx
-    mv hyphy2.osx ~/Bin/
+    gunzip hyphy2.*.gz
+    chmod 0700 hyphy2.*
+    mv hyphy2.* ~/Bin/hyphy2
 
 To install the other dependencies (numpy, scipy), you may need to
 install a Fortran compiler on linux/osx:
@@ -49,7 +49,8 @@ On linux (ubuntu/debian), use::
 
     apt-get install gfortran libatlas-base-dev liblapack-dev
 
-Instal tapir and dependencies::
+Install tapir and dependencies, which include numpy and scipy (the
+reason we installed the dependencies above)::
 
     pip install tapir
 
@@ -95,9 +96,8 @@ platform.  Then::
 Plotting
 --------
 
-Plotting is optional.  To install the plotting dependencies, do the
-following:
-
+Plotting is optional.  To install the plotting dependencies, see
+Installation, above.
 
 Testing
 *******
