@@ -2,12 +2,10 @@ import distribute_setup
 distribute_setup.use_setuptools()
 from setuptools import setup, find_packages
 
-from tapir import __version__
-
 if __name__ == '__main__':
     setup(
         name="tapir",
-        version = __version__,
+        version = "1.0",
         description="Tally Approximations of Phylogenetic Informativeness Rapidly (TAPIR)",
         long_description=open("README.rst").read(),
         author="Brant Faircloth, Jonathan Chang, Mike Alfaro",
