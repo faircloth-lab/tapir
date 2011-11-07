@@ -1,6 +1,6 @@
 import distribute_setup
 distribute_setup.use_setuptools()
-from setuptools import setup, find_packages
+from setuptools import setup
 
 if __name__ == '__main__':
     setup(
@@ -24,8 +24,9 @@ if __name__ == '__main__':
         install_requires=[
             "DendroPy >= 3.9.0",
             "numpy >= 1.3",
-            "scipy >= 0.9.0"
-        ],
+            "scipy >= 0.9.0",
+            "nose >= 0.10.0",
+            ],
         scripts=[
             "bin/tapir_compute.py",
             "bin/tapir_plot.py",
@@ -38,9 +39,11 @@ if __name__ == '__main__':
             ],
         package_data = {
             '':['*.txt'],
-            'tapir':['tests/test-data/*', 'data/*']
+            'tapir': [
+                'data/*.bf'
+                'tests/test-data/*',
+                ],
             },
         include_package_data = True,
-        test_suite = 'tapir'
     )
 
