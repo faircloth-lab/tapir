@@ -22,7 +22,7 @@ if __name__ == '__main__':
             "Programming Language :: Python",
             "Topic :: Scientific/Engineering :: Bio-Informatics",
              ],
-        requires=["dendropy","numpy(>=1.3)","scipy(>=0.9.0)"],
+        install_requires=["dendropy","numpy(>=1.3)","scipy(>=0.9.0)"],
         long_description=open("README.rst").read(),
         scripts=["bin/tapir_compute.py",
                 "bin/tapir_plot.py",
