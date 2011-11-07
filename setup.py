@@ -9,6 +9,7 @@ if __name__ == '__main__':
         name="tapir",
         version = tapir.__version__,
         description="Tally Approximations of Phylogenetic Informativeness Rapidly (TAPIR)",
+        long_description=open("README.rst").read(),
         author="Brant Faircloth, Jonathan Chang, Mike Alfaro",
         author_email="brant.faircloth+tapir@gmail.com",
         url="http://github.com/faircloth-lab/tapir/",
@@ -22,12 +23,16 @@ if __name__ == '__main__':
             "Programming Language :: Python",
             "Topic :: Scientific/Engineering :: Bio-Informatics",
              ],
-        install_requires=["dendropy","numpy(>=1.3)","scipy(>=0.9.0)"],
-        long_description=open("README.rst").read(),
-        scripts=["bin/tapir_compute.py",
-                "bin/tapir_plot.py",
-                "bin/tapir_matplot.py",
-                "bin/tapir_compare.py"
+        install_requires=[
+            "DendroPy >= 3.9.0",
+            "numpy >= 1.3",
+            "scipy >= 0.9.0"
+        ],
+        scripts=[
+            "bin/tapir_compute.py",
+            "bin/tapir_plot.py",
+            "bin/tapir_matplot.py",
+            "bin/tapir_compare.py"
             ],
         packages=[
             'tapir',
