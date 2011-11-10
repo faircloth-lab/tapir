@@ -49,24 +49,24 @@ platform (osx or linux) and place that within your $PATH.
     mv hyphy2.* ~/Bin/hyphy2
 
 To install the other dependencies (numpy, scipy), you may need to
-install a Fortran compiler on linux/osx:
+install a Fortran compiler on linux/osx, which is a dependency of
+numpy and scipy:
 
-Linux
------
+- Linux
 
-On linux (ubuntu/debian), use::
+    On linux (ubuntu/debian), use::
 
-    apt-get install gfortran libatlas-base-dev liblapack-dev
+        apt-get install gfortran libatlas-base-dev liblapack-dev
 
-Install tapir and dependencies, which include numpy and scipy (the
-reason we installed the dependencies above)::
+    Install tapir and dependencies, which include numpy and scipy (the
+    reason we installed the dependencies above)::
 
-    pip install tapir
+        pip install tapir
 
-To plot results, you will also need to::
+    To plot results, you will also need to::
 
-    apt-get install r-base r-base-dev
-    pip install rpy2
+        apt-get install r-base r-base-dev
+        pip install rpy2
 
 OSX
 ---
@@ -102,11 +102,6 @@ platform.  Then::
     python setup.py test
     python setup.py install
 
-Plotting
---------
-
-Plotting is optional.  To install the plotting dependencies, see
-Installation, above.
 
 Testing
 *******
