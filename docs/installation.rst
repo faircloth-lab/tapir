@@ -4,7 +4,7 @@
 Installation
 **************
 
-picme_ has several dependencies.  At a minimum you will need to install:
+tapir_ has several dependencies.  At a minimum you will need to install:
 
 - `hyphy 2 <http://www.datam0nk3y.org/hyphy/>`_ (must be
   single-threaded)
@@ -15,11 +15,11 @@ picme_ has several dependencies.  At a minimum you will need to install:
 Installing hyphy
 ================
 
-picme_ uses hyphy_ for substitution model selection and site rate
+tapir_ uses hyphy_ for substitution model selection and site rate
 estimation.  Additionally, hyphy needs to be compiled as a
 single-threaded binary.  We provide appropriate binaries for:
 
-- `os x 10.7 <https://github.com/downloads/faircloth-lab/picme/hyphy2.osx.gz>`_
+- `os x 10.7 <https://github.com/downloads/faircloth-lab/tapir/hyphy2.osx.gz>`_
 - linux
 
 You need to download these and place them within your `$PATH`.  If this
@@ -34,7 +34,7 @@ accomplish this by running::
 
     easy_install numpy
 
-Sometimes on OSX, this is problematic.  There is a `binary installer
+Sometimes on OSX, this is problematic.  There is a `numpy binary installer
 <http://sourceforge.net/projects/numpy/files/NumPy/1.6.1/numpy-1.6.1-py2.6-python.org-macosx10.3.dmg/download>`_
 that you can use in this case.
 
@@ -46,7 +46,7 @@ accomplish this by running::
 
     easy_install scipy
 
-Sometimes on OSX, this is problematic.  There is a `binary installer
+Sometimes on OSX, this is problematic.  There is a `scipy binary installer
 <http://sourceforge.net/projects/scipy/files/scipy/0.9.0/scipy-0.9.0-py2.7-python.org-macosx10.6.dmg/download>`_
 that you can use in this case.
 
@@ -85,4 +85,4 @@ using::
 .. _scipy: http://scipy.org
 .. _numpy: http://numpy.scipy.org
 .. _dendropy: http://packages.python.org/DendroPy
-.. _picme: https://github.com/faircloth-lab/picme
+.. _tapir: https://github.com/faircloth-lab/tapir

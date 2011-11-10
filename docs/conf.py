@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# picme documentation build configuration file, created by
+# tapir documentation build configuration file, created by
 # sphinx-quickstart on Thu Oct 20 17:46:28 2011.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -40,7 +40,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'picme'
+project = u'tapir'
 copyright = u'2011, Brant Faircloth, Jonathan Chang, Mike Alfaro'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -167,7 +167,7 @@ html_sidebars = {'**': ['sidebarlogo.html', 'localtoc.html', 'relations.html',
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'picmedoc'
+htmlhelp_basename = 'tapirdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -181,7 +181,7 @@ htmlhelp_basename = 'picmedoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'picme.tex', u'picme Documentation',
+  ('index', 'tapir.tex', u'tapir Documentation',
    u'Brant Faircloth, Jonathan Chang, Mike Alfaro', 'manual'),
 ]
 
@@ -214,6 +214,6 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'picme', u'picme Documentation',
+    ('index', 'tapir', u'tapir Documentation',
      [u'Brant Faircloth, Jonathan Chang, Mike Alfaro'], 1)
 ]
