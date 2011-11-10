@@ -31,45 +31,44 @@ Dependencies
 Installation
 *************
 
-For **ALL** platforms, you must download a hyphy binary for your
-platform (osx or linux) and place that within your $PATH.
+For **ALL** platforms, you must download a hyphy binary for your platform (osx
+or linux) and place that within your $PATH.  To install the other dependencies
+(numpy, scipy), you may need to install a Fortran compiler on linux/osx, which
+is a dependency of numpy and scipy.
 
-- OSX::
+Linux
+------
 
-    wget https://github.com/downloads/faircloth-lab/tapir/hyphy2.osx.gz
-    gunzip hyphy2.*.gz
-    chmod 0700 hyphy2.*
-    mv hyphy2.* ~/Bin/hyphy2
-
-- Linux::
+Install hyphy::
 
     wget https://github.com/downloads/faircloth-lab/tapir/hyphy2.linux.gz
     gunzip hyphy2.*.gz
     chmod 0700 hyphy2.*
     mv hyphy2.* ~/Bin/hyphy2
 
-To install the other dependencies (numpy, scipy), you may need to
-install a Fortran compiler on linux/osx, which is a dependency of
-numpy and scipy:
+On linux (ubuntu/debian), use::
 
-- Linux
+    apt-get install gfortran libatlas-base-dev liblapack-dev
 
-    On linux (ubuntu/debian), use::
+Install tapir and dependencies, which include numpy and scipy (the
+reason we installed the dependencies above)::
 
-        apt-get install gfortran libatlas-base-dev liblapack-dev
+    pip install tapir
 
-    Install tapir and dependencies, which include numpy and scipy (the
-    reason we installed the dependencies above)::
+To plot results, you will also need to::
 
-        pip install tapir
-
-    To plot results, you will also need to::
-
-        apt-get install r-base r-base-dev
-        pip install rpy2
+    apt-get install r-base r-base-dev
+    pip install rpy2
 
 OSX
 ---
+
+Install hyphy::
+
+    wget https://github.com/downloads/faircloth-lab/tapir/hyphy2.osx.gz
+    gunzip hyphy2.*.gz
+    chmod 0700 hyphy2.*
+    mv hyphy2.* ~/Bin/hyphy2
 
 It is easiest just to install the `scipy superpack
 <http://stronginference.com/scipy-superpack/>`_.  This will install the
@@ -91,9 +90,14 @@ To plot results, you need to `install R
 Other OSs
 ----------
 
+Download the source for hyphy from `<http://www.datam0nk3y.org/hyphy/doku.php?id=start>`_
+and compile a **single-threaded** version.
+
 Install `numpy <http://numpy.scipy.org>`_, `scipy <http://scipy.org>`_,
 and `dendropy <http://packages.python.org/DendroPy/>`_ for your
-platform.  Then::
+platform.  
+
+Then::
 
     wget http://pypi.python.org/packages/source/t/tapir/tapir-1.0.tar.gz
     tar -xzvf tapir-1.0.tar.gz
