@@ -95,9 +95,12 @@ and compile a **single-threaded** version.
 
 Install `numpy <http://numpy.scipy.org>`_, `scipy <http://scipy.org>`_,
 and `dendropy <http://packages.python.org/DendroPy/>`_ for your
-platform.  
+platform.  Alternatively, you can try::
 
-Then::
+    pip install tapir
+
+Which may install the necessary dependencies.  Alternatively, install the 
+dependenceis manually, and then::
 
     wget http://pypi.python.org/packages/source/t/tapir/tapir-1.0.tar.gz
     tar -xzvf tapir-1.0.tar.gz
