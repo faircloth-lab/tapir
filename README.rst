@@ -32,9 +32,18 @@ Installation
 *************
 
 For **ALL** platforms, you must download a hyphy binary for your
-platform (osx or linux) and place that within your $PATH::
+platform (osx or linux) and place that within your $PATH.
+
+- OSX::
 
     wget https://github.com/downloads/faircloth-lab/tapir/hyphy2.osx.gz
+    gunzip hyphy2.*.gz
+    chmod 0700 hyphy2.*
+    mv hyphy2.* ~/Bin/hyphy2
+
+- Linux::
+
+    wget https://github.com/downloads/faircloth-lab/tapir/hyphy2.linux.gz
     gunzip hyphy2.*.gz
     chmod 0700 hyphy2.*
     mv hyphy2.* ~/Bin/hyphy2
@@ -109,19 +118,11 @@ If you didn't run the tests using `python setup.py test` above, you can also::
 
 Use
 ***
-
-The `estimate_p_i.py` code calls a batch file for hyphy that is in
-`templates/`.  This file needs to be in the same position relative to
-wherever you put `estimate_p_i.py`.  If you install thins as above, you'll
-be fine, for the moment.
-
 To run::
-
-    cd /path/to/tapir/
 
     python tapir_compute.py Input_Folder_of_Nexus_Files/ Input.tree \
         --output Output_Directory \
-        --epochs=32-42,88-98,95-105,164-174 \
+        --intervals=32-42,88-98,95-105,164-174 \
         --times=37,93,100,170 \
         --multiprocessing
 
@@ -134,7 +135,7 @@ rather than estimating those again with::
 
      python tapir_compute.py Input_Folder_of_Site_Rate_JSON_Files/ Input.tree \
         --output Output_Directory \
-        --epochs=32-42,88-98,95-105,164-174 \
+        --intervals=32-42,88-98,95-105,164-174 \
         --times=37,93,100,170 \
         --multiprocessing \
         --site-rates
@@ -180,7 +181,7 @@ tapir contains plotting scripts to help you plot data within a results database
 and compare data between different databases.  tapir uses RPY and R to
 do this.  You can also plot data directly in R.  Until we finish the
 documentation, please see the 
-`wiki <https://github.com/faircloth-lab/tapir/wiki/getting-data-from-the-database>`_ 
+`wiki <https://github.com/faircloth-lab/tapir/wiki/getting-data-from-the-database(s)>`_ 
 for examples.
 
 Acknowledgements
