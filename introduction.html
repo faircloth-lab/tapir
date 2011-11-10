@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Introduction &mdash; picme v1.0 documentation</title>
+    <title>Introduction &mdash; tapir v1.0 documentation</title>
     <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -21,9 +21,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="picme v1.0 documentation" href="index.html" />
+    <link rel="top" title="tapir v1.0 documentation" href="index.html" />
     <link rel="next" title="Installation" href="installation.html" />
-    <link rel="prev" title="Welcome to picme’s documentation!" href="index.html" />
+    <link rel="prev" title="Welcome to tapir’s documentation!" href="index.html" />
    
   
   <link media="only screen and (max-device-width: 480px)" href="_static/small_flask.css" type= "text/css" rel="stylesheet" />
@@ -40,9 +40,9 @@
           <a href="installation.html" title="Installation"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to picme’s documentation!"
+          <a href="index.html" title="Welcome to tapir’s documentation!"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">picme v1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">tapir v1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -55,32 +55,32 @@
 <span id="id1"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="purpose">
 <h2>Purpose<a class="headerlink" href="#purpose" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://github.com/faircloth-lab/picme">picme</a> is a &#8220;Phylogenetic Informativeness Calculator
-for Marker Evaluation&#8221; - in short <a class="reference external" href="https://github.com/faircloth-lab/picme">picme</a> does just what its acronym says -
+<p><a class="reference external" href="https://github.com/faircloth-lab/tapir">tapir</a> is a &#8220;Phylogenetic Informativeness Calculator
+for Marker Evaluation&#8221; - in short <a class="reference external" href="https://github.com/faircloth-lab/tapir">tapir</a> does just what its acronym says -
 calculates phylogenetic informativeness (PI) for a given set of phylogenetic
-markers, using the formulas derived within [Townsend:2007].  <a class="reference external" href="https://github.com/faircloth-lab/picme">picme</a> also
+markers, using the formulas derived within [Townsend:2007].  <a class="reference external" href="https://github.com/faircloth-lab/tapir">tapir</a> also
 includes helper programs to plot the output of the program in several
 different fashions using either <a class="reference external" href="http://www.r-project.org/">R</a> and <a class="reference external" href="http://had.co.nz/ggplot2/">ggplot2</a> or <a class="reference external" href="http://matplotlib.sourceforge.net/">matplotlib</a>.</p>
 </div>
 <div class="section" id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="http://phydesign.townsend.yale.edu/">PhyDesign</a> is the original implementation of Townsend&#8217;s algorithms for
-computing PI.  <a class="reference external" href="https://github.com/faircloth-lab/picme">picme</a> is an alternative implementation, complementing
+computing PI.  <a class="reference external" href="https://github.com/faircloth-lab/tapir">tapir</a> is an alternative implementation, complementing
 <a class="reference external" href="http://phydesign.townsend.yale.edu/">PhyDesign</a> and differing in the folliowing ways:</p>
 <ul class="simple">
-<li><a class="reference external" href="https://github.com/faircloth-lab/picme">picme</a> selects the most appropriate finite-sites substitution model
+<li><a class="reference external" href="https://github.com/faircloth-lab/tapir">tapir</a> selects the most appropriate finite-sites substitution model
 for input alignments, prior to inputting those rates and the base
 frequencies to the PI computation</li>
-<li><a class="reference external" href="https://github.com/faircloth-lab/picme">picme</a> is written to take advantage of optimized programming libraries
+<li><a class="reference external" href="https://github.com/faircloth-lab/tapir">tapir</a> is written to take advantage of optimized programming libraries
 and multicore architectures to return data from hundreds to thousands
 of loci very rapidly</li>
-<li><a class="reference external" href="https://github.com/faircloth-lab/picme">picme</a> enables rapid re-analysis of data from intermediate results
+<li><a class="reference external" href="https://github.com/faircloth-lab/tapir">tapir</a> enables rapid re-analysis of data from intermediate results
 stored in <a class="reference external" href="http://www.json.org/">JSON</a> format.  Meaning that once you&#8217;ve esimated the site
 rates for a given set of alignments, you do not need to re-analyze all
 of the input data to evaluate a new set of discrete times or time intervals</li>
-<li><a class="reference external" href="https://github.com/faircloth-lab/picme">picme</a> collects results across all loci in a SQL database, easing data
+<li><a class="reference external" href="https://github.com/faircloth-lab/tapir">tapir</a> collects results across all loci in a SQL database, easing data
 summary and subsequeny analyses involving hundreds to thousands of loci</li>
-<li><a class="reference external" href="https://github.com/faircloth-lab/picme">picme</a> runs locally with reasonably minimal dependencies</li>
+<li><a class="reference external" href="https://github.com/faircloth-lab/tapir">tapir</a> runs locally with reasonably minimal dependencies</li>
 </ul>
 </div>
 <div class="section" id="availability">
@@ -116,11 +116,11 @@ provides richer graphics.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper"><p class="logo">
   <a href="index.html">
-    <img class="logo" src="_static/pick-me.png" alt="Logo"/>
+    <img class="logo" src="_static/tapir.png" alt="Logo"/>
   </a>
 </p>
 
-<p> <a href = 'https://github.com/faircloth-lab/picme'>picme</a> computes the
+<p> <a href = 'https://github.com/faircloth-lab/tapir'>tapir</a> computes the
 phylo-genetic informativeness of DNA loci </p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
@@ -138,7 +138,7 @@ phylo-genetic informativeness of DNA loci </p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Welcome to picme&#8217;s documentation!</a></li>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to tapir&#8217;s documentation!</a></li>
       <li>Next: <a href="installation.html" title="next chapter">Installation</a></li>
   </ul></li>
 </ul>

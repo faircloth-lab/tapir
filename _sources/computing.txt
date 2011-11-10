@@ -10,7 +10,7 @@ program looks like:
 
 .. code-block:: bash
 
-    picme_compute.py /your/input/nexus/ \
+    tapir_compute.py /your/input/nexus/ \
         /your/data/treefile.tree \
         --output /path/to/the/output \
         --times 1,2,3,4 \
@@ -21,7 +21,7 @@ This wil compute the PI from a folder of nexus files at
 `/your/data/treefile.tree`, for the the discrete times 1,2,3,4 and
 across the intervals (*aka* epochs) 1-5 and 5-10.
 
-We describe each option (`picme_compute.py -h`) in detail, below.  We 
+We describe each option (`tapir_compute.py -h`) in detail, below.  We 
 have separated these options into those pertinent to
 :ref:`initial-computation` and those for :ref:`re-computation`.
 
@@ -38,12 +38,12 @@ Positional arguments
     **tree**  The input tree
 
 Positional arguments are passed to the program by *position*.  For
-example, to send the above to `picme_compute.py`, you would type, on the
+example, to send the above to `tapir_compute.py`, you would type, on the
 command-line
 
 .. code-block:: bash
 
-    picme_compute.py alignments tree
+    tapir_compute.py alignments tree
 
 Required arguments
 ------------------
