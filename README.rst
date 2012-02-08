@@ -10,8 +10,8 @@ Citing tapir
 
 When using tapir, please cite:
 
-- Faircloth BC, Chang J, Alfaro ME: *tapir* enables high throughput analysis of
-  phylogenetic informativeness. `<https://github.com/faircloth-lab/tapir>`_
+- Faircloth BC, Chang J, Alfaro ME: *TAPIR* enables high throughput analysis of
+  phylogenetic informativeness. `arXiv:1202.1215 <http://arxiv.org/abs/1202.1215>`_
 
 - Townsend JP: Profiling phylogenetic informativeness. Systematic Biol. 2007,
   56:222-231.
