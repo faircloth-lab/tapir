@@ -1,5 +1,5 @@
 include *.txt *.py *.rst
 recursive-include docs *.rst
-recursive-include tapir/data/ *
+recursive-include tapir/data *.bf
 recursive-include tapir/tests/test-data *
 include LICENSE.txt
