@@ -53,7 +53,7 @@ class TestTransform(unittest.TestCase):
                 'informativeness_cutoff.nex',
                 'test-extension.nexus'
             ]
-        assert observed == expected
+        assert set(observed) == set(expected)
 
     def test_get_files_2(self):
         self.assertRaises(IOError, get_files, 'test-data','*.rrwrr')
