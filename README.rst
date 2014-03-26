@@ -41,7 +41,7 @@ Linux
 
 Install hyphy::
 
-    wget https://github.com/downloads/faircloth-lab/tapir/hyphy2.linux.gz
+    wget http://s3.faircloth-lab.org/packages/hyphy2.linux.gz
     gunzip hyphy2.*.gz
     chmod 0700 hyphy2.*
     mv hyphy2.* ~/Bin/hyphy2
@@ -65,7 +65,7 @@ OSX
 
 Install hyphy::
 
-    wget https://github.com/downloads/faircloth-lab/tapir/hyphy2.osx.gz
+    wget http://s3.faircloth-lab.org/packages/hyphy2.osx.gz
     gunzip hyphy2.*.gz
     chmod 0700 hyphy2.*
     mv hyphy2.* ~/Bin/hyphy2
