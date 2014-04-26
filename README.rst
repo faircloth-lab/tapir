@@ -23,7 +23,7 @@ Dependencies
 ************
 
 - hyphy2 (please download [`osx <http://s3.faircloth-lab.org/packages/hyphy2.osx.gz>`_ or `linux <http://s3.faircloth-lab.org/packages/hyphy2.linux.gz>`_] or build a **single-threaded** hyphy2)
-- Python 2.6
+- Python 2.7
 - numpy
 - scipy
 - dendropy
