@@ -110,3 +110,12 @@ def get_files(d, extension):
         raise IOError(msg.format(extension, d))
     else:
         return files
+
+def parse_subset_map_file(filename):
+    """Parses a subset map file for alignment names and sites of interest"""
+    with open(filename) as rfile:
+        for line in rfile:
+            line = line.strip()
+            if line:
+                align, start, end = line.split("\t", 2)
+                yield align, [int(start), int(end)]

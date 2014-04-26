@@ -45,6 +45,11 @@ def get_args():
         calculation of rates""", default=False, action='store_true')
     parser.add_argument('--site-rates', default=False, action='store_true',
         help="Use previously calculated site rates")
+    parser.add_argument('--subset-pi-map-file', help="""Calculate PI for a
+        subset of sites. If specified, this should be a tab-delimited file
+        with the alignment file name in the 1st column, the start of the
+        interval (0-offset) in the 2nd column, and the end of the interval in
+        the 3rd column.""")
     return parser.parse_args()
 
 def welcome_message():
@@ -78,7 +83,7 @@ def welcome_message():
 
 def worker(params):
     #pdb.set_trace()
-    time_vector, hyphy, template, towrite, output, correction, alignment, times, epochs, threshold = params
+    time_vector, hyphy, template, towrite, output, correction, alignment, times, epochs, threshold, subsets = params
     # if twowrite is set, run hyphy, else, we've sent site rates
     sys.stdout.write(".")
     sys.stdout.flush()
@@ -97,6 +102,10 @@ def worker(params):
         rates = tapir.cull_uninformative_rates(rates, good_sites)
     else:
         rates = tapir.parse_site_rates(output, correction = correction)
+    alignment_basename = os.path.basename(alignment)
+    # if we are subsetting the rates vector, do so now
+    if os.path.basename(alignment) in subsets:
+        rates = rates[subsets[alignment_basename][0]:subsets[alignment_basename][1]]
     # compute the mean, ensuring we mask the nans.
     mean_rate = numpy.mean(numpy.ma.masked_array(rates, numpy.isnan(rates)))
     # send column of times and vector of site rates to get_townsend_pi.
@@ -124,6 +133,10 @@ def main():
     tree_depth, correction, tree = tapir.correct_branch_lengths(args.tree, args.tree_format, d = args.output)
     # generate a vector of times given start and stops
     time_vector = tapir.get_time(0, int(tree_depth))
+    # get PI subsets if specified
+    subset_pi = dict()
+    if args.subset_pi_map_file:
+        subset_pi = dict(tapir.parse_subset_map_file(args.subset_pi_map_file))
     params = []
     # get path to batch/template file for hyphy
     if not args.template:
@@ -136,13 +149,13 @@ def main():
             output = os.path.join(args.output, os.path.basename(alignment) + '.rates')
             towrite = "\n".join([alignment, tree, output])
             params.append([time_vector, args.hyphy, template, towrite, output, correction, alignment,
-                args.times, args.intervals, args.threshold])
+                args.times, args.intervals, args.threshold, subset_pi])
     else:
         print "Estimating PI for files (--site-rate option):"
         for rate_file in tapir.get_files(args.alignments, '*.rates'):
             params.append([time_vector, args.hyphy, template, None, rate_file,
                 correction, rate_file, args.times, args.intervals,
-                args.threshold])
+                args.threshold, subset_pi])
     if not args.multiprocessing:
         pis = map(worker, params)
     else:
