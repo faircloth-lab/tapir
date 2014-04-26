@@ -5,7 +5,7 @@ from setuptools import setup
 if __name__ == '__main__':
     setup(
         name="tapir",
-        version = "1.0",
+        version = "1.1",
         description="Tally Approximations of Phylogenetic Informativeness Rapidly (TAPIR)",
         long_description=open("README.rst").read(),
         author="Brant Faircloth, Jonathan Chang, Mike Alfaro",
