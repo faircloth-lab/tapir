@@ -42,12 +42,14 @@ def create_unique_dir(path, limit=100):
     """Attempts to create a directory `path`. Returns the name of the
     directory actually created, which may or may not be the same as `path`.
 
-    e.g., if my_directory already exists, it tries to create my_directory.1,
-    my_directory.2, ... until my_directory.`limit` is reached.
+    e.g., if my_directory already exists and is not empty, it tries to create
+    my_directory.1, my_directory.2, ... until my_directory.`limit` is reached.
 
     Race conditions are possible.
     """
     original = path
+    if len(os.listdir(original)) == 0:
+        return original # folder empty, let's use it
     count = 1
     while count < limit:
         try:
