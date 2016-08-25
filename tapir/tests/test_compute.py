@@ -77,7 +77,7 @@ class TestTreeAdjustment(unittest.TestCase):
     def setUp(self):
         self.loc = get_test_files()
         self.expected_tree = \
-            dendropy.Tree.get_from_string('(danRer6:1.74,(oryLat2:1,(gasAcu1:0.93,(fr2:0.37,tetNig2:0.37):0.56):0.07):0.74)', schema='newick')
+            dendropy.Tree.get_from_string('(danRer6:1.74,(oryLat2:1,(gasAcu1:0.93,(fr2:0.37,tetNig2:0.37):0.56):0.07):0.74);', schema='newick')
 
     def test_dendropy_tree_adjustment(self):
         depth, correction, self.observed = \
