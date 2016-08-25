@@ -18,6 +18,13 @@ When using tapir, please cite:
 
 - Pond SLK, Frost SDW, Muse SV: HyPhy: hypothesis testing using phylogenies.
   Bioinformatics 2005, 21:676-679.
+  
+Works using TAPIR
+*****************
+
+For examples of how people have used TAPIR for their own analyses, please see the
+`wiki <https://github.com/faircloth-lab/tapir/wiki/papers-using-tapir>`_ for
+links to manuscripts.
 
 Dependencies
 ************
@@ -185,6 +192,7 @@ do this.  You can also plot data directly in R.  Until we finish the
 documentation, please see the 
 `wiki <https://github.com/faircloth-lab/tapir/wiki/getting-data-from-the-database(s)>`_ 
 for examples.
+
 
 Acknowledgements
 ****************
