@@ -99,7 +99,7 @@ def get_informative_sites(alignment, threshold=4):
     """
     taxa = dendropy.DnaCharacterMatrix.get_from_path(alignment, 'nexus')
     results = defaultdict(int)
-    for cells in taxa.vectors():
+    for cells in taxa.sequences():
         assert len(cells) == taxa.vector_size # should all have equal lengths
         for idx, cell in enumerate(cells):
             results[idx] += 1 if str(cell).upper() in "ATGC" else 0
