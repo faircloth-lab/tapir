@@ -19,10 +19,10 @@ When using tapir, please cite:
 - Pond SLK, Frost SDW, Muse SV: HyPhy: hypothesis testing using phylogenies.
   Bioinformatics 2005, 21:676-679.
   
-Works using TAPIR
+Works using tapir
 *****************
 
-For examples of how people have used TAPIR for their own analyses, please see the
+For examples of how people have used tapir for their own analyses, please see the
 `wiki <https://github.com/faircloth-lab/tapir/wiki/papers-using-tapir>`_ for
 links to manuscripts.
 
