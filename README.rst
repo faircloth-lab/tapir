@@ -53,7 +53,7 @@ On linux (ubuntu/debian), use::
 Install tapir and dependencies, which include numpy and scipy (the
 reason we installed the dependencies above)::
 
-    pip install tapir
+    pip install -e git+https://github.com/faircloth-lab/tapir.git#egg=Package
 
 To plot results, you will also need to::
 
@@ -75,11 +75,11 @@ It is easiest just to install the `scipy superpack
 dependencies that tapir needs.  After installing the superpack, using
 pip, install tapir::
 
-    pip install tapir
+    pip install -e git+https://github.com/faircloth-lab/tapir.git#egg=Package
 
 Alternatively, you can simply try to install tapir using::
 
-    pip install tapir
+    pip install -e git+https://github.com/faircloth-lab/tapir.git#egg=Package
 
 To plot results, you need to `install R
 <http://cran.r-project.org/bin/macosx/>`_ and then install rpy2::
@@ -97,7 +97,7 @@ Install `numpy <http://numpy.scipy.org>`_, `scipy <http://scipy.org>`_,
 and `dendropy <http://packages.python.org/DendroPy/>`_ for your
 platform.  Alternatively, you can try::
 
-    pip install tapir
+    pip install -e git+https://github.com/faircloth-lab/tapir.git#egg=Package
 
 Which may install the necessary dependencies.  Alternatively, install the 
 dependenceis manually, and then::
