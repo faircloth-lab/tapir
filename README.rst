@@ -60,7 +60,7 @@ On linux (ubuntu/debian), use::
 Install tapir and dependencies, which include numpy and scipy (the
 reason we installed the dependencies above)::
 
-    pip install -e git+https://github.com/faircloth-lab/tapir.git#egg=Package
+    pip install https://github.com/faircloth-lab/tapir/archive/master.zip
 
 To plot results, you will also need to::
 
@@ -77,16 +77,18 @@ Install hyphy::
     chmod 0700 hyphy2.*
     mv hyphy2.* ~/Bin/hyphy2
 
-It is easiest just to install the `scipy superpack
-<http://stronginference.com/scipy-superpack/>`_.  This will install the
-dependencies that tapir needs.  After installing the superpack, using
-pip, install tapir::
+Install the dependencies tapir needs with `Homebrew <http://brew.sh/>`_::
 
-    pip install -e git+https://github.com/faircloth-lab/tapir.git#egg=Package
+    brew tap homebrew/science
+    brew install numpy scipy
+
+Then, using pip, install tapir::
+
+    pip install https://github.com/faircloth-lab/tapir/archive/master.zip
 
 Alternatively, you can simply try to install tapir using::
 
-    pip install -e git+https://github.com/faircloth-lab/tapir.git#egg=Package
+    pip install https://github.com/faircloth-lab/tapir/archive/master.zip
 
 To plot results, you need to `install R
 <http://cran.r-project.org/bin/macosx/>`_ and then install rpy2::
@@ -97,20 +99,19 @@ To plot results, you need to `install R
 Other OSs
 ----------
 
-Download the source for hyphy from `<http://www.datam0nk3y.org/hyphy/doku.php?id=start>`_
+Download the source for hyphy from `<http://hyphy.org/w/index.php/Main_Page>`_
 and compile a **single-threaded** version.
 
-Install `numpy <http://numpy.scipy.org>`_, `scipy <http://scipy.org>`_,
-and `dendropy <http://packages.python.org/DendroPy/>`_ for your
+Install `numpy <http://www.numpy.org/>`_, `scipy <https://scipy.org>`_,
+and `dendropy <http://www.dendropy.org/>`_ for your
 platform.  Alternatively, you can try::
 
-    pip install -e git+https://github.com/faircloth-lab/tapir.git#egg=Package
+    pip install https://github.com/faircloth-lab/tapir/archive/master.zip
 
 Which may install the necessary dependencies.  Alternatively, install the 
-dependenceis manually, and then::
+dependencies manually, and then::
 
-    wget http://pypi.python.org/packages/source/t/tapir/tapir-1.0.tar.gz
-    tar -xzvf tapir-1.0.tar.gz
+    curl -L https://github.com/faircloth-lab/tapir/archive/master.zip | tar xzv
     cd tapir*
     python setup.py build
     python setup.py test
@@ -159,7 +160,7 @@ through `tapir_compute.py`.
 
 You can access the results in the database as follows.  For more examples,
 including plotting, see the 
-`documentation <http://faircloth-lab.github.com/tapir/>`_
+`documentation <https://faircloth-lab.github.io/tapir/>`_
 
 - crank up sqlite::
 
