@@ -60,12 +60,12 @@ On linux (ubuntu/debian), use::
 Install tapir and dependencies, which include numpy and scipy (the
 reason we installed the dependencies above)::
 
-    pip install https://github.com/faircloth-lab/tapir/archive/master.zip
+    pip2 install https://github.com/faircloth-lab/tapir/archive/master.zip
 
 To plot results, you will also need to::
 
     apt-get install r-base r-base-dev
-    pip install rpy2
+    pip2 install rpy2
 
 OSX
 ---
@@ -77,23 +77,23 @@ Install hyphy::
     chmod 0700 hyphy2.*
     mv hyphy2.* ~/Bin/hyphy2
 
-Install the dependencies tapir needs with `Homebrew <http://brew.sh/>`_::
+Install Python with `Homebrew <http://brew.sh/>`_::
 
     brew tap homebrew/science
+    brew install python@2
+
+Then try installing tapir with::
+
+    pip2 install https://github.com/faircloth-lab/tapir/archive/master.zip
+
+You might need to install tapir's dependencies first::
+
     brew install numpy scipy
-
-Then, using pip, install tapir::
-
-    pip install https://github.com/faircloth-lab/tapir/archive/master.zip
-
-Alternatively, you can simply try to install tapir using::
-
-    pip install https://github.com/faircloth-lab/tapir/archive/master.zip
 
 To plot results, you need to `install R
 <http://cran.r-project.org/bin/macosx/>`_ and then install rpy2::
 
-    pip install rpy2
+    pip2 install rpy2
 
 
 Other OSs
@@ -106,7 +106,7 @@ Install `numpy <http://www.numpy.org/>`_, `scipy <https://scipy.org>`_,
 and `dendropy <http://www.dendropy.org/>`_ for your
 platform.  Alternatively, you can try::
 
-    pip install https://github.com/faircloth-lab/tapir/archive/master.zip
+    pip2 install https://github.com/faircloth-lab/tapir/archive/master.zip
 
 Which may install the necessary dependencies.  Alternatively, install the 
 dependencies manually, and then::
@@ -194,12 +194,18 @@ documentation, please see the
 `wiki <https://github.com/faircloth-lab/tapir/wiki/getting-data-from-the-database(s)>`_ 
 for examples.
 
+Bugs and Support
+****************
+
+Please use the `issue tracker <https://github.com/faircloth-lab/tapir/issues>`_ for
+help building and using tapir.
+
 
 Acknowledgements
 ****************
 
 BCF thanks SP Hubbell, PA Gowaty, RT Brumfield, TC Glenn, NG Crawford,
-JE McCormack, and M Reasel. JHLC and MEA thank J Eastman and J Brown for
+JE McCormack, and M Reasel. JC and MEA thank J Eastman and J Brown for
 thoughtful comments about PI. We thank Francesc Lopez-Giraldez and
 Jeffrey Townsend for providing us with a copy of their web-application
 source code and helpful discussion.

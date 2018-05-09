@@ -1,14 +1,14 @@
-import distribute_setup
-distribute_setup.use_setuptools()
-from setuptools import setup
+"Tally Approximations of Phylogenetic Informativeness Rapidly (TAPIR)"
+
+from setuptools import find_packages, setup
 
 if __name__ == '__main__':
     setup(
         name="tapir",
-        version = "1.1",
+        version = "1.2",
         description="Tally Approximations of Phylogenetic Informativeness Rapidly (TAPIR)",
         long_description=open("README.rst").read(),
-        author="Brant Faircloth, Jonathan Chang, Mike Alfaro",
+        author="Brant Faircloth, Jonathan Chang, Michael E Alfaro",
         author_email="brant.faircloth+tapir@gmail.com",
         url="http://github.com/faircloth-lab/tapir/",
         license="http://www.opensource.org/licenses/BSD-3-Clause",
