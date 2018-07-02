@@ -22,7 +22,7 @@ if __name__ == '__main__':
             "Topic :: Scientific/Engineering :: Bio-Informatics",
              ],
         install_requires=[
-            "DendroPy >= 3.9.0",
+            "DendroPy >= 4.0.0",
             "numpy >= 1.3",
             "scipy >= 0.9.0",
             "nose >= 0.10.0",
